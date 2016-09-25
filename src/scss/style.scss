@@ -1,0 +1,694 @@
+// Spinkit
+@import '../../node_modules/spinkit/scss/spinners/3-wave';
+
+// DIMENS
+$desktop: "(min-width: 767px)";
+$mobile: "(max-width: 767px)";
+
+// Colors
+$color-green: #04F06A;
+$color-red: #F8333C;
+
+$color-bright: #FF7C6B;
+$color-white: #FCF7FF;
+$color-primary: #58D378;
+$color-primary-dark: #39C05D;
+$color-primary-light: #80E59B;
+$color-secondary: #52A9BD;
+$color-dark: #333;
+
+// Fonts
+$font-default: Lato, Helvetica, SansSerif;
+
+* {
+  font-family: $font-default;
+}
+
+.transform-double {
+  -webkit-transform: scale(2);
+  -moz-transform: scale(2);
+  -ms-transform: scale(2);
+  -o-transform: scale(2);
+  transform: scale(2);
+}
+
+.sk-wave .sk-rect {
+  margin: 0.5px;
+}
+
+.background-bright {
+  background-color: $color-bright;
+}
+
+.fullscreen {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  margin: 0;
+
+  min-width: 320px;
+  min-height: 480px;
+}
+
+.c-center {
+  justify-content: center;
+  align-items: center;
+  @extend .c;
+}
+
+.c {
+  display: flex;
+  flex-flow: column;
+}
+
+.r-center {
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.r {
+  display: flex;
+  flex-flow: row;
+}
+
+.r-left {
+  justify-content: flex-start;
+  align-items: center;
+  @extend .r;
+}
+
+.card {
+  border-radius: 3px;
+  background-color: $color-white;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.no-text-sel {
+  -webkit-user-select: none;  /* Chrome all / Safari all */
+  -moz-user-select: none;     /* Firefox all */
+  -ms-user-select: none;      /* IE 10+ */
+  user-select: none;          /* Likely future */
+}
+
+.initial {
+  background: -webkit-linear-gradient(top right, $color-primary-dark, $color-primary-light);/* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(bottom left, $color-primary-dark, $color-primary-light); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(bottom left, $color-primary-dark, $color-primary-light);/* For Firefox 3.6 to 15 */
+  background: linear-gradient(to bottom left, $color-primary-dark, $color-primary-light); /* Standard syntax */
+
+  input {
+    width: 90%;
+    height: 42px;
+    max-width: 500px;
+    font-family: $font-default;
+    font-size: 16px;
+    color: $color-dark;
+    padding-left: 8px;
+    padding-right: 8px;
+    border-radius: 3px;
+    background-color: #ededed;
+    border: 1px #cbcbcb solid;
+    margin-top: 4px;
+    margin-bottom: 4px;
+  }
+  input:focus {
+    box-shadow: rgba(0, 0, 0, 0.21) 0px 0px 8px, rgba(0, 0, 0, 0.219608) 0px 0px 3px;
+    outline: none;
+  }
+
+  @extend .fullscreen, .r-center;
+}
+
+.initial-card {
+  width: 90%;
+  height: 90%;
+  min-height: 400px;
+  max-width: 500px;
+
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+  align-items: center;
+
+  .container-input {
+    width: 90%;
+    min-width: 200px;
+    max-width: 500px;
+    @extend .c-center;
+  }
+
+  @extend .card;
+}
+.log-in {
+  .brand {
+    padding-top: 12px;
+    margin-bottom: 8px;
+    @extend .c-center;
+  }
+  .logo {
+    width: 100px;
+  }
+  .title {
+    font-family: Lato;
+    font-weight: 300;
+    font-size: 28px;
+    text-align: center;
+    margin: 0;
+  }
+
+  .top {
+    width: 100%;
+
+    @extend .c-center;
+  }
+}
+
+.sign-up {
+  justify-content: flex-start;
+  .navigation {
+    width: 100%;
+    height: 52px;
+    justify-content: flex-start;
+    align-items: center;
+
+    .back {
+      width: 30px;
+      height: 30px;
+      margin-left: 18px;
+      margin-right: 8px;
+      cursor: pointer;
+    }
+
+    .text {
+      font-family: $font-default;
+      font-size: 20px;
+      font-weight: 400;
+      margin: 0;
+      cursor: pointer;
+    }
+
+    @extend .r
+  }
+}
+
+.courses {
+  padding: 0;
+  margin: 0;
+
+  li {
+    height: 82px;
+
+    border: 1px solid #B4B4B4;
+
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+
+    position: relative;
+
+    .row-middle {
+      padding-left: 32px;
+      padding-right: 32px;
+
+      display: flex;
+      flex-flow: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .info {
+      display: flex;
+      flex-flow: column;
+      justify-content: center;
+      position: relative;
+      margin-left: 22px;
+
+      .code {
+        font-family: Lato;
+        font-size: 16px;
+        font-weight: 400;
+        color: #3C3F43;
+        padding: 0;
+        margin: 0;
+      }
+    }
+
+    .time {
+      font-family: Lato;
+      font-size: 10px;
+      font-weight: 400;
+      color: #3C3F43;
+      padding: 0;
+      margin: 0;
+    }
+
+    .instructor {
+      font-family: Lato;
+      font-size: 10px;
+      font-weight: 400;
+      color: #3C3F43;
+      padding: 0;
+      margin: 0;
+    }
+
+    .navigation {
+      display: flex;
+      margin-right: 22px;
+
+      .arrow {
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
+      }
+
+      @extend .c-center;
+    }
+
+  }
+}
+.courses > li {
+  border-top: none;
+}
+
+
+.button {
+  border-radius: 3px !important;
+  display: block;
+  @extend .button-round;
+}
+.button-round {
+  width: 150px;
+  font-size: 14px;
+  font-family: $font-default;
+  font-weight: 700;
+  //@media #{$desktop} {
+  //  font-size: 18px !important;
+  //  width: 240px !important;
+  //}
+  color: white;
+  text-align: center;
+  margin-top: 12px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 12px 12px;
+  box-shadow: rgba(0, 0, 0, 0.247059) 0px 2px 8px, rgba(0, 0, 0, 0.219608) 0px 0px 3px;
+  background-color: $color-bright;
+  border-radius: 20px;
+  transition: box-shadow 0.1s linear;
+  -webkit-transition: box-shadow 0.1s linear;
+  cursor: pointer;
+}
+.button-round:hover {
+  box-shadow: rgba(0, 0, 0, 0.247059) 0px 8px 30px, rgba(0, 0, 0, 0.219608) 0px 0px 10px;
+}
+.button-round:active {
+  box-shadow: rgba(0, 0, 0, 0.247059) 0px 2px 1px, rgba(0, 0, 0, 0.219608) 0px 0px 1px;
+}
+
+.button-clear {
+  width: 100px;
+  font-size: 14px;
+  font-family: $font-default;
+  font-weight: 400;
+  @media #{$desktop} {
+    width: 200px;
+    font-size: 20px;
+  }
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 12px 12px;
+  color: $color-bright;
+  cursor: pointer;
+}
+
+
+
+
+.dash-courses {
+  .add-course {
+    margin-top: 22px;
+    margin-bottom: 22px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .nav {
+    background: -webkit-linear-gradient(top right, $color-primary-dark, $color-primary-light);/* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(bottom left, $color-primary-dark, $color-primary-light); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(bottom left, $color-primary-dark, $color-primary-light);/* For Firefox 3.6 to 15 */
+    background: linear-gradient(to bottom left, $color-primary-dark, $color-primary-light); /* Standard syntax */
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+  }
+  $nav-top-height: 34px;
+  .nav-top {
+    height: $nav-top-height;
+    width: 100%;
+    position: relative;
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    align-items: center;
+
+    .logout {
+      font-family: $font-default;
+      position: absolute;
+      left: 12px;
+      cursor: pointer;
+    }
+    .header {
+      font-family: $font-default;
+      font-size: 28px;
+      line-height: $nav-top-height;
+      margin: 0;
+    }
+  }
+  .nav-tabs {
+    padding: 6px 0;
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    .tab {
+      width: 68px;
+      font-family: Lato;
+      font-size: 14px;
+      font-weight: 400;
+      text-align: center;
+      margin: 0 16px;
+      padding: 4px 0;
+      color: #333;
+      transition: border-bottom 0.05s linear;
+      border-bottom: 2px solid transparent;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .tab-active {
+      border-bottom: 2px solid $color-dark;
+    }
+  }
+}
+
+$nav-top_height: 34px;
+#nav-top_classes {
+  height: $nav-top_height;
+  width: 100%;
+  position: relative;
+  #button-back {
+    height: $nav-top_height - 20;
+    width: $nav-top_height - 20;
+    border-top: 2px solid #A4B5BF;
+    border-left: 2px solid #A4B5BF;
+    transform: rotate(-45deg);
+    z-index: 40;
+    cursor: pointer;
+  }
+
+  .text-back {
+    font-famiy: Lato;
+    font-weight: 400;
+    color: #333;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  .box-back {
+    width: 82px;
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+  }
+
+  .logout {
+    font-family: Lato;
+    font-weight: 400 !important;
+    color: #333;
+    position: absolute;
+    top: 8px;
+    left: 20px;
+    cursor: pointer;
+    z-index: 100;
+  }
+
+  #button-back {
+    color: #A3B8C1;
+  }
+}
+
+.loading {
+  position: absolute;
+  top: 0;  bottom: 0;
+  right: 0;  left: 0;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 500;
+  background: -webkit-linear-gradient(top right, $color-primary-dark, $color-primary-light);/* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(bottom left, $color-primary-dark, $color-primary-light); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(bottom left, $color-primary-dark, $color-primary-light);/* For Firefox 3.6 to 15 */
+  background: linear-gradient(to bottom left, $color-primary-dark, $color-primary-light); /* Standard syntax */
+  .text {
+    width: 100%;
+    font-family: Lato;
+    font-size: 52px;
+    font-weight: 300;
+    color: $color-dark;
+    margin: 0;
+    text-align: center;
+  }
+  .logo {
+    width: 140px;
+    height: 140px;
+  }
+}
+
+.dash-student {
+  background-color: $color-white;
+  //$nav_height: 68px;
+  .nav {
+    //height: $nav_height;
+    position: absolute;
+    top: 0;  left: 0;  right: 0;
+    margin: 0;
+    background: -webkit-linear-gradient(top right, $color-primary-dark, $color-primary-light);/* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(bottom left, $color-primary-dark, $color-primary-light); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(bottom left, $color-primary-dark, $color-primary-light);/* For Firefox 3.6 to 15 */
+    background: linear-gradient(to bottom left, $color-primary-dark, $color-primary-light); /* Standard syntax */
+    display: flex;
+    flex-flow: column;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+
+    $top-height: 42px;
+    .nav-top {
+      height: $top-height;
+      width: 100%;
+      position: relative;
+      .navigation {
+        position: absolute;
+        left: 4px;
+        display: flex;
+        flex-flow: row;
+        align-items: center;
+      }
+      .arrow {
+        width: 22px;
+        height: 22px;
+        margin-right: 8px;
+        cursor: pointer;
+      }
+      .text {
+        font-family: Lato;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: $top-height;
+        color: #333;
+        margin: 0;
+        z-index: 40;
+        cursor: pointer;
+      }
+
+      @extend .r-center;
+    }
+  }
+  .header {
+    height: 28px;
+    font-family: $font-default;
+    font-weight: 400;
+    font-size: 28px;
+    text-align: center;
+    position: relative;
+    bottom: 18px;
+    margin: 0;
+    color: $color-dark;
+  }
+
+  @extend .fullscreen;
+}
+$nav-btn-height: 40px;
+.nav-btns {
+  height: 40px;
+
+  .btn {
+    width: 72px;
+    height: 30px;
+    font-family: $font-default;
+    line-height: 30px;
+    text-align: center;
+    display: inline-block;
+    margin: 4px 12px;
+    border-radius: 3px;
+    border: 2px solid $color-dark;
+    cursor: pointer;
+
+    @extend .no-text-sel;
+  }
+
+  .btn-active {
+    border-color: $color-dark;
+    background-color: $color-dark;
+    color: $color-white;
+
+  }
+
+  @extend .r-center;
+}
+
+.overlay {
+  background-color: rgba(255, 255, 255, 0.5);
+  z-index: 100;
+
+  .card {
+    width: 240px;
+    height: 200px;
+    justify-content: space-between;
+    @extend .c, .card;
+  }
+
+  .content {
+    padding-left: 4px;
+    padding-right: 4px;
+
+    .text {
+      font-family: $font-default;
+      font-size: 22px;
+      text-align: center;
+      color: $color-dark;
+    }
+    @extend .c-center;
+  }
+  a {
+    margin-bottom: 14px;
+    margin-top: 8px;
+  }
+  @extend  .fullscreen, .c-center;
+}
+
+.ask-question {
+  position: absolute;
+  top: 112px;
+  left: 0; right: 0;
+  bottom: 0;
+  background-color: $color-white;
+
+  .container-input {
+    margin-top: 22px;
+    .input {
+      width: 90vw;
+      height: 200px;
+      max-width: 600px;
+      font-family: $font-default;
+      font-size: 15px;
+      border-radius: 3px;
+      border: 2px solid #c1c1c1;
+      padding: 8px;
+      resize: none;
+    }
+    .input:focus {
+      box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 9px, rgba(0, 0, 0, 0.2) 0px 0px 3px;
+      outline: none;
+    }
+    @extend .r-center;
+  }
+}
+
+.dash-admin {
+  $admin-nav_width: 100px;
+  background-color: $color-white;
+  min-width: 400px;
+  .nav {
+    width: $admin-nav_width;
+    height: 100%;
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    background: -webkit-linear-gradient(top right, $color-primary-dark, $color-primary-light);/* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(bottom left, $color-primary-dark, $color-primary-light); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(bottom left, $color-primary-dark, $color-primary-light);/* For Firefox 3.6 to 15 */
+    background: linear-gradient(to bottom left, $color-primary-dark, $color-primary-light); /* Standard syntax */
+    box-shadow: 2px 0 2px 0 rgba(0, 0, 0, 0.14), 3px 0 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    padding-top: 12px;
+    padding-bottom: 12px;
+    align-items: center;
+    .section-title {
+      font-size: 18px;
+      text-align: center;
+      margin: 0;
+    }
+    hr {
+      width: 100%;
+      height: 2px;
+      background-color: $color-dark;
+      outline: none;
+      border: none;
+      margin: 4px 0;
+    }
+    .sidenav-button {
+      width: $admin-nav_width - 8px;
+      height: 32px;
+      line-height: 32px;
+      text-align: center;
+      cursor: pointer;
+      border: 1px transparent solid;
+      @extend .no-text-sel;
+    }
+    .sidenav-button:hover {
+      border: 1px $color-white solid;
+    }
+    .sidenav-button:active {
+      background-color: $color-dark;
+      border: 1px transparent solid;
+      color: $color-white;
+    }
+    .sidenav-button-active {
+      background-color: $color-dark;
+      border: 1px transparent solid;
+      color: $color-white;
+      @extend .sidenav-button;
+    }
+    @extend .c;
+  }
+  .stage {
+    position: absolute;
+    left: $admin-nav_width + 2;
+    top: 0; right: 0; bottom: 0;
+    @extend .c-center;
+  }
+  .formcard {
+    min-width: 200px;
+    min-height: 300px;
+    padding: 22px;
+    background-color: white;
+    input {
+      font-size: 18px;
+      margin: 8px 0;
+    }
+    @extend .card, .c-center;
+  }
+}
+
+
