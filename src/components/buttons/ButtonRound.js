@@ -6,12 +6,15 @@ import React from 'react';
 
 const ButtonRound = ({
   onClick,
-  children
+  className,
+  style,
+  children,
 }) => {
   return (
     <a
       onClick={onClick}
-      className="button-round"
+      className={className ? 'button-round ' + className : 'button-round'}
+      style={style ? style : {}}
     >
       {children}
     </a>

@@ -12,6 +12,10 @@ import Signup from '../components/Signup/Signup';
 import DashCourses from '../components/Dash/DashCourses/DashCourses';
 import DashAdmin from '../components/Dash/Admin/DashAdmin';
 import AddCourses from '../components/Dash/Admin/AddCourses';
+import DeleteCourse from '../components/Dash/Admin/DeleteCourse';
+import GetCourses from '../components/Dash/Admin/GetCourses';
+import AddUser from '../components/Dash/Admin/AddUser';
+import GetUsers from '../components/Dash/Admin/GetUsers';
 
 const Root = ({ store }) => (
   <Provider store={store}>
@@ -25,6 +29,10 @@ const Root = ({ store }) => (
           <Route path="courses/:filter" components={DashCourses} />
           <Route path="admin" components={DashAdmin}>
             <Route path="addCourse" component={AddCourses} />
+            <Route path="deleteCourse" component={DeleteCourse} />
+            <Route path="getCourses" component={GetCourses} />
+            <Route path="addUser" component={AddUser} />
+            <Route path="getUsers" component={GetUsers} />
           </Route>
           {/*<Route path="student" components={DashStudent}>*/}
             {/*<Route path="questions" components={StudentQuestionList} />*/}

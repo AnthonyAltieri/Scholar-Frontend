@@ -5,9 +5,10 @@
 import React from 'react';
 import { isValidInstructorId } from '../../../api/Admin';
 import { addCourse } from '../../../api/Course';
+import { toastr } from 'react-redux-toastr';
 
 const clickAddCourse = (instructorId, code, title, time) => {
-  isValidInstructorId(instructorIdVal)
+  isValidInstructorId(instructorId)
     .then(({ result, name }) => {
       if (typeof result === 'undefined') {
         toastr.error('Invalid instructorId, user does not exist');
@@ -30,7 +31,7 @@ const clickAddCourse = (instructorId, code, title, time) => {
       toastr.error('Error checking if instructorId is valid', `${error}`);
     })
 
-}
+};
 
 const AddCourses = ({}) => {
   let instructorId;
@@ -43,6 +44,7 @@ const AddCourses = ({}) => {
     <div className="formcard">
       <form>
         <input
+          className="input"
           type="text"
           name="instructorId"
           placeholder="instructorId"
@@ -50,6 +52,7 @@ const AddCourses = ({}) => {
         />
         <br />
         <input
+          className="input"
           type="text"
           name="code"
           placeholder="code"
@@ -57,6 +60,7 @@ const AddCourses = ({}) => {
         />
         <br />
         <input
+          className="input"
           type="text"
           name="title"
           placeholder="title"
@@ -64,6 +68,7 @@ const AddCourses = ({}) => {
         />
         <br />
         <input
+          className="input"
           type="text"
           name="time"
           placeholder="time"
@@ -73,7 +78,7 @@ const AddCourses = ({}) => {
       <a
         className="button background-primary"
         onClick={() => {
-          clickAddCourse(instructorId.value(), code.value(), title.value(), time.value());
+          clickAddCourse(instructorId.value, code.value, title.value, time.value);
         }}
       >
         ADD

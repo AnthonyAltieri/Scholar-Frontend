@@ -15,7 +15,8 @@ const ROUTES = {
 
 export const logIn = (email, password) => {
   return new Promise ((resolve, reject) => {
-    fbAuth.signInWithEmailAndPassword(email, password)
+    fb.auth()
+      .signInWithEmailAndPassword(email, password)
       .then(() => {
         db.ref(`users/${fbAuth.currentUser.uid}`).once('value')
           .then((snapshot) => {
@@ -37,7 +38,8 @@ export const logIn = (email, password) => {
 
 export const signUp = (email, password, firstname, lastname) => {
   return new Promise((resolve, reject) => {
-    fbAuth.createUserWithEmailAndPassword(email, password)
+    fb.auth()
+      .createUserWithEmailAndPassword(email, password)
       .then(() => {
         const user = fbAuth.currentUser;
         console.log('user', user);
@@ -60,7 +62,8 @@ export const signUp = (email, password, firstname, lastname) => {
 
 export const logOut = () => {
   return new Promise((resolve, reject) => {
-    fbAuth.signOut()
+    fb.auth()
+      .signOut()
       .then(() => {
         resolve(true);
       }, (error) => {
@@ -68,3 +71,74 @@ export const logOut = () => {
       })
   });
 };
+
+export const addUser = (email, password, firstname, lastname, type) => {
+  return new Promise((resolve, reject) => {
+    fb.auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then(() => {
+        const user = fb.auth().currentUser;
+        console.log('user', user);
+        db.ref(`users/${user.uid}`)
+          .set({
+            firstname,
+            lastname,
+            type,
+          });
+        console.log('done');
+        resolve(fb.auth().currentUser);
+      })
+      .catch((error) => {
+        if (error) {
+          console.log('error', error);
+          reject(error);
+        }
+      })
+  });
+};
+
+export const deleteUser = () => {
+  return new Promise((resolve, reject) => {
+    const user = fb.auth().currentUser;
+    user.delete()
+      .then(() => {
+        resolve(true)
+      }, (error) => {
+       reject(error)
+      });
+  })
+};
+
+export const fetchAllUsers = () => {
+  return new Promise((resolve, reject) => {
+    fb.database()
+      .ref(`users`)
+      .once('value')
+      .then((snapshot) => {
+        const value = snapshot.val();
+        if (!value) return [];
+        const keys = Object.keys(value);
+        let courses = [];
+        keys.forEach((k) => {
+          value[k].id = k;
+          courses.push(value[k]);
+        });
+        resolve(courses);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+  })
+};
+
+export const resetPassword = (email) => {
+  return new Promise((resolve, reject) => {
+    fb.auth()
+      .sendPasswordResetEmail(email)
+      .then(() => {
+        resolve(true);
+      }, (error) => {
+        reject(error);
+      })
+  })
+}

@@ -9,7 +9,7 @@ import * as LoadingActions from '../../actions/Loading'
 import { signUp } from '../../api/User';
 import { push } from 'react-router-redux';
 import { connect } from 'react-redux';
-import ButtonRound from '../buttons/ButtonRound.jsx';
+import ButtonRound from '../buttons/ButtonRound';
 
 const srcBack = require('../../img/App/back.svg');
 

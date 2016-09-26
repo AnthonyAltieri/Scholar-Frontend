@@ -6,9 +6,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Nav from './Nav';
 import CourseList from './CourseList/CourseList';
-import { logOut } from '../../../actions/User';
+import { logOut } from '../../../api/User';
 import { setVisiblityFilter } from '../../../actions/VisibleCourseFilter';
 import { push } from 'react-router-redux';
+import { toastr } from 'react-redux-toastr';
 
 class DashCourses extends Component {
   componentWillMount() {
@@ -41,7 +42,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch(push('/dash/courses/inactive'));
     },
     onLogoutClick: () => {
-      dispatch(logOut());
+      logOut()
+        .then(() => {
+          toastr.success('Log Out Successful');
+          dispatch(push('/login'));
+        })
+        .catch((error) => {
+          toastr.error('Something went wrong please try again');
+        })
     },
     dispatch,
   }

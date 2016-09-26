@@ -5,12 +5,14 @@
 import React from 'react';
 import * as LoadingActions from '../../actions/Loading';
 import * as UserActions from '../../actions/User'
+import * as OverlayActions from '../../actions/Overlay'
 import { toastr } from 'react-redux-toastr';
 import { push } from 'react-router-redux';
 import { connect } from 'react-redux';
 import { logIn } from '../../api/User';
 import ButtonClear from '../buttons/ButtonClear.jsx';
-import ButtonRound from '../buttons/ButtonRound.jsx';
+import ButtonRound from '../buttons/ButtonRound';
+import Overlay from './Overlay';
 
 const validEmail = (email) => {
   const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -19,13 +21,11 @@ const validEmail = (email) => {
 
 const hasValidCredentials = (email = '', password = '', endLoading) => {
   if (!validEmail(email)) {
-    endLoading();
     toastr.error('Credential Error', 'Enter a valid email.');
     return false;
   }
 
   if (!password.trim()) {
-    endLoading();
     toastr.error('Credential Error', 'Enter a valid password.');
     return false;
   }
@@ -42,11 +42,14 @@ const handleLoginSuccess = (type, navigate) => {
 };
 
 let LogIn = ({
+  isOverlayVisible,
   navigate,
+  showOverlay,
   startLoading,
   endLoading,
   logInSuccess,
   logInFail,
+  dispatch,
 }) => {
   let email;
   let password;
@@ -72,6 +75,7 @@ let LogIn = ({
         }
       }}
     >
+      {isOverlayVisible ? <Overlay dispatch={dispatch} /> : null }
       <div className="initial-card log-in">
         <div className="top">
           <div className="brand">
@@ -96,7 +100,7 @@ let LogIn = ({
             <ButtonRound
               onClick={() => {
                 startLoading();
-                if (hasValidCredentials(email.value.toLowerCase(), password.value, endLoading)) {
+                if (hasValidCredentials(email.value.toLowerCase(), password.value)) {
                   logIn(email.value.toLowerCase(), password.value)
                     .then((user) => {
                       logInSuccess(user.email, user.id, `${user.firstname} ${user.lastname}`,
@@ -107,10 +111,23 @@ let LogIn = ({
                       console.log('error: ', error);
                       logInFail();
                     })
+                } else {
+                  endLoading();
                 }
               }}
             >
               LOG IN
+            </ButtonRound>
+            <ButtonRound
+              className="background-white color-bright"
+              style={{
+                border: "solid 2px #FF7C6B",
+              }}
+              onClick={() => {
+                showOverlay();
+              }}
+            >
+              FORGOT PASSWORD
             </ButtonRound>
           </div>
         </div>
@@ -127,6 +144,7 @@ let LogIn = ({
 };
 LogIn = connect(
   (state) => ({
+    isOverlayVisible: state.Overlay.isVisible,
   }),
   (dispatch) => ({
     navigate: (url) => {
@@ -144,6 +162,10 @@ LogIn = connect(
     logInFail: () => {
       dispatch(UserActions.logInFail());
     },
+    showOverlay: () => {
+      dispatch(OverlayActions.showOverlay());
+    },
+    dispatch,
   })
 )(LogIn);
 

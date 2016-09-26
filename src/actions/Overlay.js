@@ -2,14 +2,12 @@
  * @author Anthony Altieri on 9/8/16.
  */
 
-export const activateAlert = () => {
-  return {
-    type: 'ACTIVATE_ALERT',
-  }
-};
 
-export const acknowledgeAlert = () => {
-  return {
-    type: 'ACKNOWLEDGE_ALERT',
-  }
-};
+export const showOverlay = () => ({
+  type: 'SHOW_OVERLAY',
+});
+
+export const hideOverlay = () => ({
+  type: 'HIDE_OVERLAY',
+});
+

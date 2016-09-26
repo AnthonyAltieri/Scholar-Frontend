@@ -19,7 +19,7 @@ export const addCourse = (title, code, instructorId, instructorName, time) => {
         instructorName,
         time,
       })
-      .then(() => { resolve({ id }) })
+      .then(() => { resolve({ id: key }) })
       .catch((error) => { reject(error) })
   })
 };
@@ -34,8 +34,6 @@ export const deleteCourse = (courseId) => {
       .catch((error) => {
         reject(error);
       })
-
-
   })
 };
 

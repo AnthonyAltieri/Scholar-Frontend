@@ -13,8 +13,8 @@ let Nav = ({
   <div
     className="nav"
   >
-    <h2 className="section-title">COURSES</h2>
     <hr />
+    <h2 className="section-title">COURSES</h2>
     <a
       className={path !== '/dash/admin/addCourse'
         ? 'sidenav-button'
@@ -36,6 +36,41 @@ let Nav = ({
       }}
     >
       DELETE
+    </a>
+    <a
+      className={path !== '/dash/admin/getCourses'
+        ? 'sidenav-button'
+        : 'sidenav-button-active'
+      }
+      onClick={() => {
+        navigate('/dash/admin/getCourses')
+      }}
+    >
+      GET
+    </a>
+    <hr />
+    <h2 className="section-title">USERS</h2>
+    <a
+      className={path !== '/dash/admin/addUser'
+        ? 'sidenav-button'
+        : 'sidenav-button-active'
+      }
+      onClick={() => {
+        navigate('/dash/admin/addUser')
+      }}
+    >
+      ADD
+    </a>
+    <a
+      className={path !== '/dash/admin/getUsers'
+        ? 'sidenav-button'
+        : 'sidenav-button-active'
+      }
+      onClick={() => {
+        navigate('/dash/admin/getUsers')
+      }}
+    >
+      GET
     </a>
   </div>
 );

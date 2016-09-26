@@ -40,6 +40,14 @@ $font-default: Lato, Helvetica, SansSerif;
   background-color: $color-bright;
 }
 
+.background-white {
+  background-color: $color-white !important;
+}
+
+.color-bright {
+  color: $color-bright !important;
+}
+
 .fullscreen {
   position: absolute;
   top: 0;
@@ -73,6 +81,7 @@ $font-default: Lato, Helvetica, SansSerif;
 .r {
   display: flex;
   flex-flow: row;
+  align-items: center;
 }
 
 .r-left {
@@ -281,7 +290,8 @@ $font-default: Lato, Helvetica, SansSerif;
   @extend .button-round;
 }
 .button-round {
-  width: 150px;
+  min-width: 180px;
+  display: block;
   font-size: 14px;
   font-family: $font-default;
   font-weight: 700;
@@ -562,12 +572,27 @@ $nav-btn-height: 40px;
 .overlay {
   background-color: rgba(255, 255, 255, 0.5);
   z-index: 100;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
 
   .card {
-    width: 240px;
-    height: 200px;
-    justify-content: space-between;
+    width: 80%;
+    max-width: 400px;
+    height: 244px;
+    padding: 8px;
+    z-index: 150;
+    position: relative;
     @extend .c, .card;
+  }
+
+  .x {
+    position: absolute;
+    font-size: 30px;
+    top: 2px;
+    right: 8px;
+    margin: 0;
+    color: $color-red;
+    cursor: pointer;
   }
 
   .content {
@@ -623,7 +648,6 @@ $nav-btn-height: 40px;
   min-width: 400px;
   .nav {
     width: $admin-nav_width;
-    height: 100%;
     position: absolute;
     top: 0; left: 0; bottom: 0;
     background: -webkit-linear-gradient(top right, $color-primary-dark, $color-primary-light);/* For Safari 5.1 to 6.0 */
@@ -679,15 +703,52 @@ $nav-btn-height: 40px;
     @extend .c-center;
   }
   .formcard {
+    height: 90%;
+    width: 90%;
     min-width: 200px;
     min-height: 300px;
     padding: 22px;
     background-color: white;
-    input {
+    justify-content: space-between;
+    overflow-y: auto;
+    form {
+      @extend .c-center;
+    }
+    .input {
+      height: 32px;
+      width: 100%;
+      padding: 0 4px;
       font-size: 18px;
+      border: solid 1px $color-dark;
+      border-radius: 2px;
       margin: 8px 0;
     }
-    @extend .card, .c-center;
+    @extend .card, .c;
+  }
+  .list {
+    list-style-type: none;
+    background-color: $color-white;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    li {
+      padding: 3px;
+      border: 1px solid $color-dark;
+    }
+    h3 {
+      margin: 0;
+    }
+    p {
+      margin: 0;
+    }
+    .label {
+      margin-right: 8px;
+    }
+  }
+  .radio {
+    margin-left: 8px;
+    margin-right: 4px;
   }
 }
 
