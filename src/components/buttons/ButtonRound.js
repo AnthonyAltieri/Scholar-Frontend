@@ -3,6 +3,7 @@
  */
 
 import React from 'react';
+import Ink from 'react-ink';
 
 const ButtonRound = ({
   onClick,
@@ -16,6 +17,7 @@ const ButtonRound = ({
       className={className ? 'button-round ' + className : 'button-round'}
       style={style ? style : {}}
     >
+      <Ink />
       {children}
     </a>
   );

@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { isValidInstructorId } from '../../../api/Admin';
-import { addCourse } from '../../../api/Course';
+import { createCourse } from '../../../api/Course';
 import { toastr } from 'react-redux-toastr';
 
 const clickAddCourse = (instructorId, code, title, time) => {
@@ -18,7 +18,7 @@ const clickAddCourse = (instructorId, code, title, time) => {
         toastr.error('User is not of type `INSTRUCTOR`');
         return;
       }
-      addCourse(title, code, instructorId, name, time)
+      createCourse(title, code, instructorId, name, time)
         .then((result) => {
           const { id } = result;
           toastr.success('Successfully added course with id', `${id}`)
@@ -79,6 +79,11 @@ const AddCourses = ({}) => {
         className="button background-primary"
         onClick={() => {
           clickAddCourse(instructorId.value, code.value, title.value, time.value);
+          intructorId.value = '';
+          instructorName.value = '';
+          code.value = '';
+          title.value = '';
+          time.value = '';
         }}
       >
         ADD

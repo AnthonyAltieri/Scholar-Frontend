@@ -5,17 +5,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Courses from './Courses';
-import { fetchCourses } from '../../../../api/Courses';
 import { push } from 'react-router-redux';
-import * as CourseListActions from '../../../../actions/CourseList';
+import { isLoggedIn } from '../../../../api/User';
 
 const getVisibleCourses = (filter, courses) => {
   switch (filter) {
     case 'active': {
-      return courses.filter(c => c.isActive);
+      return courses.filter(c => c.active);
     }
     case 'inactive': {
-      return courses.filter(c => !c.isActive);
+      return courses.filter(c => !c.active);
     }
     default: {
       throw new Error(`Invalid Course filter: ${filter}`);
@@ -24,24 +23,12 @@ const getVisibleCourses = (filter, courses) => {
 };
 
 class CourseList extends Component {
-  componentDidMount() {
-    const { filter } = this.props.params;
-    if (!filter) {
-      this.props.dispatch(push('/dash/courses/active'));
-      return;
-    }
-    fetchCourses(this.props.params.filter)
-      .then((courses) => {
-        this.props.dispatch(CourseListActions.receivedCourses(courses));
-        this.forceUpdate();
-      })
-  }
-
 
   render() {
     const { params, visibleCourseFilter, courses, userId,
       userType } = this.props;
     const { filter } = params;
+    console.log('courses', courses);
     return (
       <Courses
         courses={getVisibleCourses(visibleCourseFilter, courses)}
@@ -58,6 +45,7 @@ CourseList = connect(
     courses: state.CourseList.Courses,
     userId: state.User.id,
     userType: state.User.type,
+    isLoggedIn: state.User.isLoggedIn,
   })
 )(CourseList);
 

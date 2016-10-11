@@ -3,14 +3,15 @@
  */
 
 import React from 'react';
-import { addVote, removeVote } from '../../actions/Votes';
+import { addVote, removeVote } from '../../../../actions/Votes';
+import { toastr } from 'react-redux-toastr';
 
 const onThumbClick = (id, userId, isUser, hasVoted, dispatch) => {
   if (isUser) {
-    // TODO: display toast
-    // Cannot vote on own question
+    toastr.info('Cannot vote on your own question');
     return;
   }
+  // TODO: Add api for vote
   if (hasVoted) {
     dispatch(addVote(id, 'UP', userId));
   } else {
@@ -21,7 +22,8 @@ const onThumbClick = (id, userId, isUser, hasVoted, dispatch) => {
 const QuestionList = ({
   questions,
   userId,
-}, { dispatch }) => {
+  dispatch
+}) => {
   return (
     <ul>
       {questions.map((q) => {

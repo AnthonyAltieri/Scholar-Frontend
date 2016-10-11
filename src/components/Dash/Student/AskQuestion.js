@@ -4,8 +4,8 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { questionSubmitSuccess } from '../../actions/DashStudent';
-import ButtonRound from '../../components/buttons/ButtonRound.jsx';
+import { questionSubmitSuccess } from '../../../actions/DashStudent';
+import ButtonRound from '../../../components/buttons/ButtonRound';
 
 let AskQuestion = ({
   dispatch,

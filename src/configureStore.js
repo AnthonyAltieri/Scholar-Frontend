@@ -6,6 +6,8 @@ import { createStore, applyMiddleware } from 'redux';
 import Root from './reducers/Root';
 import { routerMiddleware } from 'react-router-redux';
 import { browserHistory } from 'react-router';
+import { saveState, loadState } from './localStorage';
+import throttle from 'lodash/throttle';
 
 const addLoggingToDispatch = (store) => {
   const rawDispatch = store.dispatch;
@@ -21,14 +23,21 @@ const addLoggingToDispatch = (store) => {
   }
 };
 
+
 const configureStore = () => {
+  const persistedState = loadState();
   const store = createStore(
     Root,
+    persistedState,
     applyMiddleware(routerMiddleware(browserHistory))
   );
 
   if (process.env.NODE_ENV !== 'production')
     store.dispatch = addLoggingToDispatch(store);
+
+  store.subscribe(throttle(() => {
+    saveState(store.getState());
+  }), 1000);
 
   return store;
 };

@@ -8,11 +8,12 @@
  * @param id {string} the id of the course
  * @returns {{type: string, id: *}}
  */
-export const joinCourse = (id, code) => {
+export const joinCourse = (id, code, title) => {
   return {
     type: 'JOIN_COURSE',
     id,
     code,
+    title,
   }
 };
 

@@ -4,47 +4,27 @@
 
 const CourseSession = (state = {}, action) => {
   switch (action.type) {
-    case 'JOIN_COURSE': {
+    case 'JOIN_COURSESESSION': {
       return {
+        ...state,
         id: action.id,
         code: action.code,
         mode: 'QUESTIONS',
       }
     }
 
-    case 'SET_VIEW': {
-      const view = action.view;
-      if (view === 'DASH_COURSES') {
-        return {}
+    case 'STARTED_COURSESESSION': {
+      return {
+        ...state,
+        id: action.id,
+        active: true,
       }
     }
 
-    case 'SET_DASH_MODE': {
+    case 'ENDED_COURSESESSION': {
       return {
         ...state,
-        mode: action.mode,
-      }
-    }
-
-    case 'ACTIVATE_ALERT': {
-      return {
-        ...state,
-        mode: 'ALERT',
-      }
-    }
-
-    case 'QUESTION_SUBMIT_SUCCESS':
-    case 'ACKNOWLEDGE_ALERT': {
-      return {
-        ...state,
-        mode: 'QUESTIONS',
-      }
-    }
-
-    case 'ASSESSMENT': {
-      return {
-        ...state,
-        view: 'ASSESSMENT',
+        active: false,
       }
     }
 

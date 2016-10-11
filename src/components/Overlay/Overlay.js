@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import ButtonRound from '../buttons/ButtonRound.jsx';
+import ButtonRound from '../buttons/ButtonRound';
 
 const Overlay = ({
   onConfirmClick,

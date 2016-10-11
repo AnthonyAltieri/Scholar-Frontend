@@ -2,25 +2,27 @@
  * @author Anthony Altieri on 9/1/16.
  */
 
-import React from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { store } from 'redux';
 import { connect } from 'react-redux';
-import QuestionList from '../QuestionList/QuestionList.jsx';
+import QuestionList from './QuestionList/QuestionList';
+import { fetchQuesitons } from '../../../api/Questions';
+import { retrievedQuestions } from '../../../actions/DashStudent';
 
 const getVisibleQuestions = (filter, questions = [], userId) => {
   switch (filter) {
-    case 'ME': {
+    case '': {
       return questions.filter((q) => q.userId === userId);
     }
 
-    case 'MOST_VOTED': {
+    case 'mostVoted': {
       return questions
         .slice(0)
         .sort((l, r) => r.votes.length - l.votes.length);
     }
 
-    case 'MOST_RECENT': {
+    case 'mostRecent': {
       return questions
         .slice(0).sort((l, r) => {
           if (l.created < r.created) {
@@ -35,23 +37,36 @@ const getVisibleQuestions = (filter, questions = [], userId) => {
   }
 };
 
-const mapStateToProps = (state) => {
+
+class StudentQuestionList extends Component {
+  componentDidMount() {
+    const { courseSessionId, dispatch } = this.props;
+    fetchQuesitons(courseSessionId)
+      .then((questions) => {
+        dispatch(retrievedQuestions(questions));
+      })
+
+  }
+
+  render() {
+    return (
+      <div className="student-question-list">
+        <QuestionList {...props} />
+      </div>
+    )
+  }
+};
+
+const mapStateToProps = (state, ownProps) => {
   return {
     questions: getVisibleQuestions(
-      state.StudentQuestionList.VisibleQuestionFilter,
-      state.StudentQuestionList.QuestionList.questions,
+      ownProps.filter,
+      state.DashStudent.questions,
       state.User.id,
     ),
     userId: state.User.id,
   }
 };
-
-let StudentQuestionList = (props) => (
-  <div className="student-question-list">
-    <QuestionList {...props} />
-  </div>
-);
-
 
 StudentQuestionList = connect(
   mapStateToProps,

@@ -1,5 +1,7 @@
 var path = require('path');
 var webpack = require('webpack');
+var DashboardPlugin = require('webpack-dashboard/plugin');
+
 
 var babelPresets = {presets: ['react', 'es2015', 'stage-2']};
 
@@ -16,7 +18,8 @@ module.exports = {
   },
   devtool: 'eval-source-map',
   plugins: [
-    new webpack.HotModuleReplacementPlugin()
+    new webpack.HotModuleReplacementPlugin(),
+    new DashboardPlugin()
   ],
   module: {
     loaders: [
@@ -33,6 +36,10 @@ module.exports = {
       {
         test: /\.less$/,
         loaders: ['style', 'css', 'less'],
+      },
+      {
+        test: /\.png$/,
+        loader: 'url',
       },
       {
         test: /\.svg$/,

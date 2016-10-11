@@ -6,15 +6,18 @@ $desktop: "(min-width: 767px)";
 $mobile: "(max-width: 767px)";
 
 // Colors
-$color-green: #04F06A;
-$color-red: #F8333C;
+$color-green: #39C05D;
+$color-green-light: #C8E6C9;
+$color-red: #F44336;
+$color-red-light: #FFCDD2;
 
 $color-bright: #FF7C6B;
 $color-white: #FCF7FF;
+$color-gray: #cbc6ce;
 $color-primary: #58D378;
 $color-primary-dark: #39C05D;
 $color-primary-light: #80E59B;
-$color-secondary: #52A9BD;
+$color-secondary: #2196F3;
 $color-dark: #333;
 
 // Fonts
@@ -39,13 +42,36 @@ $font-default: Lato, Helvetica, SansSerif;
 .background-bright {
   background-color: $color-bright;
 }
+.background-secondary {
+  background-color: $color-secondary !important;
+}
+
+.background-red {
+  background-color: $color-red !important;
+}
+
+.background-green {
+  background-color: $color-green !important;
+}
 
 .background-white {
   background-color: $color-white !important;
 }
 
+.background-gray {
+  background-color: $color-gray !important;
+}
+
 .color-bright {
   color: $color-bright !important;
+}
+
+.color-white {
+  color: $color-white !important;
+}
+
+.border-bright {
+  border: solid 2px $color-bright;
 }
 
 .fullscreen {
@@ -101,6 +127,10 @@ $font-default: Lato, Helvetica, SansSerif;
   -moz-user-select: none;     /* Firefox all */
   -ms-user-select: none;      /* IE 10+ */
   user-select: none;          /* Likely future */
+}
+
+body {
+  background-color: $color-white;
 }
 
 .initial {
@@ -160,6 +190,7 @@ $font-default: Lato, Helvetica, SansSerif;
   }
   .logo {
     width: 100px;
+    @extend .no-text-sel;
   }
   .title {
     font-family: Lato;
@@ -205,20 +236,33 @@ $font-default: Lato, Helvetica, SansSerif;
 }
 
 .courses {
-  padding: 0;
+  padding: 76px 4px 0;
   margin: 0;
 
+  .island {
+    width: 140px;
+    height: 140px;
+    display: block;
+    margin: 42px auto 4px;
+  }
+  .nothing {
+    width: 100%;
+    font-size: 34px;
+    font-weight: 300;
+    color: $color-gray;
+    margin-top: 18px;
+    text-align: center;
+  }
+
   li {
-    height: 82px;
-
+    height: 100px;
     border: 1px solid #B4B4B4;
-
     display: flex;
     flex-flow: row;
     justify-content: space-between;
-
     position: relative;
-
+    background-color: white;
+    margin: 6px 0;
     .row-middle {
       padding-left: 32px;
       padding-right: 32px;
@@ -230,29 +274,38 @@ $font-default: Lato, Helvetica, SansSerif;
     }
 
     .info {
+      width: 75%;
       display: flex;
-      flex-flow: column;
-      justify-content: center;
+      flex-flow: row;
+      align-items: center;
       position: relative;
-      margin-left: 22px;
+      margin-left: 4px;
 
       .code {
-        font-family: Lato;
-        font-size: 16px;
-        font-weight: 400;
+        width: 68px;
+        text-align: center;
+        font-size: 22px;
+        font-weight: 700;
         color: #3C3F43;
         padding: 0;
-        margin: 0;
+        margin: 0 8px 0 0;
+        @extend .no-text-sel;
       }
     }
 
+    .title {
+      margin: 0;
+      font-weight: 300;
+      @extend .no-text-sel;
+    }
+
     .time {
-      font-family: Lato;
       font-size: 10px;
       font-weight: 400;
       color: #3C3F43;
       padding: 0;
       margin: 0;
+      @extend .no-text-sel;
     }
 
     .instructor {
@@ -262,21 +315,27 @@ $font-default: Lato, Helvetica, SansSerif;
       color: #3C3F43;
       padding: 0;
       margin: 0;
+      @extend .no-text-sel;
     }
 
     .navigation {
       display: flex;
-      margin-right: 22px;
+      padding-right: 10px;
+      justify-content: center;
+      flex-flow: column-reverse;
 
-      .arrow {
-        width: 30px;
-        height: 30px;
+      .btn {
+        width: 100%;
+        text-align: center;
+        color: $color-secondary;
         cursor: pointer;
+        @extend .no-text-sel;
       }
 
       @extend .c-center;
     }
 
+    @extend .card;
   }
 }
 .courses > li {
@@ -295,6 +354,7 @@ $font-default: Lato, Helvetica, SansSerif;
   font-size: 14px;
   font-family: $font-default;
   font-weight: 700;
+  position: relative;
   //@media #{$desktop} {
   //  font-size: 18px !important;
   //  width: 240px !important;
@@ -311,6 +371,7 @@ $font-default: Lato, Helvetica, SansSerif;
   transition: box-shadow 0.1s linear;
   -webkit-transition: box-shadow 0.1s linear;
   cursor: pointer;
+  @extend .no-text-sel;
 }
 .button-round:hover {
   box-shadow: rgba(0, 0, 0, 0.247059) 0px 8px 30px, rgba(0, 0, 0, 0.219608) 0px 0px 10px;
@@ -318,7 +379,6 @@ $font-default: Lato, Helvetica, SansSerif;
 .button-round:active {
   box-shadow: rgba(0, 0, 0, 0.247059) 0px 2px 1px, rgba(0, 0, 0, 0.219608) 0px 0px 1px;
 }
-
 .button-clear {
   width: 100px;
   font-size: 14px;
@@ -335,9 +395,31 @@ $font-default: Lato, Helvetica, SansSerif;
   color: $color-bright;
   cursor: pointer;
 }
-
-
-
+.fab {
+  $fab_width: 58px;
+  width: $fab_width;
+  height: $fab_width;
+  color: $color-white;
+  position: fixed;
+  border-radius: 50%;
+  display: block;
+  box-shadow: 0 8px 11px 1px rgba(0,0,0,.14),0 3px 16px 2px rgba(0,0,0,.12),0 5px 5px -3px rgba(0,0,0,.2);
+  cursor: pointer;
+  .plus {
+    $plus_width: 14px;
+    width: $plus_width;
+    height: $plus_width;
+    position: relative;
+    left: ($fab_width - $plus_width) / 2;
+    top: ($fab_width - $plus_width - 2) / 2;
+    @extend .no-text-sel;
+  }
+  @extend .no-text-sel;
+}
+.fab.br {
+  bottom: 32px;
+  right: 16px;
+}
 
 .dash-courses {
   .add-course {
@@ -352,6 +434,8 @@ $font-default: Lato, Helvetica, SansSerif;
     background: -moz-linear-gradient(bottom left, $color-primary-dark, $color-primary-light);/* For Firefox 3.6 to 15 */
     background: linear-gradient(to bottom left, $color-primary-dark, $color-primary-light); /* Standard syntax */
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    position: fixed;
+    top: 0; left: 0; right: 0;
   }
   $nav-top-height: 34px;
   .nav-top {
@@ -365,6 +449,7 @@ $font-default: Lato, Helvetica, SansSerif;
 
     .logout {
       font-family: $font-default;
+      font-weight: 300;
       position: absolute;
       left: 12px;
       cursor: pointer;
@@ -397,6 +482,32 @@ $font-default: Lato, Helvetica, SansSerif;
     }
     .tab-active {
       border-bottom: 2px solid $color-dark;
+    }
+  }
+
+  .overlay{
+    .card {
+    }
+    .content{
+      margin-top: 22px;
+    }
+    .input {
+      width: 90%;
+      height: 42px;
+      max-width: 500px;
+      font-family: $font-default;
+      font-size: 20px;
+      color: $color-dark;
+      padding-left: 8px;
+      padding-right: 8px;
+      border-radius: 3px;
+      background-color: #ededed;
+      border: 1px #cbcbcb solid;
+      margin: 32px auto 4px;
+    }
+    .input:focus {
+      box-shadow: rgba(0, 0, 0, 0.21) 0px 0px 8px, rgba(0, 0, 0, 0.219608) 0px 0px 3px;
+      outline: none;
     }
   }
 }
@@ -578,7 +689,7 @@ $nav-btn-height: 40px;
   .card {
     width: 80%;
     max-width: 400px;
-    height: 244px;
+    height: 174px;
     padding: 8px;
     z-index: 150;
     position: relative;
@@ -661,7 +772,7 @@ $nav-btn-height: 40px;
     .section-title {
       font-size: 18px;
       text-align: center;
-      margin: 0;
+      margin: 4px 0;
     }
     hr {
       width: 100%;
@@ -750,6 +861,266 @@ $nav-btn-height: 40px;
     margin-left: 8px;
     margin-right: 4px;
   }
+}
+
+.dash-instructor {
+  $side-nav-width: 82px;
+  min-height: 660px;
+  position: absolute;
+  top: 0; right: 0; bottom: 0;
+  left: $side-nav-width + 2;
+
+  .side-nav {
+    min-height: 660px;
+    width: $side-nav-width;
+    background: -webkit-linear-gradient(top right, $color-primary-dark, $color-primary-light);/* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(bottom left, $color-primary-dark, $color-primary-light); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(bottom left, $color-primary-dark, $color-primary-light);/* For Firefox 3.6 to 15 */
+    background: linear-gradient(to bottom left, $color-primary-dark, $color-primary-light); /* Standard syntax */
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    padding-top: 8px;
+    box-shadow: 3px 0 2px 0 rgba(0, 0, 0, 0.14), 4px 0 1px -2px rgba(0, 0, 0, 0.2), 2px 0 5px 0 rgba(0, 0, 0, 0.12);
+
+    .logo {
+      width: $side-nav-width - 30;
+      margin: 0 auto;
+      @extend .no-text-sel;
+    }
+
+    .code {
+      margin: 4px auto;
+      font-weight: 800;
+      color: $color-dark;
+    }
+
+    $action-bar-height: 22px;
+    .active-bar {
+      width: 100%;
+      height: $action-bar-height;
+      background-color: $color-green;
+      margin-top: 4px;
+      margin-bottom: 12px;
+      border-top: 2px solid $color-dark;
+      border-bottom: 2px solid $color-dark;
+      box-shadow: -2px 0 2px 2px rgba(0, 0, 0, 0.14), -2px 0 1px 0px rgba(0, 0, 0, 0.2), -2px 0 5px 2px rgba(0, 0, 0, 0.12);
+      .text {
+        width: 100%;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 700;
+        color: $color-white;
+        margin: 0;
+        line-height: $action-bar-height;
+        @extend .no-text-sel;
+      }
+    }
+    .inactive {
+      background-color: $color-red !important;
+    }
+
+    $nav-btn-width: 38px;
+    .nav-btn {
+      width: $nav-btn-width;
+      height: $nav-btn-width;
+      background: $color-dark;
+      margin: 4px auto;
+      border-radius: 5px;
+      cursor: pointer;
+      color: white;
+      box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.14), 0 0 1px 0px rgba(0, 0, 0, 0.2), 0 0 5px 2px rgba(0, 0, 0, 0.12);
+      .icon {
+        height: $nav-btn-width - 14;
+        width: $nav-btn-width - 14;
+        margin: auto;
+        display: block;
+        @extend .no-text-sel;
+      }
+      @extend .c-center;
+    }
+    .nav-btn:active {
+      box-shadow: none;
+    }
+    .title {
+      width: 100%;
+      text-align: center;
+      color: $color-white;
+      font-weight: 300;
+      margin: 0;
+    }
+    .label {
+      width: 100%;
+      font-size: 0.9em;
+      text-align: center;
+      color: $color-dark;
+      margin: 0;
+    }
+    hr {
+      border: none;
+      width: 100%;
+      height: 2px;
+      background-color: $color-dark;
+    }
+    @extend .c;
+  }
+
+  .settings {
+    position: absolute;
+    top: 12px; left: 12px; right: 12px; bottom: 12px;
+    background-color: white;
+
+    .section {
+      $header_height: 52px;
+      .header {
+        height: $header_height;
+        padding-left: 12px;
+        background-color: $color-bright;
+        border-radius: 3px;
+        margin-bottom: 22px;
+        input {
+          max-width: 116px;
+        }
+        @extend .r;
+      }
+      .heading {
+        color: $color-white;
+        line-height: $header_height;
+        margin: 0 12px 0 0;
+      }
+    }
+
+    .options {
+      padding: 22px;
+    }
+
+    .toggle {
+      width: 300px;
+      display: inline-block;
+      .title {
+        margin: 0;
+      }
+      .on-off {
+        text-align: center;
+        margin: 2px 0;
+      }
+    }
+    .toggle-switch {
+      display: block;
+      max-width: 150px;
+      margin: 16px auto;
+    }
+    .toggle-enable {
+      position: relative;
+      top: 2px;
+      @extend .toggle;
+    }
+
+    .slider {
+      width: 300px;
+      display: inline-block;
+      .value {
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        display: block;
+        background-color: $color-dark;
+        color: $color-white;
+        text-align: center;
+        margin: 4px auto;
+        border-radius: 50%;
+      }
+    }
+
+    .title {
+      margin: 0;
+      text-align: center;
+      color: $color-dark;
+    }
+
+    @extend .card;
+  }
+
+  .confusion {
+    position: absolute;
+    top: 12px; left: 12px; right: 12px; bottom: 12px;
+    background-color: white;
+
+    @extend .card;
+  }
+
+  .ask {
+    position: absolute;
+    top: 12px; left: 12px; right: 12px; bottom: 12px;
+    background-color: white;
+
+    .heading {
+      padding: 4px 12px;
+      .header {
+        display: inline-block;
+        font-weight: 300;
+        font-size: 36px;
+        margin: 0;
+      }
+    }
+
+    .left-pane {
+      display: inline-block;
+      height: 100%;
+      width: 50%;
+      border-right: 1px solid $color-dark;
+    }
+
+    .most-voted {
+      display: inline-block;
+      height: 70%;
+      width: 100%;
+    }
+
+    .stats {
+      display: inline-block;
+      height: 30%;
+      width: 100%;
+      border-top: 2px solid $color-dark;
+    }
+    .right-pane {
+      display: inline-block;
+      height: 100%;
+      width: 50%;
+      border-left: 1px solid $color-dark;
+    }
+    @extend .card;
+  }
+
+  .question {
+    width: 94%;
+    margin: 8px auto;
+    .content {
+      font-size: 18px;
+      line-height: 140%;
+      padding: 8px;
+      margin: 0;
+    }
+    $buttons_height: 52px;
+    .buttons {
+      height: $buttons_height;
+      display: flex;
+      justify-content: space-between;
+      border-top: solid 1px $color-gray;
+      @extend .r;
+      .btn {
+        width: 33%;
+        height: $buttons_height;
+        line-height: $buttons_height;
+        position: relative;
+        display: inline-block;
+        text-align: center;
+        border-radius: 3px;
+        color: $color-secondary;
+      }
+    }
+    @extend .card;
+  }
+
 }
 
 

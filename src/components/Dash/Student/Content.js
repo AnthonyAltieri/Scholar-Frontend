@@ -3,16 +3,18 @@
  */
 
 import React from 'react';
-import StudentQuestionList from './StudentQuestionList.jsx';
-import AskQuestion from './AskQuestion.jsx';
+import StudentQuestionList from './StudentQuestionList';
+import AskQuestion from './AskQuestion';
 
 const Content = ({
-  mode,
+  mode, params
 }) => {
+  const { filter } = params;
+
   switch (mode) {
     case 'ALERT':
     case 'QUESTIONS': {
-      return <StudentQuestionList />
+      return <StudentQuestionList filter={filte} />
     }
 
     case 'ASK': {

@@ -2,14 +2,14 @@
  * @author Anthony Altieri on 9/5/16.
  */
 
-import React from 'react';
+import React, { Component } from 'react';
 import * as LoadingActions from '../../actions/Loading';
 import * as UserActions from '../../actions/User'
 import * as OverlayActions from '../../actions/Overlay'
 import { toastr } from 'react-redux-toastr';
 import { push } from 'react-router-redux';
 import { connect } from 'react-redux';
-import { logIn } from '../../api/User';
+import { logIn, isLoggedIn, setUserStatusListener } from '../../api/User';
 import ButtonClear from '../buttons/ButtonClear.jsx';
 import ButtonRound from '../buttons/ButtonRound';
 import Overlay from './Overlay';
@@ -41,110 +41,144 @@ const handleLoginSuccess = (type, navigate) => {
   navigate('/dash/courses/active');
 };
 
-let LogIn = ({
-  isOverlayVisible,
-  navigate,
-  showOverlay,
-  startLoading,
-  endLoading,
-  logInSuccess,
-  logInFail,
-  dispatch,
-}) => {
-  let email;
-  let password;
-
-  return (
-    <div
-      className="initial"
-      onKeyPress={(e) => {
-        if (e.key === 'Enter') {
-          startLoading();
-          if (hasValidCredentials(email.value.toLowerCase(), password.value, endLoading)) {
-            logIn(email.value.toLowerCase(), password.value)
-              .then((user) => {
-                logInSuccess(user.email, user.id, `${user.firstname} ${user.lastname}`,
-                  user.type);
-                handleLoginSuccess(user.type, navigate);
-              })
-              .catch((error) => {
-                console.log('error: ', error);
-                logInFail();
-              })
-          }
+class LogIn extends Component {
+  componentDidMount() {
+    console.log('mount');
+    console.log('isLoggedIn', this.props.isLoggedIn)
+    if (this.props.isLoggedIn) {
+      switch (this.props.userType) {
+        case 'INSTRUCTOR':
+        case 'STUDENT': {
+          this.props.navigate('/dash/courses/active');
+          break;
         }
-      }}
-    >
-      {isOverlayVisible ? <Overlay dispatch={dispatch} /> : null }
-      <div className="initial-card log-in">
-        <div className="top">
-          <div className="brand">
-            <img
-              src={require('../../img/App/logo-dark.svg')}
-              className="logo"
-            />
-            <h1 className="title">SCHOLAR</h1>
-          </div>
-          <div className="container-input">
-            <input
-              ref={(n) => { email = n }}
-              type="email"
-              placeholder="Email"
-            />
-            <input
-              ref={(n) => { password = n }}
-              type="password"
-              placeholder="Password"
-            />
 
-            <ButtonRound
-              onClick={() => {
-                startLoading();
-                if (hasValidCredentials(email.value.toLowerCase(), password.value)) {
-                  logIn(email.value.toLowerCase(), password.value)
-                    .then((user) => {
-                      logInSuccess(user.email, user.id, `${user.firstname} ${user.lastname}`,
-                        user.type);
-                      handleLoginSuccess(user.type, navigate);
-                    })
-                    .catch((error) => {
-                      console.log('error: ', error);
-                      logInFail();
-                    })
-                } else {
-                  endLoading();
-                }
-              }}
-            >
-              LOG IN
-            </ButtonRound>
-            <ButtonRound
-              className="background-white color-bright"
-              style={{
-                border: "solid 2px #FF7C6B",
-              }}
-              onClick={() => {
-                showOverlay();
-              }}
-            >
-              FORGOT PASSWORD
-            </ButtonRound>
+        case 'ADMIN': {
+          this.props.navigate('/dash/admin/');
+          break;
+        }
+
+        default: {
+          throw new Error (`Invalid user type ${this.props.userType}`);
+        }
+      }
+    }
+    console.log('endLoading');
+    this.props.endLoading();
+  }
+
+  render() {
+    const {
+      isOverlayVisible, navigate, showOverlay,
+      startLoading, endLoading, logInSuccess, logInFail,
+      dispatch,
+    } = this.props;
+
+    let email;
+    let password;
+
+    return (
+      <div
+        className="initial"
+        onKeyPress={(e) => {
+          if (e.key === 'Enter') {
+            startLoading();
+            if (hasValidCredentials(email.value.toLowerCase(), password.value, endLoading)) {
+              logIn(email.value.toLowerCase(), password.value)
+                .then((user) => {
+                  logInSuccess(user.email, user.id, `${user.firstname} ${user.lastname}`,
+                    user.type);
+                  handleLoginSuccess(user.type, navigate);
+                  setUserStatusListener(() => {}, () => {
+                    this.props.dispatch(UserActions.logOut());
+                  });
+                })
+                .catch((error) => {
+                  console.log('error: ', error);
+                  logInFail();
+                })
+            }
+          }
+        }}
+      >
+        {isOverlayVisible ? <Overlay dispatch={dispatch}/> : null }
+        <div className="initial-card log-in">
+          <div className="top">
+            <div className="brand">
+              <img
+                src={require('../../img/App/logo-dark.svg')}
+                className="logo"
+              />
+              <h1 className="title">SCHOLAR</h1>
+            </div>
+            <div className="container-input">
+              <input
+                ref={(n) => {
+                  email = n
+                }}
+                type="email"
+                placeholder="Email"
+              />
+              <input
+                ref={(n) => {
+                  password = n
+                }}
+                type="password"
+                placeholder="Password"
+              />
+
+              <ButtonRound
+                onClick={() => {
+                  startLoading();
+                  if (hasValidCredentials(email.value.toLowerCase(), password.value)) {
+                    logIn(email.value.toLowerCase(), password.value)
+                      .then((user) => {
+                        logInSuccess(user.email, user.id, `${user.firstname} ${user.lastname}`,
+                          user.type);
+                        handleLoginSuccess(user.type, navigate);
+                        setUserStatusListener(() => {}, () => {
+                          this.props.dispatch(UserActions.logOut());
+                        });
+                      })
+                      .catch((error) => {
+                        console.log('error: ', error);
+                        logInFail();
+                      })
+                  } else {
+                    endLoading();
+                  }
+                }}
+              >
+                LOG IN
+              </ButtonRound>
+              <ButtonRound
+                className="background-bright"
+                onClick={() => {
+                  showOverlay();
+                }}
+              >
+                FORGOT PASSWORD
+              </ButtonRound>
+            </div>
           </div>
+          <ButtonClear
+            onClick={() => {
+              navigate('/signup')
+            }}
+          >
+            SIGN UP
+          </ButtonClear>
         </div>
-        <ButtonClear
-          onClick={() => {
-            navigate('/signup')
-          }}
-        >
-          SIGN UP
-        </ButtonClear>
       </div>
-    </div>
-  )
+    )
+  }
 };
+
 LogIn = connect(
   (state) => ({
     isOverlayVisible: state.Overlay.isVisible,
+    isLoggedIn: state.User.isLoggedIn,
+    userType: state.User.type,
   }),
   (dispatch) => ({
     navigate: (url) => {

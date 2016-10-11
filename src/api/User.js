@@ -4,7 +4,6 @@
 
 
 import fb from './firebase';
-const fbAuth = fb.auth();
 const db = fb.database();
 
 const ROUTES = {
@@ -18,10 +17,10 @@ export const logIn = (email, password) => {
     fb.auth()
       .signInWithEmailAndPassword(email, password)
       .then(() => {
-        db.ref(`users/${fbAuth.currentUser.uid}`).once('value')
+        db.ref(`users/${fb.auth().currentUser.uid}`).once('value')
           .then((snapshot) => {
             resolve({
-              id: fbAuth.currentUser.uid,
+              id: fb.auth().currentUser.uid,
               ...snapshot.val(),
               email,
             })
@@ -41,15 +40,16 @@ export const signUp = (email, password, firstname, lastname) => {
     fb.auth()
       .createUserWithEmailAndPassword(email, password)
       .then(() => {
-        const user = fbAuth.currentUser;
+        const user = fb.auth().currentUser;
         console.log('user', user);
         db.ref(`users/${user.uid}`)
           .set({
+            type: 'STUDENT',
             firstname,
             lastname,
-            type: 'STUDENT'
+            email,
           });
-        resolve(fbAuth.currentUser);
+        resolve(fb.auth().currentUser);
       })
       .catch((error) => {
         if (error) {
@@ -141,4 +141,34 @@ export const resetPassword = (email) => {
         reject(error);
       })
   })
-}
+};
+
+export const setUserStatusListener = (onLoggedIn, onLoggedOut) => {
+  fb.auth()
+    .onAuthStateChanged((user) => {
+      if (user) {
+        onLoggedIn();
+      } else {
+        onLoggedOut();
+      }
+    })
+};
+
+// export const isLoggedIn = () => {
+//   return new Promise((resolve, reject) => {
+//     console.log('isLoggedIn');
+//     console.log(getAuth().currentUser);
+//     if (!getAuth().currentUser) {
+//       resolve(null);
+//       return;
+//     }
+//     fb.database()
+//       .ref(`users/${fb.auth().currentUser.uid}`)
+//       .once('value')
+//       .then((snapshot) => {
+//         resolve(snapshot.val())
+//       })
+//       .catch((error) => { reject(error) })
+//
+//   })
+// };

@@ -30,32 +30,42 @@ const Overlay = ({
           placeholder="Enter your email"
           ref={(n) => { username = n }}
         />
-        <ButtonRound
-          onClick={() => {
-            resetPassword(username.value)
-              .then(() => {
-                username.value = '';
-                toastr.success('Password reset email sent');
-                dispatch(hideOverlay());
-              })
-              .catch(() => {
-                toastr.error('Something went wrong please try again');
-              })
-          }}
+        <div
+          className="r-center"
         >
-          SUMBIT
-        </ButtonRound>
-        <ButtonRound
-          className="background-white color-bright"
-          style={{
-            border: "solid 2px #FF7C6B",
-          }}
-          onClick={() => {
-            dispatch(hideOverlay());
-          }}
-        >
-          CANCEL
-        </ButtonRound>
+          <ButtonRound
+            className="background-green"
+            style={{
+              minWidth: "100px",
+              margin: "12px 8px"
+            }}
+            onClick={() => {
+              resetPassword(username.value)
+                .then(() => {
+                  username.value = '';
+                  toastr.success('Password reset email sent');
+                  dispatch(hideOverlay());
+                })
+                .catch(() => {
+                  toastr.error('Something went wrong please try again');
+                })
+            }}
+          >
+            SUMBIT
+          </ButtonRound>
+          <ButtonRound
+            className="background-red"
+            style={{
+              minWidth: "100px",
+              margin: "12px 8px"
+            }}
+            onClick={() => {
+              dispatch(hideOverlay());
+            }}
+          >
+            CANCEL
+          </ButtonRound>
+        </div>
       </div>
     </div>
 

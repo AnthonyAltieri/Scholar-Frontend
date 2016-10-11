@@ -3,19 +3,33 @@
  */
 
 import fb from './firebase';
-const auth = fb.auth();
-const db = fb.database();
+import { objToArray, objContentToArray } from '../util/fbtool';
 
-export const fetchCourses = (filter) => {
+// TODO: Optimize this
+export const fetchCourses = (filter, userId) => {
+  console.log('fetchCourses');
   return new Promise((resolve, reject) => {
     fb.database()
-      .ref(`users/${auth.currentUser.uid}/courses`)
-      .once('value')
-      .then((snapshot) => {
-        resolve(snapshot.val() ? snapshot.val().filter(c => !!c.activeSession) : []);
-      })
-      .catch((error) => {
-        reject(error)
+      .ref(`users/${userId}/courses`)
+      .on('value', (snapshot) => {
+        if (!snapshot.val()) {
+          resolve([]);
+          return;
+        };
+        const userCourses = objContentToArray(snapshot.val());
+        console.log('userCourses', userCourses);
+        let hm = {};
+        userCourses.forEach((c) => {
+          hm[c.id] = true;
+        });
+        console.log('hm', hm);
+        fetchAllCourses()
+          .then((courses) => {
+            resolve(courses.filter(c => !!hm[c.id]));
+          })
+          .catch((error) => {
+            reject(error)
+          })
       })
   });
 };
@@ -27,13 +41,11 @@ export const fetchAllCourses = () => {
       .once('value')
       .then((snapshot) => {
         const value = snapshot.val();
-        if (!value) return [];
-        const keys = Object.keys(value);
-        let courses = [];
-        keys.forEach((k) => {
-          value[k].id = k;
-          courses.push(value[k]);
-        });
+        if (!value) {
+          resolve([]);
+          return;
+        }
+        const courses = objToArray(value);
         resolve(courses);
       })
       .catch((error) => {
@@ -42,7 +54,3 @@ export const fetchAllCourses = () => {
   })
 };
 
-export const joinCourse = (courseId) => {
-  return new Promise((resolve, reject) => {
-  })
-};

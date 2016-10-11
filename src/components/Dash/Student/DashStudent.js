@@ -4,18 +4,18 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { activateAlert, acknowledgeAlert } from '../../actions/Overlay';
-import { setDashMode } from '../../actions/DashStudent';
-import { setView } from '../../actions/View';
-import * as api from '../../api/CourseSession';
-import Content from './Content.jsx';
-import Overlay from '../Overlay/Overlay.jsx';
-import Nav from '../Navigation/DashStudent/Nav.jsx';
+import { activateAlert, acknowledgeAlert } from '../../../actions/Overlay';
+import { setDashMode } from '../../../actions/DashStudent';
+import { setView } from '../../../actions/View';
+import Content from './Content';
+import Overlay from '../../Overlay/Overlay';
+import Nav from '../../Navigation/DashStudent/Nav';
 
 let DashStudent = (props) => {
   const { mode, code, courseSessionId, onAlertClick,
     onConfirmClick, onAskInactiveClick, onAskActiveClick,
-    onBackQuestionsClick, onBackCoursesClick, children
+    onBackQuestionsClick, onBackCoursesClick, children,
+    params
   }  = props;
   switch (mode) {
     case 'QUESTIONS':
@@ -74,12 +74,10 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onBackQuestionsClick: () => {
-      console.log('onBackQuestionsClick')
       dispatch(setDashMode('QUESTIONS'))
     },
     onBackCoursesClick: () => {
       console.log('onBackCoursesClick')
-      dispatch(setDashMode('QUESTIONS'))
       dispatch(setView('DASH_COURSES'))
     },
     onAlertClick: () => {
