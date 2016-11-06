@@ -13,6 +13,7 @@ import { logIn, isLoggedIn, setUserStatusListener } from '../../api/User';
 import ButtonClear from '../buttons/ButtonClear.jsx';
 import ButtonRound from '../buttons/ButtonRound';
 import Overlay from './Overlay';
+import TextField from '../TextField';
 
 const validEmail = (email) => {
   const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -20,12 +21,12 @@ const validEmail = (email) => {
 };
 
 const hasValidCredentials = (email = '', password = '', endLoading) => {
-  if (!validEmail(email)) {
+  if (!email || !validEmail(email)) {
     toastr.error('Credential Error', 'Enter a valid email.');
     return false;
   }
 
-  if (!password.trim()) {
+  if (!password || !password.trim()) {
     toastr.error('Credential Error', 'Enter a valid password.');
     return false;
   }
@@ -112,21 +113,21 @@ class LogIn extends Component {
               <h1 className="title">SCHOLAR</h1>
             </div>
             <div className="container-input">
-              <input
-                ref={(n) => {
-                  email = n
-                }}
+              <TextField
+                floatingLabelText="Email"
                 type="email"
-                placeholder="Email"
-              />
-              <input
-                ref={(n) => {
-                  password = n
+                onChange={(event) => {
+                  email = event.target.value;
                 }}
-                type="password"
-                placeholder="Password"
               />
-
+              <TextField
+                floatingLabelText="Password"
+                type="password"
+                onChange={(event) => {
+                  password = event.target.value;
+                }}
+              />
+              <br />
               <ButtonRound
                 onClick={() => {
                   startLoading();

@@ -13,7 +13,7 @@ $color-red-light: #FFCDD2;
 
 $color-bright: #FF7C6B;
 $color-white: #FCF7FF;
-$color-gray: #cbc6ce;
+$color-gray: #ece7ef;
 $color-primary: #58D378;
 $color-primary-dark: #39C05D;
 $color-primary-light: #80E59B;
@@ -127,6 +127,7 @@ $font-default: Lato, Helvetica, SansSerif;
   -moz-user-select: none;     /* Firefox all */
   -ms-user-select: none;      /* IE 10+ */
   user-select: none;          /* Likely future */
+  cursor: default;
 }
 
 body {
@@ -139,25 +140,25 @@ body {
   background: -moz-linear-gradient(bottom left, $color-primary-dark, $color-primary-light);/* For Firefox 3.6 to 15 */
   background: linear-gradient(to bottom left, $color-primary-dark, $color-primary-light); /* Standard syntax */
 
-  input {
-    width: 90%;
-    height: 42px;
-    max-width: 500px;
-    font-family: $font-default;
-    font-size: 16px;
-    color: $color-dark;
-    padding-left: 8px;
-    padding-right: 8px;
-    border-radius: 3px;
-    background-color: #ededed;
-    border: 1px #cbcbcb solid;
-    margin-top: 4px;
-    margin-bottom: 4px;
-  }
-  input:focus {
-    box-shadow: rgba(0, 0, 0, 0.21) 0px 0px 8px, rgba(0, 0, 0, 0.219608) 0px 0px 3px;
-    outline: none;
-  }
+  //input {
+  //  width: 90%;
+  //  height: 42px;
+  //  max-width: 500px;
+  //  font-family: $font-default;
+  //  font-size: 16px;
+  //  color: $color-dark;
+  //  padding-left: 8px;
+  //  padding-right: 8px;
+  //  border-radius: 3px;
+  //  background-color: #ededed;
+  //  border: 1px #cbcbcb solid;
+  //  margin-top: 4px;
+  //  margin-bottom: 4px;
+  //}
+  //input:focus {
+  //  box-shadow: rgba(0, 0, 0, 0.21) 0px 0px 8px, rgba(0, 0, 0, 0.219608) 0px 0px 3px;
+  //  outline: none;
+  //}
 
   @extend .fullscreen, .r-center;
 }
@@ -209,6 +210,7 @@ body {
 
 .sign-up {
   justify-content: flex-start;
+  padding-bottom: 16px;
   .navigation {
     width: 100%;
     height: 52px;
@@ -219,7 +221,7 @@ body {
       width: 30px;
       height: 30px;
       margin-left: 18px;
-      margin-right: 8px;
+      margin-right: 12px;
       cursor: pointer;
     }
 
@@ -878,9 +880,10 @@ $nav-btn-height: 40px;
     background: -moz-linear-gradient(bottom left, $color-primary-dark, $color-primary-light);/* For Firefox 3.6 to 15 */
     background: linear-gradient(to bottom left, $color-primary-dark, $color-primary-light); /* Standard syntax */
     position: fixed;
-    top: 0; left: 0; bottom: 0;
+    top: 1%; left: 6px; bottom: 1%;
     padding-top: 8px;
-    box-shadow: 3px 0 2px 0 rgba(0, 0, 0, 0.14), 4px 0 1px -2px rgba(0, 0, 0, 0.2), 2px 0 5px 0 rgba(0, 0, 0, 0.12);
+    border-radius: 3px;
+    box-shadow: 0 0 2px 3px rgba(0, 0, 0, 0.14), 0px 0 1px 1px rgba(0, 0, 0, 0.2), 0px 0 5px 3px rgba(0, 0, 0, 0.12);
 
     .logo {
       width: $side-nav-width - 30;
@@ -901,8 +904,8 @@ $nav-btn-height: 40px;
       background-color: $color-green;
       margin-top: 4px;
       margin-bottom: 12px;
-      border-top: 2px solid $color-dark;
-      border-bottom: 2px solid $color-dark;
+      border-top: 1px solid $color-dark;
+      border-bottom: 1px solid $color-dark;
       box-shadow: -2px 0 2px 2px rgba(0, 0, 0, 0.14), -2px 0 1px 0px rgba(0, 0, 0, 0.2), -2px 0 5px 2px rgba(0, 0, 0, 0.12);
       .text {
         width: 100%;
@@ -923,12 +926,16 @@ $nav-btn-height: 40px;
     .nav-btn {
       width: $nav-btn-width;
       height: $nav-btn-width;
-      background: $color-dark;
-      margin: 4px auto;
+      position: relative;
+      //background: $color-dark;
+      background: $color-bright;
+      margin: 4px auto 2px;
       border-radius: 5px;
       cursor: pointer;
       color: white;
-      box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.14), 0 0 1px 0px rgba(0, 0, 0, 0.2), 0 0 5px 2px rgba(0, 0, 0, 0.12);
+      box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.14), 0 0 1px -1px rgba(0, 0, 0, 0.2), 0 0 5px 1px rgba(0, 0, 0, 0.12);
+      transition: box-shadow 0.1s linear;
+      -webkit-transition: box-shadow 0.1s linear;
       .icon {
         height: $nav-btn-width - 14;
         width: $nav-btn-width - 14;
@@ -939,7 +946,9 @@ $nav-btn-height: 40px;
       @extend .c-center;
     }
     .nav-btn:active {
-      box-shadow: none;
+    }
+    .nav-btn:hover {
+      box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.14), 0 0 1px 0 rgba(0, 0, 0, 0.2), 0 0 5px 2px rgba(0, 0, 0, 0.12);
     }
     .title {
       width: 100%;
@@ -950,16 +959,15 @@ $nav-btn-height: 40px;
     }
     .label {
       width: 100%;
-      font-size: 0.9em;
+      font-size: 0.8em;
       text-align: center;
       color: $color-dark;
       margin: 0;
     }
     hr {
       border: none;
+      border-bottom: 1px dashed $color-dark;
       width: 100%;
-      height: 2px;
-      background-color: $color-dark;
     }
     @extend .c;
   }
@@ -1051,15 +1059,20 @@ $nav-btn-height: 40px;
   .ask {
     position: absolute;
     top: 12px; left: 12px; right: 12px; bottom: 12px;
-    background-color: white;
+    //background-color: white;
 
     .heading {
       padding: 4px 12px;
+      margin-bottom: 4px;
+      text-align: center;
+      border-bottom: 1px dashed $color-gray;
       .header {
         display: inline-block;
         font-weight: 300;
         font-size: 36px;
         margin: 0;
+        cursor: default;
+        @extend .no-text-sel;
       }
     }
 
@@ -1067,37 +1080,91 @@ $nav-btn-height: 40px;
       display: inline-block;
       height: 100%;
       width: 50%;
-      border-right: 1px solid $color-dark;
+      //border-right: 1px solid $color-dark;
     }
 
     .most-voted {
       display: inline-block;
       height: 70%;
       width: 100%;
+      background-color: white;
+      @extend .card;
     }
 
+    #stat-row {
+      padding: 0 12px;
+      margin-top: 10px;
+    }
     .stats {
       display: inline-block;
-      height: 30%;
+      height: 28%;
       width: 100%;
-      border-top: 2px solid $color-dark;
+      //border-top: 2px solid $color-dark;
+      background-color: white;
+      margin-top: 12px;
+
+      .stat {
+        width: 144px;
+        height: 144px;
+        background-color: $color-secondary;
+        border-radius: 5px;
+        box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.14), 0 0 1px 0px rgba(0, 0, 0, 0.2), 0 0 5px 2px rgba(0, 0, 0, 0.12);
+        @extend .c-center;
+      }
+      .name {
+        width: 120px;
+        font-size: 18px;
+        margin: 4px;
+        text-align: center;
+        color: white;
+      }
+      .number {
+        font-size: 70px;
+        margin: 0;
+        text-align: center;
+        color: white;
+      }
+
+      @extend .card;
     }
     .right-pane {
       display: inline-block;
       height: 100%;
       width: 50%;
-      border-left: 1px solid $color-dark;
+      //border-left: 1px solid $color-dark;
+      margin: 12px;
+      background-color: white;
+      @extend .card;
     }
-    @extend .card;
+    //@extend .card;
   }
 
   .question {
     width: 94%;
     margin: 8px auto;
+    position: relative;
+    .rank {
+      width: 30px;
+      height: 30px;
+      background-color: $color-dark;
+      color: $color-white;
+      text-align: center;
+      line-height: 30px;
+      border-radius: 50%;
+      display: block;
+      position: absolute;
+      top: -12px;
+      right: -12px;
+      margin: 0;
+      font-weight: 800;
+      font-size: 12px;
+      box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.14), 0 0 1px 0px rgba(0, 0, 0, 0.2), 0 0 5px 2px rgba(0, 0, 0, 0.12);
+      @extend .no-text-sel;
+    }
     .content {
       font-size: 18px;
       line-height: 140%;
-      padding: 8px;
+      padding: 8px 10px 8px 8px;
       margin: 0;
     }
     $buttons_height: 52px;
@@ -1105,7 +1172,15 @@ $nav-btn-height: 40px;
       height: $buttons_height;
       display: flex;
       justify-content: space-between;
-      border-top: solid 1px $color-gray;
+      border-top: dashed 1px $color-gray;
+      hr {
+        height: 100%;
+        outline: none;
+        border-right: dashed 1px $color-gray;
+        border-left: none;
+        border-top: none;
+        border-bottom: none;
+      }
       @extend .r;
       .btn {
         width: 33%;
@@ -1116,6 +1191,8 @@ $nav-btn-height: 40px;
         text-align: center;
         border-radius: 3px;
         color: $color-secondary;
+        cursor: pointer;
+        @extend .no-text-sel;
       }
     }
     @extend .card;

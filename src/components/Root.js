@@ -22,7 +22,7 @@ import StudentQuestionList from './Dash/Student/StudentQuestionList';
 import DashInstructor from './Dash/Instructor/DashInstructor';
 import InstructorSettings from './Dash/Instructor/InstructorSettings';
 import InstructorConfusion from './Dash/Instructor/Confusion';
-import InstructorAsk from './Dash/Instructor/Ask';
+import InstructorAsk from './Dash/Instructor/Ask/Ask';
 
 class Root extends Component {
   componentWillMount() {

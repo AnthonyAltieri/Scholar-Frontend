@@ -4,8 +4,17 @@
 
 import React from 'react';
 
-const StatBlock = () => {
+const StatBlock = ({
+  name,
+  number,
+}) => {
+  return (
+    <div className="stat">
+      <h3 className="name">{name}</h3>
+      <p className="number">{number}</p>
 
+    </div>
+  );
 };
 
 export default StatBlock;

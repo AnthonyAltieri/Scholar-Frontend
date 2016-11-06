@@ -12,7 +12,11 @@ const ROUTES = {
 };
 
 
-export const logIn = (email, password) => {
+export async function logIn(email, password) {
+  try {
+  } catch (e) {
+  }
+
   return new Promise ((resolve, reject) => {
     fb.auth()
       .signInWithEmailAndPassword(email, password)

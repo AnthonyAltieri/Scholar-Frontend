@@ -10,6 +10,8 @@ import { signUp } from '../../api/User';
 import { push } from 'react-router-redux';
 import { connect } from 'react-redux';
 import ButtonRound from '../buttons/ButtonRound';
+import TextField from '../TextField';
+
 
 const srcBack = require('../../img/App/back.svg');
 
@@ -19,22 +21,22 @@ const validEmail = (email) => {
 };
 
 const hasValidCredentials = (firstname, lastname, email, password, endLoading) => {
-  if (!firstname.trim()) {
+  if (!firstname || !firstname.trim()) {
     endLoading();
     toastr.error('Credential Error', 'Enter a valid first name.');
     return false;
   }
-  if (!lastname.trim()) {
+  if (!lastname || !lastname.trim()) {
     endLoading();
     toastr.error('Credential Error', 'Enter a valid last name.');
     return false;
   }
-  if (!validEmail(email)) {
+  if (!validEmail || !validEmail(email)) {
     endLoading();
     toastr.error('Credential Error', 'Enter a valid email.');
     return false;
   }
-  if (!password.trim()) {
+  if (!password || !password.trim()) {
     endLoading();
     toastr.error('Credential Error', 'Enter a valid password.');
     return false;
@@ -43,6 +45,11 @@ const hasValidCredentials = (firstname, lastname, email, password, endLoading) =
 };
 
 class Signup extends Component {
+  componentDidMount() {
+    const { endLoading } = this.props;
+    endLoading();
+  }
+
   render() {
     const { navigate, startLoading, endLoading,
       signUpSuccess, signUpFail } = this.props;
@@ -50,6 +57,7 @@ class Signup extends Component {
     let lastname;
     let email;
     let password;
+    let phone;
     return (
       <div className="initial">
         <div className="initial-card sign-up">
@@ -71,25 +79,43 @@ class Signup extends Component {
             </h2>
           </div>
           <div className="container-input">
-            <input
+            <TextField
+              floatingLabelText="School Email"
               type="email"
-              ref={(n) => { email = n }}
-              placeholder="Email"
+              onChange={(event) => {
+                email = event.target.value;
+              }}
             />
-            <input
-              type="text"
-              ref={(n) => { firstname = n }}
-              placeholder="First Name"
-            />
-            <input
-              type="text"
-              ref={(n) => { lastname = n }}
-              placeholder="Last Name"
-            />
-            <input
+            <TextField
+              floatingLabelText="Password"
               type="password"
-              ref={(n) => { password = n }}
-              placeholder="Password"
+              onChange={(event) => {
+                password = event.target.value;
+              }}
+            />
+            <TextField
+              floatingLabelText="First Name"
+              type="text"
+              onChange={(event) => {
+                firstname = event.target.value;
+              }}
+            />
+            <TextField
+              floatingLabelText="Last Name"
+              type="text"
+              onChange={(event) => {
+                lastname = event.target.value;
+              }}
+            />
+            <TextField
+              floatingLabelText="Phone Number"
+              type="text"
+              onChange={(event) => {
+                phone = event.target.value;
+              }}
+              style={{
+                marginBottom: "12px",
+              }}
             />
           </div>
           <ButtonRound

@@ -1,44 +1,45 @@
 /**
  * @author Anthony Altieri on 9/6/16.
+ * @author Bharat Batra on 10/14/16.
  */
 
-const Server = {
-  post,
-};
-
-const PREFIX = process.env.NODE_ENV === 'production'
-  ? 'http://usescholar.xyz'
-  : 'http://localhost:8000';
-
-function post(url, params) {
-  console.log('posting with url: ', url);
+function send(type, url, params, withCredentials = false) {
   return new Promise((resolve, reject) => {
     const ajax = new XMLHttpRequest();
-    ajax.open('POST', PREFIX + url, true);
+    ajax.open(type, PREFIX + url, true);
     ajax.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-    ajax.withCredentials = true;
+    ajax.withCredentials = withCredentials;
     ajax.onreadystatechange = () => {
       if (ajax.status === 200 && ajax.readyState === 4) {
         try {
-          resolve(JSON.parse(ajax.response));
+          resolve({
+            code: 200,
+            payload: JSON.parse(ajax.payload),
+          });
         } catch (e) {
           reject({
+            code: 200,
             error: {
               info: 'JSON parse failed',
             }
-          })
+          });
+          return;
         }
       } else {
         switch (ajax.status) {
           // Redirection
           case 300: {
             // Do nothing
+            reject({
+              code: 300,
+            });
             return;
           }
 
           // Client Error
           case 400: {
             reject({
+              code: 400,
               error: {
                 code: 400,
                 info: 'Client Error',
@@ -50,6 +51,7 @@ function post(url, params) {
           // Server Error
           case 500: {
             reject({
+              code: 500,
               error: {
                 code: 500,
                 info: 'Server Error',
@@ -70,9 +72,8 @@ function post(url, params) {
           code: null,
           info: 'Stringify Failed: ' + e
         }
-      })
+      });
+      return;
     }
   })
 }
-
-export default Server;

@@ -26,31 +26,30 @@ const Nav = ({
       <ActiveBar
         hasCourseSession={hasCourseSession}
       />
-      <p className="label">session</p>
       <NavBtn
         iconSrc={require('../../../img/power.svg')}
         onClick={() => {
           dispatch(Overlay.showOverlay());
         }}
       />
-      <p className="label">settings</p>
+      <p className="label">session</p>
       <NavBtn
         iconSrc={require('../../../img/settings.svg')}
         onClick={() => {
           dispatch(push('/dash/instructor/settings'))
         }}
       />
-      <p className="label">attendance</p>
+      <p className="label">settings</p>
       <NavBtn
         iconSrc={require('../../../img/group.svg')}
       />
+      <p className="label">attendance</p>
       <hr
         style={{
           marginTop: "16px"
         }}
       />
       <h3 className="title">ALERT</h3>
-      <p className="label">confusion</p>
       <NavBtn
         iconSrc={require('../../../img/question.svg')}
         onClick={() => {
@@ -59,7 +58,6 @@ const Nav = ({
       />
       <hr />
       <h3 className="title">ASK</h3>
-      <p className="label">questions</p>
       <NavBtn
         iconSrc={require('../../../img/chat.svg')}
         onClick={() => {
@@ -68,14 +66,14 @@ const Nav = ({
       />
       <hr />
       <h3 className="title">ASSESS</h3>
-      <p className="label">instant</p>
       <NavBtn
         iconSrc={require('../../../img/thunder.svg')}
       />
-      <p className="label">reflective</p>
+      <p className="label">instant</p>
       <NavBtn
         iconSrc={require('../../../img/brain.svg')}
       />
+      <p className="label">reflective</p>
     </div>
   );
 };

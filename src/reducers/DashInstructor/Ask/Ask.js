@@ -10,6 +10,20 @@ const Ask = (state = {}, action) => {
       }
     }
 
+    case 'RETRIEVED_MOST_VOTED': {
+      return {
+        ...state,
+        mostVoted: action.mostVoted,
+      }
+    }
+
+    case 'RETRIEVED_MOST_RECENT': {
+      return {
+        ...state,
+        mostRecent: action.mostRecent,
+      }
+    }
+
     default: {
       return state;
     }

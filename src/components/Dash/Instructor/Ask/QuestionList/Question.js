@@ -9,10 +9,12 @@ const Question = ({
   onProposeClick,
   onResolveClick,
   onDismissClick,
+  rank,
   content,
 }) => {
   return (
     <div className="question">
+      <p className="rank">{rank}</p>
       <p className="content">
         {content}
       </p>
@@ -26,6 +28,7 @@ const Question = ({
           />
           PROPOSE
         </a>
+        <hr />
         <a
           className="btn"
           onClick={onResolveClick}
@@ -35,6 +38,7 @@ const Question = ({
           />
           RESOLVE
         </a>
+        <hr />
         <a
           className="btn"
           onClick={onDismissClick}

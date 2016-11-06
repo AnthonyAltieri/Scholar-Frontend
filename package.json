@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "material-ui": "^0.16.0",
+    "material-ui": "^0.16.1",
     "react": "^15.3.2",
     "react-addons-css-transition-group": "^15.3.1",
     "react-dom": "^15.3.1",

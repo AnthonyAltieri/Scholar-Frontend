@@ -2,7 +2,7 @@
  * @author Anthony Altieri on 9/4/16.
  */
 
-import Server from '../util/Server';
+// import Server from '../util/Server';
 
 const Courses = (state = [], action) => {
   switch (action.type) {

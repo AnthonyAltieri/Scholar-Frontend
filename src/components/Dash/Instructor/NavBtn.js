@@ -14,6 +14,9 @@ const NavBtn = ({
       className="nav-btn"
       onClick={onClick}
     >
+      <Ink
+        style={{ color: "white" }}
+      />
       <img
         className="icon"
         src={iconSrc}

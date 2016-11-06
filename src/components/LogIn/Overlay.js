@@ -7,15 +7,25 @@ import { toastr } from 'react-redux-toastr';
 import { hideOverlay } from '../../actions/Overlay';
 import { resetPassword } from '../../api/User';
 import ButtonRound from '../buttons/ButtonRound';
+import TextField from '../TextField';
 
 const Overlay = ({
   dispatch,
 }) => {
-  let username;
+  let email;
   return (
     <div className="overlay"
     >
-      <div className="card">
+      <div
+        className="card"
+        style={{
+          display: "flex",
+          flexFlow: "column",
+          justifyContent: "space-between",
+          minHeight: "260px",
+          minWidth: "282px",
+        }}
+      >
         <p
           className="text"
           style={{
@@ -24,14 +34,25 @@ const Overlay = ({
         >
           Enter the email associated with your account.
         </p>
-        <input
+        <TextField
+          floatingLabelText="Enter your email"
           type="text"
-          name="username"
-          placeholder="Enter your email"
-          ref={(n) => { username = n }}
+          onChange={(event) => {
+            email = event.target.value;
+          }}
+          style={{
+            marginLeft: "auto",
+            marginRight: "auto",
+            position: "relative",
+            bottom: "12px",
+          }}
         />
         <div
           className="r-center"
+          style={{
+            position: "relative",
+            bottom: "6px",
+          }}
         >
           <ButtonRound
             className="background-green"
@@ -40,7 +61,10 @@ const Overlay = ({
               margin: "12px 8px"
             }}
             onClick={() => {
-              resetPassword(username.value)
+              if (!email) {
+                toastr.info('Enter a valid email');
+              }
+              resetPassword(email.value)
                 .then(() => {
                   username.value = '';
                   toastr.success('Password reset email sent');
