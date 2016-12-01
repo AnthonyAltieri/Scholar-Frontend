@@ -7,18 +7,27 @@ import StudentQuestionList from './StudentQuestionList';
 import AskQuestion from './AskQuestion';
 
 const Content = ({
-  mode, params
+  mode,
+  params
 }) => {
-  const { filter } = params;
+  console.log('in Content', params);
+  // const { filter } = params;
 
   switch (mode) {
     case 'ALERT':
     case 'QUESTIONS': {
-      return <StudentQuestionList filter={filte} />
+      return (
+        <div className="content">
+          <StudentQuestionList filter={''} />
+        </div>);
     }
 
     case 'ASK': {
-      return <AskQuestion />
+      return (
+        <div className="content">
+          <AskQuestion />
+        </div>
+      );
     }
 
     //

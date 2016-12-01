@@ -4,12 +4,13 @@
 
 import React, { Component } from 'react';
 import { Provider, connect } from 'react-redux';
-import { Router, Route, IndexRedirect, browserHistory } from 'react-router';
+import { Router, Route, IndexRedirect, browserHistory, Redirect } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import { startLoading } from '../actions/Loading';
 import AppWithToast from './AppWithToast.jsx';
 import Login from './LogIn/LogIn';
-import Signup from '../components/Signup/Signup';
+import Signup from './Signup/Signup';
+import SignupInstructor from './Signup/SignupInstructor'
 import DashCourses from './Dash/Courses/DashCourses';
 import DashAdmin from '../components/Dash/Admin/DashAdmin';
 import AddCourses from '../components/Dash/Admin/AddCourses';
@@ -19,10 +20,13 @@ import AddUser from '../components/Dash/Admin/AddUser';
 import GetUsers from '../components/Dash/Admin/GetUsers';
 import DashStudent from './Dash/Student/DashStudent';
 import StudentQuestionList from './Dash/Student/StudentQuestionList';
+import InstructorHome from './Dash/Instructor/Home/Home';
 import DashInstructor from './Dash/Instructor/DashInstructor';
+import AddCourse from './Dash/Instructor/Home/Course/Add';
+import DashCourse from './Dash/Instructor/Course/DashCourse';
 import InstructorSettings from './Dash/Instructor/InstructorSettings';
-import InstructorConfusion from './Dash/Instructor/Confusion';
-import InstructorAsk from './Dash/Instructor/Ask/Ask';
+import InstructorConfusion from './Dash/Instructor/Course/Confusion';
+import InstructorAsk from './Dash/Instructor/Course/Ask/Ask';
 
 class Root extends Component {
   componentWillMount() {
@@ -38,6 +42,7 @@ class Root extends Component {
             <IndexRedirect to="/login/"/>
             <Route path="login" component={Login}/>
             <Route path="signup" components={Signup}/>
+            <Route path="signup/instructor" components={SignupInstructor}/>
             <Route path="dash/">
               <Route path="courses" components={DashCourses}/>
               <Route path="courses/:filter" components={DashCourses}/>
@@ -54,8 +59,13 @@ class Root extends Component {
               {/*<Route path="assessment" components={} />*/}
               </Route>
               <Route path="instructor" components={DashInstructor} >
-                <Route path="confusion" components={InstructorConfusion} />
+                <IndexRedirect to="/dash/instructor/home"/>
+                <Route path="home" components={InstructorHome} />
+                <Route path="course/add" components={AddCourse} />
+                <Route path="course/:courseId" components={DashCourse} />
+                <Redirect from="course" to="home" />
                 <Route path="settings" components={InstructorSettings} />
+                <Route path="confusion" components={InstructorConfusion} />
                 <Route path="ask" components={InstructorAsk} />
               </Route>
             </Route>

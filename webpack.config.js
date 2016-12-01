@@ -7,6 +7,7 @@ var babelPresets = {presets: ['react', 'es2015', 'stage-2']};
 
 module.exports = {
   entry: [
+    'babel-polyfill',
     'webpack-dev-server/client?http://localhost:3000',
     'webpack/hot/only-dev-server',
     './src/index'

@@ -43,7 +43,7 @@ const Section = ({
               thumbSwitchedStyle={styles.thumbSwitched}
               trackSwitchedStyle={styles.trackSwitched}
               onToggle={onEnableToggle}
-              labelStyle={{ color: Colors.white }}
+              labelStyle={{ color: Colors.dark }}
             />
           : null}
       </div>

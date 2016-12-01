@@ -3,7 +3,7 @@
  */
 
 import { combineReducers } from 'redux';
-import QuestionList from './QuestionList';
+import QuestionList from './Questions/QuestionList';
 import VisibleQuestionFilter from './VisibleQuestionFilter';
 
 const StudentQuestionList = combineReducers({

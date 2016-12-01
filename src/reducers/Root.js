@@ -3,16 +3,17 @@
  */
 
 import { combineReducers } from 'redux';
+import SignupInstructor from './SignupInstructor';
 import StudentQuestionList from './StudentQuestionList';
-import CourseList from './CourseList';
+import Courses from './Course/Courses';
 import User from './User';
-import Course from './Course';
+import QuestionList from './Questions/QuestionList';
 import CourseSession from './CourseSession';
 import Loading from './Loading';
 import Admin from './Admin';
 import Overlay from './Overlay';
 import DashStudent from './DashStudent';
-import DashInstructor from './DashInstructor/DashInstructor';
+import Dash from './Dash/Dash';
 import {reducer as Toastr} from 'react-redux-toastr'
 import { routerReducer } from 'react-router-redux';
 
@@ -20,16 +21,17 @@ import { routerReducer } from 'react-router-redux';
 const Root = combineReducers({
   toastr: Toastr,
   routing: routerReducer,
+  Courses,
   Admin,
   User,
-  Course,
   CourseSession,
   Loading,
   Overlay,
   DashStudent,
-  DashInstructor,
+  Dash,
+  QuestionList,
   StudentQuestionList,
-  CourseList,
+  SignupInstructor,
 });
 
 export default Root;

@@ -6,15 +6,21 @@ const Colors = {
   green: '#39C05D',
   greenLight: '#C8E6C9',
   red: '#f44336',
-  redLight: '#c8e6c9',
+  redLight: '#FFCDD2',
   bright: '#FF7C6B',
   white: '#FCF7FF',
   gray: '#cbc6ce',
   primary: '#58D378',
   primaryDark: '#39C05D',
   primaryLight: '#80E59B',
-  secondary: '#52A9BD',
+  secondary: '#2196F3',
   dark: '#333333',
+  courseTiles: {
+    pink: '#FFC0C0',
+    orange: '#FFDDC0',
+    blue: '#B0E9E9',
+    green: '#B8F4B8',
+  }
 };
 
 export default Colors;

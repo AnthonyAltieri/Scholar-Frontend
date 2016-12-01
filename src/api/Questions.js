@@ -2,23 +2,36 @@
  * @author Anthony Altieri on 9/30/16.
  */
 
-import firebase from 'firebase';
-import { objContentToArray } from '../util/fbtool';
+import { post } from './Ajax';
 
-export const fetchQuestions = (courseSessionId) => {
-  return new Promise((resolve, reject) => {
-    firebase
-      .database()
-      .ref(`courseSession/${courseSessionId}/questions`)
-      .once('value')
-      .then((snapshot) => {
-        const value = snapshot.val();
-        if (!value) {
-          resolve([]);
-          return;
-        }
-        resolve(objContentToArray(value));
-      })
-      .catch((error) => { reject(error) })
-  })
-};
+const ROUTER_PREFIX = '/api/question';
+
+const routes = {
+  GET_COURSE_SESSION: `${ROUTER_PREFIX}/get/courseSession`,
+  DISMISS: `${ROUTER_PREFIX}/dismiss`,
+}
+
+export async function fetchQuestions(courseSessionId) {
+  try {
+    return await post(
+      routes.GET_COURSE_SESSION,
+      { courseSessionId }
+    )
+  } catch (e) {
+    console.error('[ERROR] fetch questions', e);
+    return null;
+  }
+}
+
+export async function dismiss(questionId, courseSessionId) {
+  try {
+    return await post(
+      routes.DISMISS,
+      { questionId, courseSessionId },
+    );
+  } catch (e) {
+    console.error('[ERROR] dismiss question', e);
+    return null;
+  }
+}
+

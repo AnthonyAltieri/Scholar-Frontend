@@ -11,3 +11,11 @@ export const hideOverlay = () => ({
   type: 'HIDE_OVERLAY',
 });
 
+export const setOverlayType = (overlayType)  => ({
+  type: 'SET_OVERLAY_TYPE',
+  overlayType,
+});
+
+export const clearOverlayType = () => ({
+  type: 'CLEAR_OVERLAY_TYPE',
+});

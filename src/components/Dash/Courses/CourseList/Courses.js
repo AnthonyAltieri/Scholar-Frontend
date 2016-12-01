@@ -6,16 +6,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import Course from './Course';
+import Socket from '../../../../socket/Socket';
 import * as CourseActions from '../../../../actions/Course'
 import * as api from '../../../../api/Course';
 
 
 let Courses = ({
   courses,
-  userType,
   filter,
-  joinCourse,
-  navigate,
 }) => {
   return (
     <ul className="courses">
@@ -26,20 +24,13 @@ let Courses = ({
             key={c.id}
             code={c.code}
             title={c.title}
-            time={c.time}
+            time={`${c.timeStart} - ${c.timeEnd}`}
             instructor={c.instructorName}
-            userType={userType}
             filter={filter}
             onEnterClick={() => {
-              api.enterCourse(c.id)
-                .then((data) => {
-                  const { courseSessionId } = data;
-                  // TODO: action
-                })
             }}
             onJoinClick={() => {
-              joinCourse(c.id, c.code, c.title);
-              navigate('/dash/instructor/')
+              // TODO: call api to join course
             }}
           />
         );
@@ -55,21 +46,5 @@ let Courses = ({
   )
 };
 
-const stateToProps = (state) => ({
-});
-
-const dispatchToProps = (dispatch) => ({
-  joinCourse: (id, code, title) => {
-    dispatch(CourseActions.joinCourse(id, code, title))
-  },
-  navigate: (url) => {
-    dispatch(push(url));
-  }
-});
-
-Courses = connect(
-  stateToProps,
-  dispatchToProps,
-)(Courses);
 
 export default Courses;

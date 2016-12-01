@@ -9,10 +9,10 @@ import * as OverlayActions from '../../actions/Overlay'
 import { toastr } from 'react-redux-toastr';
 import { push } from 'react-router-redux';
 import { connect } from 'react-redux';
-import { logIn, isLoggedIn, setUserStatusListener } from '../../api/User';
-import ButtonClear from '../buttons/ButtonClear.jsx';
+import { logIn, isLoggedIn } from '../../api/User';
+import ButtonClear from '../buttons/ButtonClear';
 import ButtonRound from '../buttons/ButtonRound';
-import Overlay from './Overlay';
+import ForgotPasswordDialog from './ForgotPasswordDialog';
 import TextField from '../TextField';
 
 const validEmail = (email) => {
@@ -23,30 +23,85 @@ const validEmail = (email) => {
 const hasValidCredentials = (email = '', password = '', endLoading) => {
   if (!email || !validEmail(email)) {
     toastr.error('Credential Error', 'Enter a valid email.');
+    endLoading();
     return false;
   }
 
   if (!password || !password.trim()) {
     toastr.error('Credential Error', 'Enter a valid password.');
+    endLoading();
     return false;
   }
 
   return true;
 };
 
-const handleLoginSuccess = (type, navigate) => {
-  if (type === 'ADMIN') {
-    navigate('/dash/admin');
-    return;
+async function handleLogIn(
+  email,
+  password,
+  logInSuccess,
+  logInFail,
+  endLoading,
+  navigate,
+) {
+  try {
+    const payload = await logIn(email, password);
+    const { user, error } = payload;
+    if (!!error) {
+      console.log('error', e);
+      toastr.error('Something went wrong, please try again.');
+      endLoading();
+      return;
+    }
+    if (!user) {
+      toastr.info('No account found associated with that email.');
+      endLoading();
+      return;
+    }
+    logInSuccess(
+      user.email,
+      user.id,
+      `${user.firstName} ${user.lastName}`,
+      user.type
+    );
+    handleLoginSuccess(user.type, navigate);
+  } catch (e) {
+    console.log('error', e);
+    toastr.error('Something went wrong, please try again.');
+    logInFail();
   }
-  navigate('/dash/courses/active');
+}
+
+const handleLoginSuccess = (type, navigate) => {
+  switch (type) {
+    case 'ADMIN': {
+      navigate('/dash/admin');
+      return;
+    }
+
+    case 'INSTRUCTOR': {
+      navigate('/dash/instructor/home');
+      return;
+    }
+
+    case 'STUDENT': {
+      navigate('/dash/courses/active');
+      return;
+    }
+
+    default: {
+      throw new Error(`Invalid user type: ${type}`);
+    }
+  }
 };
 
 class LogIn extends Component {
   componentDidMount() {
+    this.props.endLoading();
+    return;
     console.log('mount');
     console.log('isLoggedIn', this.props.isLoggedIn)
-    if (this.props.isLoggedIn) {
+    if (!!this.props.isLoggedIn) {
       switch (this.props.userType) {
         case 'INSTRUCTOR':
         case 'STUDENT': {
@@ -70,9 +125,14 @@ class LogIn extends Component {
 
   render() {
     const {
-      isOverlayVisible, navigate, showOverlay,
-      startLoading, endLoading, logInSuccess, logInFail,
-      dispatch,
+      isOverlayVisible,
+      navigate,
+      showOverlay,
+      startLoading,
+      endLoading,
+      logInSuccess,
+      logInFail,
+      hideOverlay,
     } = this.props;
 
     let email;
@@ -84,25 +144,30 @@ class LogIn extends Component {
         onKeyPress={(e) => {
           if (e.key === 'Enter') {
             startLoading();
-            if (hasValidCredentials(email.value.toLowerCase(), password.value, endLoading)) {
-              logIn(email.value.toLowerCase(), password.value)
-                .then((user) => {
-                  logInSuccess(user.email, user.id, `${user.firstname} ${user.lastname}`,
-                    user.type);
-                  handleLoginSuccess(user.type, navigate);
-                  setUserStatusListener(() => {}, () => {
-                    this.props.dispatch(UserActions.logOut());
-                  });
-                })
-                .catch((error) => {
-                  console.log('error: ', error);
-                  logInFail();
-                })
+            const lowerEmail = email.toLowerCase();
+            if (hasValidCredentials(email.toLowerCase(), password, endLoading)) {
+              handleLogIn(
+                email.toLowerCase(),
+                password,
+                logInSuccess,
+                logInFail,
+                endLoading,
+                navigate
+              );
             }
           }
         }}
       >
-        {isOverlayVisible ? <Overlay dispatch={dispatch}/> : null }
+        <ForgotPasswordDialog
+          isOpen={isOverlayVisible}
+          onCancelClick={() => {
+            hideOverlay();
+          }}
+          onSendClick={() => {
+            // TODO: add forgot password functionality
+            hideOverlay();
+          }}
+        />
         <div className="initial-card log-in">
           <div className="top">
             <div className="brand">
@@ -131,22 +196,15 @@ class LogIn extends Component {
               <ButtonRound
                 onClick={() => {
                   startLoading();
-                  if (hasValidCredentials(email.value.toLowerCase(), password.value)) {
-                    logIn(email.value.toLowerCase(), password.value)
-                      .then((user) => {
-                        logInSuccess(user.email, user.id, `${user.firstname} ${user.lastname}`,
-                          user.type);
-                        handleLoginSuccess(user.type, navigate);
-                        setUserStatusListener(() => {}, () => {
-                          this.props.dispatch(UserActions.logOut());
-                        });
-                      })
-                      .catch((error) => {
-                        console.log('error: ', error);
-                        logInFail();
-                      })
-                  } else {
-                    endLoading();
+                  if (hasValidCredentials(email, password, endLoading)) {
+                    handleLogIn(
+                      email.toLowerCase(),
+                      password,
+                      logInSuccess,
+                      logInFail,
+                      endLoading,
+                      navigate
+                    );
                   }
                 }}
               >
@@ -174,7 +232,6 @@ class LogIn extends Component {
     )
   }
 };
-
 LogIn = connect(
   (state) => ({
     isOverlayVisible: state.Overlay.isVisible,
@@ -199,6 +256,9 @@ LogIn = connect(
     },
     showOverlay: () => {
       dispatch(OverlayActions.showOverlay());
+    },
+    hideOverlay: () => {
+      dispatch(OverlayActions.hideOverlay())
     },
     dispatch,
   })

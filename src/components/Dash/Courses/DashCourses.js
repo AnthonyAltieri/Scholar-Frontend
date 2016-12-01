@@ -5,71 +5,120 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Nav from './Nav';
-import ButtonFab from '../../buttons/ButtonFab';
 import CourseList from './CourseList/CourseList';
-import Overlay from './Overlay';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import FontIcon from 'material-ui/FontIcon';
+import AddCourseDialog from './AddCourseDialog';
+import LogOutDialog from './LogOutDialog';
 import { logOut } from '../../../api/User';
-import { setVisiblityFilter } from '../../../actions/VisibleCourseFilter';
 import * as OverlayActions from '../../../actions/Overlay';
 import * as LoadingActions from '../../../actions/Loading'
+import * as CoursesActions from '../../../actions/Dash/Courses/Courses'
 import * as UserActions from '../../../actions/User'
 import { push } from 'react-router-redux';
 import { toastr } from 'react-redux-toastr';
-import { fetchCourses } from '../../../api/Courses';
-import * as CourseListActions from '../../../actions/CourseList';
+import { getByUser as getCoursesByUser } from '../../../api/Courses';
+
+
+async function handleGetCourses(
+  userId,
+  receivedCourses
+) {
+  try {
+    const { error, courses } = await getCoursesByUser(userId);
+    if (!!error) {
+      console.error('error: ', error);
+      toastr.error('Something went wrong please refresh the page');
+      return;
+    }
+    receivedCourses(courses);
+  } catch (e) {
+    console.error('error: ', e);
+    toastr.error('Something went wrong please refresh the page');
+  }
+}
 
 class DashCourses extends Component {
   componentDidMount() {
-    const { isLoggedIn, navigate, endLoading } = this.props;
-    if (!isLoggedIn) {
+    const {
+      userId,
+      navigate,
+      endLoading,
+      receivedCourses,
+      setVisibilityFilter,
+    } = this.props;
+    if (!userId) {
       navigate('/login/');
       return;
     }
 
-    if (this.props.isLoggedIn) {
-      const { filter } = this.props.params;
-      console.log('fiter', filter)
-      if (!filter) {
-        this.props.dispatch(push('/dash/courses/active'));
-        return;
-      }
-      fetchCourses(this.props.params.filter, this.props.userId)
-        .then((courses) => {
-          this.props.dispatch(CourseListActions.receivedCourses(courses));
-          this.forceUpdate();
-        })
+    const { filter } = this.props.params;
+    console.log('filter', filter);
+    if (!filter) {
+      navigate('/dash/courses/active');
+      return;
     }
+    setVisibilityFilter(filter);
 
+    handleGetCourses(userId, receivedCourses);
     endLoading();
   }
 
   render() {
-    const { showOverlay, isOverlayVisible, dispatch, userId } = this.props;
+    const {
+      showOverlay,
+      hideOverlay,
+      isOverlayVisible,
+      onActiveClick,
+      onInactiveClick,
+      filter,
+      userId,
+      overlayType,
+    } = this.props;
     return (
       <div className="dash-courses fullscreen">
-        {isOverlayVisible
-          ? <Overlay
-              dispatch={dispatch}
-              userId={userId}
-            />
-          : ''}
-        <Nav {...this.props} />
-        <CourseList {...this.props} />
-        <ButtonFab
-          position="br"
-          className="background-bright"
-          onClick={() => {
-            showOverlay()
+        <AddCourseDialog
+          isOpen={isOverlayVisible && overlayType === 'ADD_COURSE'}
+          onCancelClick={() => { hideOverlay() }}
+          onSendClick={() => {
           }}
         />
+        <LogOutDialog
+          isOpen={isOverlayVisible && overlayType === 'LOG_OUT'}
+          onYesClick={() => {
+          }}
+          onNoClick={() => { hideOverlay() }}
+        />
+        <Nav
+          onActiveClick={onActiveClick}
+          onInactiveClick={onInactiveClick}
+          filter={filter}
+          onLogoutClick={() => { showOverlay('LOG_OUT') }}
+        />
+        <CourseList />
+        <FloatingActionButton
+          style={{
+            position: "absolute",
+            bottom: "30px",
+            right: "16px",
+          }}
+          className="background-bright"
+          secondary
+          onClick={() => { showOverlay('ADD_COURSE') }}
+        >
+          <FontIcon className="material-icons">
+           add
+          </FontIcon>
+        </FloatingActionButton>
       </div>
     );
   }
 }
 const mapStateToProps = (state) => {
   return {
+    filter: state.Courses.filter,
     isOverlayVisible: state.Overlay.isVisible,
-    filter: state.CourseList.VisibleCourseFilter,
+    overlayType: state.Overlay.type,
     isLoggedIn: state.User.isLoggedIn,
     userId: state.User.id,
   }
@@ -77,38 +126,39 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onActiveClick: () => {
-      dispatch(setVisiblityFilter('active'));
+      if (ownProps.params.filter === 'active') return;
+      dispatch(CoursesActions.setVisibilityFilter('active'));
       dispatch(push('/dash/courses/active'));
     },
     onInactiveClick: () => {
-      dispatch(setVisiblityFilter('inactive'));
+      if (ownProps.params.filter === 'inactive') return;
+      dispatch(CoursesActions.setVisibilityFilter('inactive'));
       dispatch(push('/dash/courses/inactive'));
     },
     onLogoutClick: () => {
-      logOut()
-        .then(() => {
-          toastr.success('Log Out Successful');
-          dispatch(UserActions.logOut());
-          dispatch(push('/login'));
-        })
-        .catch((error) => {
-          console.log('error', error);
-          toastr.error('Something went wrong with logout please try again');
-        })
+      dispatch(UserActions.logOut());;
+      dispatch(push('/login'));
     },
     endLoading: () => {
       dispatch(LoadingActions.endLoading());
     },
-    showOverlay: () => {
+    showOverlay: (overlayType) => {
+      dispatch(OverlayActions.setOverlayType(overlayType));
       dispatch(OverlayActions.showOverlay());
     },
     hideOverlay: () => {
+      dispatch(OverlayActions.clearOverlayType());
       dispatch(OverlayActions.hideOverlay());
+    },
+    receivedCourses: (courses) => {
+      dispatch(CoursesActions.receivedCourses(courses))
+    },
+    setVisibilityFilter: (filter) => {
+      dispatch(CoursesActions.setVisibilityFilter(filter));
     },
     navigate: (url) => {
       dispatch(push(url))
     },
-    dispatch,
   }
 };
 DashCourses = connect(

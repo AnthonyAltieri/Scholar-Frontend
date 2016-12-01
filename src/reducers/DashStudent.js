@@ -8,7 +8,7 @@ const initialState = {
 
 const DashStudent = (state = initialState, action) => {
   switch (action.type) {
-    case 'SET_MODE': {
+    case 'SET_DASH_MODE': {
       return {
         ...state,
         mode: action.mode,
@@ -20,6 +20,20 @@ const DashStudent = (state = initialState, action) => {
         ...state,
         courseSessionId: action.courseSessionId,
         courseId: action.courseId,
+      }
+    }
+
+    case 'SHOW_ALERT_OVERLAY': {
+      return {
+        ...state,
+        isAlertOverlayVisible: true,
+      }
+    }
+
+    case 'HIDE_ALERT_OVERLAY': {
+      return {
+        ...state,
+        isAlertOverlayVisible: false,
       }
     }
 

@@ -39,6 +39,10 @@ $font-default: Lato, Helvetica, SansSerif;
   margin: 0.5px;
 }
 
+.background-primary {
+  background-color: $color-primary;
+}
+
 .background-bright {
   background-color: $color-bright;
 }
@@ -88,13 +92,18 @@ $font-default: Lato, Helvetica, SansSerif;
 
 .c-center {
   justify-content: center;
-  align-items: center;
   @extend .c;
 }
 
 .c {
   display: flex;
   flex-flow: column;
+  align-items: center;
+}
+
+.c-start {
+  justify-content: flex-start;
+  @extend .c;
 }
 
 .r-center {
@@ -116,9 +125,25 @@ $font-default: Lato, Helvetica, SansSerif;
   @extend .r;
 }
 
+.r-right {
+  justify-content: flex-end;
+  align-items: center;
+  @extend .r;
+}
+
+.r-between {
+  justify-content: space-between;
+  @extend .r;
+}
+
+.r-around {
+  justify-content: space-around;
+  @extend .r;
+}
+
 .card {
   border-radius: 3px;
-  background-color: $color-white;
+  background-color: white;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
 }
 
@@ -209,7 +234,7 @@ body {
 }
 
 .sign-up {
-  justify-content: flex-start;
+  background-color: $color-primary;
   padding-bottom: 16px;
   .navigation {
     width: 100%;
@@ -456,9 +481,10 @@ body {
       left: 12px;
       cursor: pointer;
     }
-    .header {
+    .code {
       font-family: $font-default;
       font-size: 28px;
+      font-weight: 400;
       line-height: $nav-top-height;
       margin: 0;
     }
@@ -594,6 +620,7 @@ $nav-top_height: 34px;
 .dash-student {
   background-color: $color-white;
   //$nav_height: 68px;
+  $top-height: 42px;
   .nav {
     //height: $nav_height;
     position: absolute;
@@ -607,7 +634,6 @@ $nav-top_height: 34px;
     flex-flow: column;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
 
-    $top-height: 42px;
     .nav-top {
       height: $top-height;
       width: 100%;
@@ -649,6 +675,11 @@ $nav-top_height: 34px;
     bottom: 18px;
     margin: 0;
     color: $color-dark;
+  }
+  .content {
+    position: absolute;
+    top: $top-height + 2;
+    left: 0; right: 0; bottom: 0;
   }
 
   @extend .fullscreen;
@@ -728,14 +759,10 @@ $nav-btn-height: 40px;
 }
 
 .ask-question {
-  position: absolute;
-  top: 112px;
-  left: 0; right: 0;
-  bottom: 0;
   background-color: $color-white;
 
   .container-input {
-    margin-top: 22px;
+    margin-top: 16px;
     .input {
       width: 90vw;
       height: 200px;
@@ -866,7 +893,7 @@ $nav-btn-height: 40px;
 }
 
 .dash-instructor {
-  $side-nav-width: 82px;
+  $side-nav-width: 124px;
   min-height: 660px;
   position: absolute;
   top: 0; right: 0; bottom: 0;
@@ -880,13 +907,13 @@ $nav-btn-height: 40px;
     background: -moz-linear-gradient(bottom left, $color-primary-dark, $color-primary-light);/* For Firefox 3.6 to 15 */
     background: linear-gradient(to bottom left, $color-primary-dark, $color-primary-light); /* Standard syntax */
     position: fixed;
-    top: 1%; left: 6px; bottom: 1%;
+    top: 0; left: 0; bottom: 0;
     padding-top: 8px;
     border-radius: 3px;
     box-shadow: 0 0 2px 3px rgba(0, 0, 0, 0.14), 0px 0 1px 1px rgba(0, 0, 0, 0.2), 0px 0 5px 3px rgba(0, 0, 0, 0.12);
 
     .logo {
-      width: $side-nav-width - 30;
+      width: 80px;
       margin: 0 auto;
       @extend .no-text-sel;
     }
@@ -903,7 +930,7 @@ $nav-btn-height: 40px;
       height: $action-bar-height;
       background-color: $color-green;
       margin-top: 4px;
-      margin-bottom: 12px;
+      margin-bottom: 4px;
       border-top: 1px solid $color-dark;
       border-bottom: 1px solid $color-dark;
       box-shadow: -2px 0 2px 2px rgba(0, 0, 0, 0.14), -2px 0 1px 0px rgba(0, 0, 0, 0.2), -2px 0 5px 2px rgba(0, 0, 0, 0.12);
@@ -953,7 +980,7 @@ $nav-btn-height: 40px;
     .title {
       width: 100%;
       text-align: center;
-      color: $color-white;
+      color: $color-dark;
       font-weight: 300;
       margin: 0;
     }
@@ -972,29 +999,45 @@ $nav-btn-height: 40px;
     @extend .c;
   }
 
+  .section {
+    .filters-text {
+      font-size: 14px;
+      margin: 0 12px;
+      @extend .no-text-sel;
+    }
+    $header_height: 52px;
+    .header {
+      height: $header_height;
+      padding-left: 12px;
+      border-top-left-radius: 3px;
+      border-top-right-radius: 3px;
+      input {
+        max-width: 116px;
+      }
+      @extend .r;
+    }
+    .heading {
+      color: $color-dark;
+      line-height: $header_height;
+      margin: 0 12px 0 0;
+    }
+    .filter {
+      margin: 0 8px;
+      border-bottom: 1px solid transparent;
+      cursor: pointer;
+      @extend .no-text-sel;
+    }
+    .filter.active {
+      color: $color-bright;
+      font-weight: 700;
+      border-bottom: 1px solid $color-bright;
+    }
+
   .settings {
     position: absolute;
     top: 12px; left: 12px; right: 12px; bottom: 12px;
     background-color: white;
 
-    .section {
-      $header_height: 52px;
-      .header {
-        height: $header_height;
-        padding-left: 12px;
-        background-color: $color-bright;
-        border-radius: 3px;
-        margin-bottom: 22px;
-        input {
-          max-width: 116px;
-        }
-        @extend .r;
-      }
-      .heading {
-        color: $color-white;
-        line-height: $header_height;
-        margin: 0 12px 0 0;
-      }
     }
 
     .options {
@@ -1055,33 +1098,27 @@ $nav-btn-height: 40px;
 
     @extend .card;
   }
+  .heading {
+    padding: 4px 12px;
+    margin-bottom: 4px;
+    text-align: center;
+    border-bottom: 1px dashed $color-gray;
+    .header {
+      display: inline-block;
+      font-weight: 300;
+      font-size: 36px;
+      margin: 0;
+      cursor: default;
+      @extend .no-text-sel;
+    }
+  }
+
 
   .ask {
     position: absolute;
     top: 12px; left: 12px; right: 12px; bottom: 12px;
     //background-color: white;
 
-    .heading {
-      padding: 4px 12px;
-      margin-bottom: 4px;
-      text-align: center;
-      border-bottom: 1px dashed $color-gray;
-      .header {
-        display: inline-block;
-        font-weight: 300;
-        font-size: 36px;
-        margin: 0;
-        cursor: default;
-        @extend .no-text-sel;
-      }
-    }
-
-    .left-pane {
-      display: inline-block;
-      height: 100%;
-      width: 50%;
-      //border-right: 1px solid $color-dark;
-    }
 
     .most-voted {
       display: inline-block;
@@ -1109,6 +1146,7 @@ $nav-btn-height: 40px;
         background-color: $color-secondary;
         border-radius: 5px;
         box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.14), 0 0 1px 0px rgba(0, 0, 0, 0.2), 0 0 5px 2px rgba(0, 0, 0, 0.12);
+        margin: 0 4px;
         @extend .c-center;
       }
       .name {
@@ -1127,34 +1165,69 @@ $nav-btn-height: 40px;
 
       @extend .card;
     }
-    .right-pane {
-      display: inline-block;
-      height: 100%;
-      width: 50%;
-      //border-left: 1px solid $color-dark;
-      margin: 12px;
-      background-color: white;
-      @extend .card;
-    }
-    //@extend .card;
+  }
+  .left-pane {
+    display: inline-block;
+    height: 100%;
+    width: 49.5%;
+  }
+  .right-pane {
+    display: inline-block;
+    height: 100%;
+    width: 49.5%;
+    background-color: white;
+    @extend .card;
   }
 
-  .question {
+  .top-pane {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    display: inline-block;
+    height: 47.5%;
+    background-color: white;
+    @extend .card;
+  }
+
+  .full-pane {
+    position: absolute;
+    top: 6px; right: 6px; left: 6px; bottom: 6px;
+    display: inline-block;
+    background-color: white;
+    @extend .card;
+  }
+
+  .bottom-pane {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
+    display: inline-block;
+    height: 47.5%;
+    background-color: white;
+    @extend .card;
+  }
+
+  .question-response {
     width: 94%;
     margin: 8px auto;
     position: relative;
+    border-top: 1px solid rgba(0, 0, 0, 0.03);
     .rank {
-      width: 30px;
-      height: 30px;
+      //float: left;
+      width: 20px;
+      height: 20px;
       background-color: $color-dark;
       color: $color-white;
       text-align: center;
-      line-height: 30px;
+      line-height: 20px;
       border-radius: 50%;
       display: block;
-      position: absolute;
-      top: -12px;
-      right: -12px;
+      //position: relative;
+      //top: 8px;
+      //left: 8px;
+      //margin-right: 14px !important;
       margin: 0;
       font-weight: 800;
       font-size: 12px;
@@ -1162,40 +1235,158 @@ $nav-btn-height: 40px;
       @extend .no-text-sel;
     }
     .content {
-      font-size: 18px;
+      font-size: 14px;
       line-height: 140%;
-      padding: 8px 10px 8px 8px;
+      padding: 0px 8px 8px 8px;
       margin: 0;
     }
-    $buttons_height: 52px;
     .buttons {
-      height: $buttons_height;
-      display: flex;
-      justify-content: space-between;
-      border-top: dashed 1px $color-gray;
-      hr {
-        height: 100%;
-        outline: none;
-        border-right: dashed 1px $color-gray;
-        border-left: none;
-        border-top: none;
-        border-bottom: none;
-      }
-      @extend .r;
-      .btn {
-        width: 33%;
-        height: $buttons_height;
-        line-height: $buttons_height;
-        position: relative;
-        display: inline-block;
-        text-align: center;
-        border-radius: 3px;
-        color: $color-secondary;
-        cursor: pointer;
-        @extend .no-text-sel;
-      }
+      padding: 0 8px;
+      background-color: rgba(210, 210, 210, 0.38);
+      border-radius: 3px;
+      @extend .r-between;
     }
-    @extend .card;
+    .time {
+      font-size: 8px;
+      font-weight: 800;
+      margin: 0;
+      padding: 0 2px 0 8px;
+      @extend .no-text-sel;
+    }
+    .clear {
+      display: block;
+      padding: 2px;
+    }
+  }
+
+  .question-response.response {
+  }
+  .question-response-list {
+    padding: 0;
+    border-left: solid 1px #F1F1F1;
+    margin: 0;
+  }
+}
+
+.alert-graph {
+  $bar-height: 22px;
+  width: 100%;
+  height: $bar-height;
+  position: absolute;
+  bottom: 0;
+  background-color: $color-white;
+  box-shadow: 0 0px 2px 1px rgba(0,0,0,.14),0 3px 16px 2px rgba(0,0,0,.12),0 5px 5px -3px rgba(0,0,0,.2);
+  z-index: 1;
+  .bar {
+    height: $bar-height;
+    width: 100%;
+    p {
+      font-size: 18px;
+      margin-left: 8px;
+      line-height: $bar-height;
+    }
+
+    @extend .r;
+  }
+}
+
+.sign-up-instructor {
+  .card {
+    padding: 34px 54px;
+  }
+  .header {
+    width: 100%;
+    text-align: center;
+    font-weight: 400;
+    margin: 4px 0;
+    @extend .no-text-sel;
+  }
+}
+
+.home-instructor {
+  .course-list {
+    position: absolute;
+    top: 72px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    @extend .r-left;
+  }
+  .pages {
+    position: absolute;
+    bottom: 6px;
+    right: 8px;
+    margin: 4px 0;
+    text-align: center;
+  }
+  .next-page {
+    position: absolute !important;
+    bottom: 8px;
+    right: 60px;
+  }
+  .prev-page {
+    position: absolute !important;
+    bottom: 8px;
+    right: 156px;
+  }
+  .course {
+    width: 140px;
+    height: 140px;
+    margin: 0 8px;
+    z-index: 10;
+    justify-content: space-between;
+    cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.247059) 0px 2px 8px, rgba(0, 0, 0, 0.219608) 0px 0px 3px;
+
+    p {
+      cursor: pointer;
+      @extend .no-text-sel;
+    }
+
+    .abbreviation {
+      margin: 0;
+      font-size: 22px;
+    }
+    .time {
+      margin: 0;
+      font-size: 10px;
+    }
+    .days {
+      margin-top: 0;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    .date {
+      margin-top: 0;
+      margin-bottom: 12px;
+      font-size: 16px;
+
+    }
+
+    .icon {
+      width: 82px;
+      display: block;
+      cursor: pointer;
+      @extend .no-text-sel;
+    }
+
+    .text {
+      margin: 0 0 22px;
+      font-size: 18px;
+      @extend .no-text-sel;
+    }
+
+    @extend .c, .card;
+  }
+  .course.add {
+    background-color: $color-green;
+  }
+  .course:hover {
+    box-shadow: rgba(0, 0, 0, 0.247059) 0px 3px 20px, rgba(0, 0, 0, 0.219608) 0px 0 3px;
+  }
+  .course:active {
+    box-shadow: rgba(0, 0, 0, 0.247059) 0px 2px 1px, rgba(0, 0, 0, 0.219608) 0px 0px 1px;
   }
 
 }

@@ -7,7 +7,6 @@ export const logOut = () => {
     type: 'LOG_OUT',
   }
 };
-
 export const logInSuccess = (username, id, name, type) => {
   return {
     type: 'LOG_IN_SUCCESS',

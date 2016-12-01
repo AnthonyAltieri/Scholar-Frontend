@@ -8,8 +8,6 @@ const backSrc = require('../../../img/App/back.svg');
 
 const Nav = ({
   onBackClick,
-  onAlertClick,
-  onAskClick,
   code,
   mode
 }) => (
@@ -21,28 +19,10 @@ const Nav = ({
           onClick={onBackClick}
           src={backSrc}
         />
-        <h3
-          className="text"
-          onClick={onBackClick}
-        >
-          {mode === 'QUESTIONS' ? 'Courses' : 'Questions'}
-        </h3>
       </div>
-    </div>
-    <h1 className="header">{code}</h1>
-    <div className="nav-btns">
-      <a
-        className={mode === 'ASK' ? 'btn btn-active' : 'btn'}
-        onClick={onAskClick}
-      >
-        ASK
-      </a>
-      <a
-        className={mode === 'ALERT' ? 'btn btn-active' : 'btn'}
-        onClick={onAlertClick}
-      >
-        ALERT
-      </a>
+      <h1 className="code">
+        CSE 100
+      </h1>
     </div>
   </div>
 );

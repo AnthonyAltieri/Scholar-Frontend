@@ -9,9 +9,8 @@ const Nav = ({
   onLogoutClick,
   onActiveClick,
   onInactiveClick,
-  params,
+  filter,
 }) => {
-  const { filter } = params;
 
   return (
     <div className="nav">

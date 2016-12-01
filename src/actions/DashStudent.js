@@ -13,3 +13,16 @@ export const retrievedQuestions = (questions) => ({
   type: 'RETRIEVED_QUESTIONS',
   questions,
 });
+
+export const setDashMode = (mode) => ({
+  type: 'SET_DASH_MODE',
+  mode,
+});
+
+export const showAlertOverlay = () => ({
+  type: 'SHOW_ALERT_OVERLAY',
+});
+
+export const hideAlertOverlay = () => ({
+  type: 'HIDE_ALERT_OVERLAY',
+});

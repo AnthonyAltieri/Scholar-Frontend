@@ -4,7 +4,7 @@
 
 
 const initialState = {
-  showOverlay: false,
+  isVisible: false,
 };
 
 const Overlay = (state = initialState, action) => {
@@ -22,6 +22,20 @@ const Overlay = (state = initialState, action) => {
       return {
         ...state,
         isVisible: false,
+      }
+    }
+
+    case 'SET_OVERLAY_TYPE': {
+      return {
+        ...state,
+        type: action.overlayType,
+      }
+    }
+
+    case 'CLEAR_OVERLAY_TYPE': {
+      return {
+        ...state,
+        type: null,
       }
     }
 

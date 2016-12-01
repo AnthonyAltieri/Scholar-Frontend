@@ -11,7 +11,9 @@ import { push } from 'react-router-redux';
 import { connect } from 'react-redux';
 import ButtonRound from '../buttons/ButtonRound';
 import TextField from '../TextField';
-
+import AutoComplete from 'material-ui/AutoComplete';
+import Colors from '../../util/Colors';
+import { Schools, isValidSchool } from '../../Data/Schools';
 
 const srcBack = require('../../img/App/back.svg');
 
@@ -20,29 +22,140 @@ const validEmail = (email) => {
   return regex.test(email);
 };
 
-const hasValidCredentials = (firstname, lastname, email, password, endLoading) => {
-  if (!firstname || !firstname.trim()) {
+const validPhone = (phone) => {
+  phone = phone.replace('-', '');
+  phone = phone.replace(' ', '');
+  phone = phone.replace('(', '');
+  phone = phone.replace(')', '');
+  const regEx = /\d{7}/;
+  return regEx.test(phone);
+};
+
+const validSchool = (school) => {
+  return true;
+};
+
+const hasValidCredentials = (
+  firstName,
+  lastName,
+  email,
+  password,
+  phone,
+  schoolId,
+  school,
+  endLoading,
+) => {
+  if (!firstName || !firstName.trim()) {
     endLoading();
-    toastr.error('Credential Error', 'Enter a valid first name.');
+    toastr.error(
+      'Credential Error',
+      'Enter a valid first name.'
+    );
     return false;
   }
-  if (!lastname || !lastname.trim()) {
+  if (!lastName || !lastName.trim()) {
     endLoading();
-    toastr.error('Credential Error', 'Enter a valid last name.');
+    toastr.error(
+      'Credential Error',
+      'Enter a valid last name.'
+    );
     return false;
   }
   if (!validEmail || !validEmail(email)) {
     endLoading();
-    toastr.error('Credential Error', 'Enter a valid email.');
+    toastr.error(
+      'Credential Error',
+      'Enter a valid email.'
+    );
     return false;
   }
   if (!password || !password.trim()) {
     endLoading();
-    toastr.error('Credential Error', 'Enter a valid password.');
+    toastr.error(
+      'Credential Error',
+      'Enter a valid password.'
+    );
+    return false;
+  }
+  if (!phone || !validPhone(phone)) {
+    endLoading();
+    toastr.error(
+      'Credential Error',
+      'Enter a valid phone number.'
+    );
+    return false;
+  }
+  if (!schoolId || !schoolId.trim()) {
+    endLoading();
+    toastr.error(
+      'Credential Error',
+      'Enter a valid School Id',
+    )
+  }
+  if (!school || !validSchool(school)) {
+    endLoading();
+    toastr.error(
+      'Credential Error',
+      'Enter a valid school.'
+    );
     return false;
   }
   return true;
 };
+
+async function handleSignUp(
+  firstName,
+  lastName,
+  email,
+  password,
+  phone,
+  institutionId,
+  school,
+  navigate,
+  endLoading
+) {
+  try {
+    const payload = await signUp(
+      email,
+      password,
+      firstName,
+      lastName,
+      phone,
+      institutionId,
+      school
+    );
+    const {
+      error,
+      emailInUse,
+      schoolNotFound,
+      user
+    } = payload;
+    if (!!error) {
+      toastr.error('Something went wrong please try again.');
+      endLoading();
+      return;
+    }
+    if (!!emailInUse) {
+      toastr.info('This email is in use, try another one.');
+      endLoading();
+      return;
+    }
+    if (!!schoolNotFound) {
+      toastr.info('That is an invalid School Name.');
+      endLoading();
+      return;
+    }
+    signUpSuccess(
+      user.email,
+      user.id,
+      `${user.firstName} ${user.lastName}`,
+      user.type
+    );
+    navigate('/dash/courses/active');
+  } catch (e) {
+    signUpFail();
+  }
+}
 
 class Signup extends Component {
   componentDidMount() {
@@ -51,98 +164,176 @@ class Signup extends Component {
   }
 
   render() {
-    const { navigate, startLoading, endLoading,
-      signUpSuccess, signUpFail } = this.props;
-    let firstname;
-    let lastname;
+    const {
+      navigate,
+      startLoading,
+      endLoading,
+      signUpSuccess,
+      signUpFail,
+    } = this.props;
+
+    let firstName;
+    let lastName;
     let email;
     let password;
     let phone;
+    let institutionId;
+    let school;
     return (
-      <div className="initial">
-        <div className="initial-card sign-up">
-          <div className="navigation">
-            <img
-              src={srcBack}
-              className="back"
-              onClick={() => {
-                navigate('/login');
-              }}
-            />
-            <h2
-              className="text"
-              onClick={() => {
-                navigate('/login');
-              }}
-            >
-              Log In
-            </h2>
-          </div>
-          <div className="container-input">
-            <TextField
-              floatingLabelText="School Email"
-              type="email"
-              onChange={(event) => {
-                email = event.target.value;
-              }}
-            />
-            <TextField
-              floatingLabelText="Password"
-              type="password"
-              onChange={(event) => {
-                password = event.target.value;
-              }}
-            />
-            <TextField
-              floatingLabelText="First Name"
-              type="text"
-              onChange={(event) => {
-                firstname = event.target.value;
-              }}
-            />
-            <TextField
-              floatingLabelText="Last Name"
-              type="text"
-              onChange={(event) => {
-                lastname = event.target.value;
-              }}
-            />
-            <TextField
-              floatingLabelText="Phone Number"
-              type="text"
-              onChange={(event) => {
-                phone = event.target.value;
-              }}
-              style={{
-                marginBottom: "12px",
-              }}
-            />
-          </div>
+      <div className="sign-up fullscreen">
+        <div className="navigation">
+          <img
+            src={srcBack}
+            className="back"
+            onClick={() => {
+              navigate('/login');
+            }}
+          />
+          <h2
+            className="text"
+            onClick={() => {
+              navigate('/login');
+            }}
+          >
+            Log In
+          </h2>
+        </div>
+        <div
+          className="c"
+          style={{
+            paddingLeft: "12px",
+            paddingRight: "12px",
+            maxWidth: "500px",
+            margin: "auto",
+            backgroundColor: Colors.primary,
+          }}
+        >
+          <TextField
+            floatingLabelText="School Email"
+            hintText="student@college.edu"
+            type="email"
+            onChange={(event) => {
+              email = event.target.value;
+            }}
+            underlineStyle={{
+              borderColor: "rgba(0,0,0,0.3)",
+            }}
+            fullWidth
+          />
+          <TextField
+            floatingLabelText="Password"
+            hintText="Minimum 6 Characters"
+            type="password"
+            onChange={(event) => {
+              password = event.target.value;
+            }}
+            underlineStyle={{
+              borderColor: "rgba(0,0,0,0.3)",
+            }}
+            fullWidth
+          />
+          <TextField
+            floatingLabelText="First Name"
+            type="text"
+            onChange={(event) => {
+              firstName = event.target.value;
+            }}
+            underlineStyle={{
+              borderColor: "rgba(0,0,0,0.3)",
+            }}
+            fullWidth
+          />
+          <TextField
+            floatingLabelText="Last Name"
+            type="text"
+            onChange={(event) => {
+              lastName = event.target.value;
+            }}
+            underlineStyle={{
+              borderColor: "rgba(0,0,0,0.3)",
+            }}
+            fullWidth
+          />
+          <TextField
+            floatingLabelText="School Id"
+            type="text"
+            onChange={(event) => {
+              institutionId = event.target.value;
+            }}
+            underlineStyle={{
+              borderColor: "rgba(0,0,0,0.3)",
+            }}
+            fullWidth
+          />
+          <TextField
+            floatingLabelText="Phone Number"
+            hintText="xxx-xxx-xxxx"
+            type="text"
+            onChange={(event) => {
+              phone = event.target.value;
+            }}
+            underlineStyle={{
+              borderColor: "rgba(0,0,0,0.3)",
+            }}
+            fullWidth
+          />
+          <AutoComplete
+            floatingLabelText="School Name"
+            type="text"
+            floatingLabelFocusStyle={{
+              color: Colors.bright,
+            }}
+            underlineFocusStyle={{
+              borderColor: Colors.bright,
+            }}
+            underlineStyle={{
+              borderColor: "rgba(0,0,0,0.3)",
+            }}
+            style={{
+              marginBottom: "12px",
+            }}
+            dataSource={Schools}
+            ref={(n) => {
+              school = n;
+            }}
+            filter={AutoComplete.caseInsensitiveFilter}
+            fullWidth
+          />
           <ButtonRound
+            style={{
+              marginBottom: "12px",
+            }}
             onClick={() => {
               startLoading();
-              const firstVal = firstname.value;
-              const lastVal = lastname.value;
-              const emailVal = email.value ? email.value.toLocaleString() : '';
-              const passwordVal = password.value;
-              if (hasValidCredentials(firstVal, lastVal, emailVal,
-                  passwordVal, endLoading)) {
-                signUp(emailVal, passwordVal, firstVal, lastVal)
-                  .then((user) => {
-                    signUpSuccess(emailVal, user.uid, `${firstVal} ${lastVal}`, user.type);
-                    navigate('/dash/courses/active');
-                  })
-                  .catch((error) => {
-                    signUpFail();
-                  })
+              const validCredentials = hasValidCredentials(
+                firstName,
+                lastName,
+                email,
+                password,
+                phone,
+                institutionId,
+                school.state.searchText,
+                endLoading
+              );
+              if (validCredentials) {
+                handleSignUp(
+                  firstName,
+                  lastName,
+                  email,
+                  password,
+                  phone,
+                  institutionId,
+                  school,
+                  navigate,
+                  endLoading,
+                );
               }
             }}
           >
             SIGN UP
           </ButtonRound>
         </div>
-      </div>
-
+    </div>
     )
   }
 }

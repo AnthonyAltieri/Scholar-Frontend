@@ -13,6 +13,13 @@ const CourseSession = (state = {}, action) => {
       }
     }
 
+    case 'TYPED_QUESTION': {
+      return {
+        ...state,
+        enteredQuestion: action.enteredQuestion,
+      }
+    }
+
     case 'STARTED_COURSESESSION': {
       return {
         ...state,
@@ -25,6 +32,20 @@ const CourseSession = (state = {}, action) => {
       return {
         ...state,
         active: false,
+      }
+    }
+
+    case 'SET_ALERT_THRESHOLD': {
+      return {
+        ...state,
+        threshold: action.threshold,
+      }
+    }
+
+    case 'SET_ALERT_PERCENTAGE': {
+      return {
+        ...state,
+        alertPercentage: action.alertPercentage,
       }
     }
 

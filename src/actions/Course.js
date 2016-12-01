@@ -2,9 +2,19 @@
  * @author Anthony Altieri on 10/9/16.
  */
 
-export const joinCourse = (id, code, title) => ({
+export const joinCourse = (
+  id,
+  abbreviation,
+  title,
+  activeCourseSessionId,
+  timeStart,
+  timeEnd,
+) => ({
   type: 'JOIN_COURSE',
   id,
-  code,
+  abbreviation,
   title,
+  activeCourseSessionId,
+  timeStart,
+  timeEnd,
 });

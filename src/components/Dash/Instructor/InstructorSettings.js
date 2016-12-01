@@ -7,9 +7,11 @@ import { connect } from 'react-redux';
 import Section from '../../Settings/Section';
 import Slider from '../../Settings/Slider';
 import Toggle from '../../Settings/Toggle';
+import RaisedButton from 'material-ui/RaisedButton';
+import Colors from '../../../util/Colors';
 import * as Loading from '../../../actions/Loading';
 import * as Settings from '../../../actions/DashInstructor/Settings';
-import { getSettings } from '../../../api/DashInstructor/Settings';
+import { get as getSettings } from '../../../api/DashInstructor/Settings';
 
 class InstructorSettings extends Component{
   componentDidMount() {
@@ -33,7 +35,28 @@ class InstructorSettings extends Component{
       toggleProfanityFilter,
     } = this.props;
     return (
-      <div className="settings">
+      <div
+        className="settings"
+        style={{
+          padding: "12px"
+        }}
+      >
+        <RaisedButton
+          label="Save"
+          fullWidth
+          style={{
+            marginBottom: "16px"
+          }}
+          buttonStyle={{
+            backgroundColor: Colors.green,
+          }}
+          labelStyle={{
+            color: "#FFFFFF",
+          }}
+          onClick={() => {
+            // TODO: implement
+          }}
+        />
         <Section
           heading="ALERT"
           hasEnable
@@ -53,6 +76,7 @@ class InstructorSettings extends Component{
             }}
           />
         </Section>
+        <br />
         <Section
           heading="ASK"
           hasEnable
@@ -77,11 +101,11 @@ class InstructorSettings extends Component{
 }
 
 const stateToProps = (state) => ({
-  courseId: state.CourseSession.courseId,
-  threshold: state.DashInstructor.Settings.threshold,
-  enableAlert: state.DashInstructor.Settings.enableAlert,
-  enableAsk: state.DashInstructor.Settings.enableAsk,
-  hasProfanityFilter: state.DashInstructor.Settings.hasProfanityFilter,
+  courseId: state.Course.id,
+  threshold: state.Dash.Instructor.Settings.threshold,
+  enableAlert: state.Dash.Instructor.Settings.enableAlert,
+  enableAsk: state.Dash.Instructor.Settings.enableAsk,
+  hasProfanityFilter: state.Dash.Instructor.Settings.hasProfanityFilter,
 });
 
 const dispatchToProps = (dispatch) => ({
@@ -95,16 +119,16 @@ const dispatchToProps = (dispatch) => ({
     dispatch(Loading.endLoading());
   },
   slideThreshold: (threshold) => {
-    dispatch(Settings.slideThreshold(threshold));
+    dispatch(Settings.defaultSlideThreshold(threshold));
   },
   toggleAlert: (enableAlert) => {
-    dispatch(Settings.toggleAlert(enableAlert))
+    dispatch(Settings.defaultToggleAlert(enableAlert))
   },
   toggleAsk: (enableAsk) => {
-    dispatch(Settings.toggleAsk(enableAsk))
+    dispatch(Settings.defaultToggleAsk(enableAsk))
   },
   toggleProfanityFilter: (hasProfanityFilter) => {
-    dispatch(Settings.toggleProfanityFilter(hasProfanityFilter))
+    dispatch(Settings.defaultToggleProfanityFilter(hasProfanityFilter))
   },
 });
 

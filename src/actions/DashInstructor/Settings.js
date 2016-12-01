@@ -2,22 +2,34 @@
  * @author Anthony Altieri on 10/8/16.
  */
 
-export const slideThreshold = (threshold) => ({
-  type: 'SLIDE_THRESHOLD',
+export const defaultSettingsRetrieved = (
+  threshold,
+  platformRestrictions,
+  hasProfanityFilter,
+  hasQuestionList,
+  hasAlerts,
+) => ({
+  type: 'DEFAULT_SETTINGS_RETRIEVED',
+  threshold,
+  platformRestrictions,
+  hasProfanityFilter,
+  hasQuestionList,
+  hasAlerts,
+});
+
+export const defaultSlideThreshold = (threshold) => ({
+  type: 'DEFAULT_SLIDE_THRESHOLD',
   threshold,
 });
 
-export const toggleAlert = (enableAlert) => ({
-  type: 'TOGGLE_ALERT',
-  enableAlert,
+export const defaultToggleAlert = () => ({
+  type: 'DEFAULT_TOGGLE_ALERT',
 });
 
-export const toggleAsk = (enableAsk) => ({
-  type: 'TOGGLE_ASK',
-  enableAsk,
+export const defaultToggleAsk = () => ({
+  type: 'DEFAULT_TOGGLE_ASK',
 });
 
-export const toggleProfanityFilter = (hasProfanityFilter) => ({
-  type: 'TOGGLE_PROFANITY_FILTER',
-  hasProfanityFilter,
+export const defaultToggleProfanityFilter = () => ({
+  type: 'DEFAULT_TOGGLE_PROFANITY_FILTER',
 });

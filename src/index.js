@@ -6,15 +6,12 @@ import ReactDOM from 'react-dom';
 import React from 'react';
 import Root from './components/Root.js';
 import configureStore from './configureStore'
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/database';
-
 import './scss/style.scss';
+import Panic from './Voodoo/src/Panic';
 
 const store = configureStore();
-
 module.hot.accept();
+
 
 ReactDOM.render(
   <Root store={store} />,

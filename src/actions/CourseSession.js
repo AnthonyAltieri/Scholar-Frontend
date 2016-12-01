@@ -10,3 +10,18 @@ export const startedCourseSession = (id) => ({
 export const endedCourseSession = () => ({
   type: 'ENDED_COURSESESSION',
 });
+
+export const typedQuestion = (enteredQuestion) => ({
+  type: 'TYPED_QUESTION',
+  enteredQuestion,
+});
+
+export const setAlertThreshold = (threshold) => ({
+  type: 'SET_ALERT_THRESHOLD',
+  threshold,
+});
+
+export const setAlertPercentage = (alertPercentage) => ({
+  type: 'SET_ALERT_PERCENTAGE',
+  alertPercentage,
+});

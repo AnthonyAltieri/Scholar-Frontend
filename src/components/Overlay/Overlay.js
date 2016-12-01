@@ -9,6 +9,7 @@ const Overlay = ({
   onConfirmClick,
   cardText,
   buttonText,
+  yesNo
 }) => {
   return (
     <div className="overlay">
@@ -18,12 +19,16 @@ const Overlay = ({
             {cardText}
           </p>
         </div>
-        <ButtonRound
-          className="confirm"
-          onClick={onConfirmClick}
-        >
-          {buttonText}
-        </ButtonRound>
+        {yesNo
+          ?<div>
+          </div>
+          : <ButtonRound
+            className="confirm"
+            onClick={onConfirmClick}
+          >
+            {buttonText}
+          </ButtonRound>
+        }
       </div>
     </div>
   );

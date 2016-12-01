@@ -13,7 +13,6 @@ const Course = ({
   onEnterClick,
   onJoinClick,
   filter,
-  userType
 }) => (
   <li className="course">
     <div className="info">

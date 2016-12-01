@@ -3,11 +3,14 @@
  */
 
 import React, { Component } from 'react';
-import Nav from './Nav';
+import Nav from './Nav/Nav';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import * as LoadingActions from '../../../actions/Loading'
 import * as CourseSessionActions from '../../../actions/CourseSession'
-import Overlay from './Overlay';
+import * as ModeActions from '../../../actions/DashInstructor/Course/Mode'
+import * as OverlayActions from '../../../actions/Overlay';
+
 
 class DashInstructor extends Component {
   componentDidMount() {
@@ -16,25 +19,26 @@ class DashInstructor extends Component {
   }
 
   render() {
-    const { children, dispatch, isOverlayVisible, courseCode,
-      hasCourseSession, startedCourseSession, courseId,
-      endedCourseSession,
+    const {
+      children,
+      pathname,
+      isCourseSessionActive,
+      courseAbbreviation,
+      courseId,
+      setMode,
+      showOverlay,
+      navigate,
     } = this.props;
     return (
       <div className="dash-instructor">
-        {isOverlayVisible
-          ? <Overlay
-            courseId={courseId}
-            dispatch={dispatch}
-            hasCourseSession={hasCourseSession}
-            startedCourseSession={startedCourseSession}
-            endedCourseSession={endedCourseSession}
-          />
-          : null}
         <Nav
-          dispatch={dispatch}
-          courseCode={courseCode}
-          hasCourseSession={hasCourseSession}
+          courseAbbreviation={courseAbbreviation}
+          isCourseSessionActive={isCourseSessionActive}
+          pathname={pathname}
+          navigate={navigate}
+          courseId={courseId}
+          setMode={setMode}
+          showOverlay={showOverlay}
         />
         {children}
       </div>
@@ -43,12 +47,16 @@ class DashInstructor extends Component {
 }
 
 const stateToProps = (state) => ({
-  promptEndSession: state.DashInstructor.promptEndSession,
-  isSessionActive: state.CourseSession.isActive,
-  isOverlayVisible: state.Overlay.isVisible,
-  hasCourseSession: state.CourseSession.active,
-  courseId: state.Course.id,
-  courseCode: state.Course.code,
+  // promptEndSession: state.Dash.Instructor.promptEndSession,
+  // isSessionActive: state.CourseSession.isActive,
+  // isOverlayVisible: state.Overlay.isVisible,
+  // hasCourseSession: state.CourseSession.active,
+  courseId: !!state.User.inCourse ? state.User.inCourse.id : null,
+  isCourseSessionActive: !!state.User.inCourse
+    ? state.User.inCourse.activeCourseSessionId : null,
+  courseAbbreviation: !!state.User.inCourse
+    ? state.User.inCourse.abbreviation : null,
+  pathname: state.routing.locationBeforeTransitions.pathname,
 });
 const dispatchToProps = (dispatch) => ({
   endLoading: () => {
@@ -60,7 +68,16 @@ const dispatchToProps = (dispatch) => ({
   endedCourseSession: () => {
     dispatch(CourseSessionActions.endedCourseSession());
   },
-  dispatch,
+  setMode: (mode) => {
+    dispatch(ModeActions.setMode(mode));
+  },
+  navigate: (url) => {
+    dispatch(push(url));
+  },
+  showOverlay: (type) => {
+    dispatch(OverlayActions.setOverlayType(type));
+    dispatch(OverlayActions.showOverlay());
+  }
 
 });
 

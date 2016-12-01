@@ -7,8 +7,8 @@ import ReactDOM from 'react-dom';
 import { store } from 'redux';
 import { connect } from 'react-redux';
 import QuestionList from './QuestionList/QuestionList';
-import { fetchQuesitons } from '../../../api/Questions';
-import { retrievedQuestions } from '../../../actions/DashStudent';
+// import { fetchQuesitons } from '../../../api/Questions';
+import * as DashStudentActions from '../../../actions/DashStudent'
 
 const getVisibleQuestions = (filter, questions = [], userId) => {
   switch (filter) {
@@ -40,18 +40,18 @@ const getVisibleQuestions = (filter, questions = [], userId) => {
 
 class StudentQuestionList extends Component {
   componentDidMount() {
-    const { courseSessionId, dispatch } = this.props;
-    fetchQuesitons(courseSessionId)
-      .then((questions) => {
-        dispatch(retrievedQuestions(questions));
-      })
+    const { courseSessionId, retrievedQuestions } = this.props;
+    // fetchQuesitons(courseSessionId)
+    //   .then((questions) => {
+    //     retrievedQuestions(questions);
+    //   })
 
   }
 
   render() {
     return (
       <div className="student-question-list">
-        <QuestionList {...props} />
+        <QuestionList {...this.props} />
       </div>
     )
   }
@@ -67,6 +67,11 @@ const mapStateToProps = (state, ownProps) => {
     userId: state.User.id,
   }
 };
+const dispatchToProps = (dispatch) => ({
+  retrievedQuestions: (questions) => {
+    dispatch(DashStudentActions.retrievedQuestions(questions));
+  }
+});
 
 StudentQuestionList = connect(
   mapStateToProps,
