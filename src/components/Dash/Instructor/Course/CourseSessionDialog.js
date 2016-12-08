@@ -12,15 +12,14 @@ const CourseSessionDialog = ({
   onStartClick,
   onEndClick,
   onCancelClick,
-}) => {
-  return (
-    <Dialog
-      title="Control Course Session"
-      open={isOpen}
-      modal={false}
-      contentStyle={{
-      }}
-      actions={[
+}) => (
+  <Dialog
+    title="Control Course Session"
+    open={isOpen}
+    modal={false}
+    contentStyle={{
+    }}
+    actions={[
       <FlatButton
         label="Cancel"
         onTouchTap={onCancelClick}
@@ -34,12 +33,11 @@ const CourseSessionDialog = ({
         label="Start"
         onTouchTap={onStartClick}
         style={{ color: Colors.green }}
-      />
+      />,
     ]}
-    >
-      Would you like to Start or End a Course Session for this Course.
-    </Dialog>
-  );
-};
+  >
+    Would you like to Start or End a Course Session for this Course.
+  </Dialog>
+);
 
 export default CourseSessionDialog;

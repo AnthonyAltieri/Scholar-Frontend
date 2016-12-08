@@ -17,6 +17,7 @@ const Nav = ({
   let nav = null;
   const courseRegex = /^\/dash\/instructor\/course\/*/;
   const homeRegex = /^\/dash\/instructor\/home/;
+  const settingsRegex = /^\/dash\/instructor\/settings/;
 
   if (courseRegex.test(pathname)) {
     nav = (<CourseNav
@@ -26,7 +27,7 @@ const Nav = ({
       showOverlay={showOverlay}
       isCourseSessionActive={isCourseSessionActive}
     />)
-  } else if (homeRegex.test(pathname)) {
+  } else if (homeRegex.test(pathname) || settingsRegex.test(pathname)) {
     nav = <HomeNav navigate={navigate} />
   }
 

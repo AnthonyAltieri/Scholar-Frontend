@@ -27,6 +27,9 @@ const Course = (state = {}, action) => {
         validateCourse(state);
         return state;
       } catch (e) {
+        // TODO: fix the dirty fix, consider making another
+        // reducer for the top level Course information
+        return state;
         throw new Error(e);
       }
     }

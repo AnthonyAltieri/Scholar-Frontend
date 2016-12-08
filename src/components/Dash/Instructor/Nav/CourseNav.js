@@ -79,7 +79,7 @@ const CourseNav = ({
       />
       <NavBtn
         icon="chat"
-        label="ask"
+        label="ask  "
         onClick={() => {
           setMode('ASK')
         }}
@@ -92,10 +92,17 @@ const CourseNav = ({
         }}
       />
       <NavBtn
-        icon="content_paste"
+        icon="school"
         label="assess"
         onClick={() => {
           setMode('ASSESS')
+        }}
+      />
+      <NavBtn
+        icon="monetization_on"
+        label="Bank"
+        onClick={() => {
+          setMode('QUESTION_BANK')
         }}
       />
     </div>

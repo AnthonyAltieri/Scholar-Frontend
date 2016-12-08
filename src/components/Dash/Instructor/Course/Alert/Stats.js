@@ -10,18 +10,20 @@ const Stats = ({
   attendance,
 }) => {
   return (
-    <div className="stats">
+    <div
+      className="stats r-around"
+      style={{
+        display: "flex"
+      }}
+    >
       <StatBlock
-        name="Number of Alerts"
-        value={numberAlerts}
+        name="Active Alerts"
+        number={numberAlerts || 0}
       />
       <StatBlock
-        name="Course Session Attendance"
-        value={attendance}
+        name="Attendance"
+        number={attendance || 0}
       />
-      <div className="r-around" id="stat-row">
-      </div>
-
     </div>
   );
 };

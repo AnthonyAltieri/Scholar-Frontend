@@ -11,6 +11,12 @@ const routes = {
   DISMISS: `${ROUTER_PREFIX}/dismiss`,
 }
 
+/**
+ * Get the questions trees from a course session
+ *
+ * @param courseSessionId
+ * @returns { error, questions }
+ */
 export async function fetchQuestions(courseSessionId) {
   try {
     return await post(

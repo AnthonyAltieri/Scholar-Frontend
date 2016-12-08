@@ -47,7 +47,7 @@ class AppWithToast extends Component {
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
         <div>
-          {isLoading ? <Loading /> : ''}
+          {isLoading ? <Loading /> : null}
           {children}
           <ReduxToastr
             timeOut={4000}

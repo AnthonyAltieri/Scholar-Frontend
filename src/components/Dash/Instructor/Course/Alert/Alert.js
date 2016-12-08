@@ -5,6 +5,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Stats from './Stats';
+import Graph from './Graph';
 
 class Alert extends Component {
 
@@ -16,6 +17,11 @@ class Alert extends Component {
         </div>
         <div className="alert-graph">
         </div>
+        <Graph
+          graphData={[
+            20, 20, 30, 50, 10, 40, 60, 10, 10, 20
+          ]}
+        />
         <Stats />
       </div>
     );

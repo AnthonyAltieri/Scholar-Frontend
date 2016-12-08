@@ -163,18 +163,20 @@ class Ask extends Component {
               }
             </div>
           </div>
-          <div className="stats">
+          <div className="stats c-between card">
             <div className="heading">
               <h2 className="header">STATS</h2>
             </div>
             <div className="r-around" id="stat-row">
               <StatBlock
-                name="Number of Questions"
+                name="Questions"
                 number={questions.length}
+                isMini
               />
               <StatBlock
-                name="Number of Responses"
+                name="Responses"
                 number={calculateNumberResponses(questions)}
+                isMini
               />
             </div>
           </div>

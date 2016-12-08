@@ -58,7 +58,7 @@ const CourseList = ({
       />
       <AddCourse
         onClick={() => {
-            navigate('/dash/instructor/course/add');
+            navigate('/dash/instructor/home/addCourse');
         }}
       />
         {courses.map((c) => {

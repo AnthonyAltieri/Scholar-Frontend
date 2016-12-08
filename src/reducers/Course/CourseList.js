@@ -2,7 +2,7 @@
  * @author Anthony Altieri on 9/6/16.
  */
 
-import Course from './Course';
+import Course from '../Course';
 
 const setCourseActivation = (state, action) => {
   const idxOfCourse = state.indexOf(c => c.id === action.id);
@@ -15,6 +15,8 @@ const setCourseActivation = (state, action) => {
 };
 
 const CourseList = (state = [], action) => {
+    console.log('CourseList Reducer, state', state)
+    console.log('action', action);
   switch (action.type) {
     case 'RECEIVED_COURSES': {
       return [

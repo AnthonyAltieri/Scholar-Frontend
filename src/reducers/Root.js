@@ -8,30 +8,30 @@ import StudentQuestionList from './StudentQuestionList';
 import Courses from './Course/Courses';
 import User from './User';
 import QuestionList from './Questions/QuestionList';
-import CourseSession from './CourseSession';
 import Loading from './Loading';
 import Admin from './Admin';
 import Overlay from './Overlay';
 import DashStudent from './DashStudent';
 import Dash from './Dash/Dash';
+import Course from './Course';
 import {reducer as Toastr} from 'react-redux-toastr'
 import { routerReducer } from 'react-router-redux';
 
 
 const Root = combineReducers({
-  toastr: Toastr,
-  routing: routerReducer,
+  Loading,
+  User,
+  Course,
   Courses,
   Admin,
-  User,
-  CourseSession,
-  Loading,
   Overlay,
   DashStudent,
   Dash,
   QuestionList,
   StudentQuestionList,
   SignupInstructor,
+  toastr: Toastr,
+  routing: routerReducer,
 });
 
 export default Root;

@@ -61,7 +61,7 @@ class Root extends Component {
               <Route path="instructor" components={DashInstructor} >
                 <IndexRedirect to="/dash/instructor/home"/>
                 <Route path="home" components={InstructorHome} />
-                <Route path="course/add" components={AddCourse} />
+                <Route path="home/addCourse" components={AddCourse} />
                 <Route path="course/:courseId" components={DashCourse} />
                 <Redirect from="course" to="home" />
                 <Route path="settings" components={InstructorSettings} />

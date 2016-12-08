@@ -53,7 +53,7 @@ const stateToProps = (state) => ({
   // hasCourseSession: state.CourseSession.active,
   courseId: !!state.User.inCourse ? state.User.inCourse.id : null,
   isCourseSessionActive: !!state.User.inCourse
-    ? state.User.inCourse.activeCourseSessionId : null,
+    ? !!state.User.inCourse.activeCourseSessionId : false,
   courseAbbreviation: !!state.User.inCourse
     ? state.User.inCourse.abbreviation : null,
   pathname: state.routing.locationBeforeTransitions.pathname,
