@@ -11,11 +11,11 @@ const getVisibleCourses = (courses, filter) => {
     }
 
     case 'active': {
-      return courses.filter(c => !!c.activeCourseSession)
+      return courses.filter(c => !!c.activeSessionId)
     }
 
     case 'inactive': {
-      return courses.filter(c => !c.activeCourseSession)
+      return courses.filter(c => !c.activeSessionId)
     }
 
     default: {
@@ -58,10 +58,20 @@ const Courses = (state = initialState, action) => {
       }
     }
 
+    case 'ADD_COURSE': {
+      const all = CourseList(state.all, action);
+      return {
+        ...state,
+        all,
+        visible: getVisibleCourses(all, state.filter),
+      }
+    }
+
     case 'SET_VISIBILITY_FILTER': {
       return {
         ...state,
         filter: action.filter,
+        visible: getVisibleCourses(state.all, action.filter),
       }
     }
 

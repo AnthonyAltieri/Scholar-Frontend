@@ -31,15 +31,7 @@ const Course = ({
         >
         ENTER
         </a>)
-        : (userType === 'INSTRUCTOR'
-            ? (<a
-                className="btn"
-                onClick={onJoinClick}
-                >
-                JOIN
-              </a>)
-            : null
-          )
+        : null
       }
     </div>
   </li>

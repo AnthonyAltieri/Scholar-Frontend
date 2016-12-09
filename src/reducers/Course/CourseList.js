@@ -33,6 +33,10 @@ const CourseList = (state = [], action) => {
       return setCourseActivation(state, action);
     }
 
+    case 'ADD_COURSE': {
+      return [...state, Course(action.course, action)];
+    }
+
     default: {
       return state;
     }

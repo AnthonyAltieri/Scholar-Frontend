@@ -11,6 +11,7 @@ import FontIcon from 'material-ui/FontIcon';
 import AddCourseDialog from './AddCourseDialog';
 import LogOutDialog from './LogOutDialog';
 import { logOut } from '../../../api/User';
+import { enrollStudentInCourse } from '../../../api/Course';
 import * as OverlayActions from '../../../actions/Overlay';
 import * as LoadingActions from '../../../actions/Loading'
 import * as CoursesActions from '../../../actions/Dash/Courses/Courses'
@@ -27,14 +28,44 @@ async function handleGetCourses(
   try {
     const { error, courses } = await getCoursesByUser(userId);
     if (!!error) {
-      console.error('error: ', error);
+      console.error('[ERROR] : ', error);
       toastr.error('Something went wrong please refresh the page');
       return;
     }
     receivedCourses(courses);
   } catch (e) {
-    console.error('error: ', e);
+    console.error('[ERROR] : ', e);
     toastr.error('Something went wrong please refresh the page');
+  }
+}
+
+async function handleStudentAddCourse(
+  code,
+  userId,
+  addCourseSuccess,
+  hideOverlay
+) {
+  try {
+    const payload = await enrollStudentInCourse(code, userId);
+    const { invalidAddCode, course, studentAlreadyEnrolled } = payload;
+    if (!!invalidAddCode) {
+      console.error("[ERROR] in DashCourses.js > handleStudentAddCourse : Invalid Add Code = ", invalidAddCode);
+      toastr.error('Incorrect Add Code. Please try again');
+      return;
+    }
+    if (!!studentAlreadyEnrolled) {
+      console.error("[ERROR] in DashCourses.js > handleStudentAddCourse : Student Already Enrolled = ", studentAlreadyEnrolled);
+      toastr.error('You are already enrolled in this course!');
+      hideOverlay();
+      return;
+    }
+    toastr.success("Success! New course added");
+    addCourseSuccess(course);
+    hideOverlay();
+  } catch (e) {
+    console.error("[ERROR] in DashCourses.js > handleStudentAddCourse : ", e);
+    addCourseFail();
+    toastr.error('Something went wrong please refresh the page and try again');
   }
 }
 
@@ -53,7 +84,6 @@ class DashCourses extends Component {
     }
 
     const { filter } = this.props.params;
-    console.log('filter', filter);
     if (!filter) {
       navigate('/dash/courses/active');
       return;
@@ -74,13 +104,15 @@ class DashCourses extends Component {
       filter,
       userId,
       overlayType,
+      addCourseSuccess
     } = this.props;
     return (
       <div className="dash-courses fullscreen">
         <AddCourseDialog
           isOpen={isOverlayVisible && overlayType === 'ADD_COURSE'}
           onCancelClick={() => { hideOverlay() }}
-          onSendClick={() => {
+          onSendClick={(code) => {
+            handleStudentAddCourse(code, userId, addCourseSuccess, hideOverlay);
           }}
         />
         <LogOutDialog
@@ -121,6 +153,7 @@ const mapStateToProps = (state) => {
     overlayType: state.Overlay.type,
     isLoggedIn: state.User.isLoggedIn,
     userId: state.User.id,
+    userType: state.User.type,
   }
 };
 const mapDispatchToProps = (dispatch, ownProps) => {
@@ -159,6 +192,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     navigate: (url) => {
       dispatch(push(url))
     },
+    addCourseSuccess: (course) => {
+      dispatch(CoursesActions.addCourse(course))
+    }
   }
 };
 DashCourses = connect(

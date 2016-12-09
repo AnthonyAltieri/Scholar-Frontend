@@ -6,6 +6,7 @@ import { post } from './Ajax';
 
 const routes = {
   CREATE: '/api/course/create',
+  ENROLL_STUDENT: '/api/course/enroll/student'
 };
 
 /**
@@ -43,6 +44,23 @@ export async function create(
         dateStart,
         dateEnd,
         days,
+      }
+    );
+  } catch (e) {
+    return null;
+  }
+}
+
+export async function enrollStudentInCourse(
+  addCode,
+  studentId
+) {
+  try {
+    return await post(
+      routes.ENROLL_STUDENT,
+      {
+        addCode,
+        studentId
       }
     );
   } catch (e) {

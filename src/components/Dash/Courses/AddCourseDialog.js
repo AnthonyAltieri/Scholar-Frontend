@@ -31,7 +31,9 @@ const AddCourseDialog = ({
       />,
       <FlatButton
         label="Send"
-        onTouchTap={onSendClick}
+        onTouchTap={() => {
+          onSendClick(code);
+        }}
         style={{ color: Colors.green }}
       />
     ]}
@@ -39,7 +41,7 @@ const AddCourseDialog = ({
       Please enter the code of a course you would like to add
       <div className="r-center">
         <TextField
-          floatingLabelText="Email"
+          floatingLabelText="Code"
           onChange={(event) => {
             code = event.target.value;
           }}
