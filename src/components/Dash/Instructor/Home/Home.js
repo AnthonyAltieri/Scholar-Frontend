@@ -13,6 +13,8 @@ import * as ModeActions from '../../../../actions/DashInstructor/Course/Mode';
 import * as CourseActions from '../../../../actions/Course';
 import CourseListSection from './CourseList/Section';
 import CourseSessionListSection from './CourseSessionList/Section';
+import { setId as setAssessmentBankId } from '../../../../actions/AssessmentBank';
+import { getByUserId as getAssessmentBankByUserId } from '../../../../api/AssessmentBank';
 
 
 async function handleCourses(userId, receivedCourses) {
@@ -31,6 +33,24 @@ async function handleCourses(userId, receivedCourses) {
   }
 }
 
+async function handleAssessmentBankId(
+  userId,
+  receivedBankId,
+) {
+  try {
+    const { error, assessmentBankId} = await
+      getAssessmentBankByUserId(userId);
+    if (!!error) {
+      console.log('[ERROR] getAssessmentBankByUserId', e);
+      return;
+    }
+    receivedBankId(assessmentBankId);
+  } catch (e) {
+    console.error('[ERROR] Home handleAssessmentBankId', e);
+  }
+}
+
+
 class Home extends Component {
   componentDidMount() {
     const {
@@ -38,6 +58,7 @@ class Home extends Component {
       navigate,
       receivedCourses,
       endLoading,
+      receivedBankId,
     } = this.props;
 
     if (!userId) {
@@ -50,6 +71,10 @@ class Home extends Component {
       userId,
       receivedCourses
     );
+    handleAssessmentBankId(
+      userId,
+      receivedBankId,
+    )
     endLoading();
   }
 
@@ -118,6 +143,9 @@ const dispatchToProps = (dispatch) => ({
           timeEnd,
         )
       )
+  },
+  receivedBankId: (id) => {
+    dispatch(setAssessmentBankId(id));
   }
 });
 

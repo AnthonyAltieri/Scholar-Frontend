@@ -81,7 +81,7 @@ class DashCourse extends Component {
       }
 
       case 'QUESTION_BANK': {
-        content = (<QuestionBank />)
+        content = (<QuestionBank courseId={courseId} />)
         break;
       }
 

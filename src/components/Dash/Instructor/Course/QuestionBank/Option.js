@@ -1,6 +1,7 @@
 import React from 'react';
 import FontIcon from 'material-ui/FontIcon';
 import IconButton from 'material-ui/IconButton';
+import Colors from '../../../../../util/Colors';
 
 const indexToLetter = (index) => {
   switch (index) {
@@ -18,17 +19,22 @@ const indexToLetter = (index) => {
 const Option = ({
   index,
   content,
+  editContentId,
   isEditable,
+  onEditContentChange,
+  onContentClick,
   onClearClick,
+  editRef,
 }) => (
   <div
     key={index}
-    className="option"
-    onClick={() => {
-    }}
+    className="bq-option"
   >
     <IconButton
       className="bq-clear"
+      iconStyle={{
+        color: Colors.red,
+      }}
       onClick={() => {
         onClearClick(index)
       }}
@@ -38,9 +44,20 @@ const Option = ({
       </FontIcon>
     </IconButton>
     <p className="bq-letter">{indexToLetter(index)}</p>
-    {!!isEditable
-      ? <p className="bq-content">{content}</p>
-      : <textarea className="bq-content editable" />
+    {!isEditable
+      ? (<p
+          className="bq-content"
+          onClick={onContentClick}
+        >
+          {content}
+        </p>)
+      : (<textarea
+        className="bq-content editable"
+        id={editContentId}
+        onChange={onEditContentChange}
+        ref={editRef}
+        defaultValue={content}
+      />)
     }
 
   </div>
