@@ -7,25 +7,58 @@ const determineNumberPages = (numberBQ) => (
 );
 
 const BankedQuestionList = ({
-  bankedQuestions,
-  page,
-  onBankedQuestionClick,
+  bankedAssessments,
+  onQuestionClick,
+  onOptionsDropdownClick,
+  onOptionClick,
+  onOptionClearClick,
+  editOptionClear,
+  editQuestionClear,
+  enterAddTagMode,
+  cancelAddTagMode,
+  onSaveClick,
+  onTagSaveClick,
+  onTagRemoveClick,
 }) => (
   <ul className="banked-question-list">
-    {bankedQuestions.reduce((acc, cur, i) => {
-      // NOTE: page is 1,2,...
-      const startingIndex = page * 3 ;
-      return (i >= startingIndex && !!acc && acc.length < 3)
-        ? [...acc, cur]
-        : acc;
-      }, [])
-      .map((bq) => (
+    {bankedAssessments.map((bq) => (
         <BankedQuestion
           key={bq.id}
           id={bq.id}
-          content={bq.content}
+          question={bq.question}
           options={bq.options || []}
-          onBankedQuestionClick={onBankedQuestionClick}
+          tags={bq.tags}
+          questionEdit={bq.questionEdit}
+          optionsEdited={bq.optionsEdited || []}
+          isOptionsVisible={bq.isOptionsVisible || false}
+          questionEditMode={bq.editQuestionMode || false}
+          optionEditModes={bq.optionEditModes ||
+            (!!bq.options ? bq.options.map(o => false) : [])
+          }
+          onQuestionClick={() => {
+            onQuestionClick(bq.questionEditMode, bq.id);
+          }}
+          onOptionsDropdownClick={() => {
+            onOptionsDropdownClick(bq.isOptionsVisible, bq.id);
+          }}
+          onOptionClick={(index) => {
+            onOptionClick(
+              bq.optionEditModes[index],
+              index,
+              bq.id
+            )
+          }}
+          onOptionClearClick={(index) => {
+            onOptionClearClick(index, bq.id)
+          }}
+          onSaveClick={onSaveClick}
+          editOptionClear={() => editOptionClear(bq.id)}
+          editQuestionClear={() => editQuestionClear(bq.id)}
+          addTagMode={bq.addTagMode}
+          enterAddTagMode={enterAddTagMode}
+          cancelAddTagMode={cancelAddTagMode}
+          onTagSaveClick={onTagSaveClick}
+          onTagRemoveClick={onTagRemoveClick}
         />
       ))
     }

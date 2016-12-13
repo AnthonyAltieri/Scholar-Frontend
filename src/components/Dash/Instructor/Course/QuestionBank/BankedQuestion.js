@@ -2,38 +2,177 @@ import React from 'react';
 import Colors from '../../../../../util/Colors';
 import FlatButton from 'material-ui/FlatButton';
 import Option from './Option';
+import Chip from 'material-ui/Chip';
+import FontIcon from 'material-ui/FontIcon';
+import Tag from './Tag';
+import AddTag from './AddTag';
+import CancelTag from './CancelTag';
+import TextField from '../../../../TextField';
+import RaisedButton from 'material-ui/RaisedButton';
+import RedRaisedButton from '../../../../buttons/RedRaisedButton';
+
+const DropdownArrow = ({
+  isOpen,
+  onClick,
+}) => (
+  <FontIcon
+    className="material-icons dropdown-arrow"
+    onClick={onClick}
+    style={{
+      display: 'inline-block',
+      curspor: 'pointer',
+    }}
+  >
+      {!isOpen ? 'arrow_drop_up' : 'arrow_drop_down'}
+  </FontIcon>
+);
 
 const BankedQuestion = ({
-  content,
+  id,
+  question,
   options,
-  isQuestionEdited,
-  isContentEdited,
+  tags,
+  questionEdit,
+  optionsEdited,
+  isOptionsVisible,
+  questionEditMode,
+  optionEditModes,
+  onQuestionClick,
+  onOptionsDropdownClick,
+  onOptionClick,
+  onOptionClearClick,
+  editQuestionClear,
+  editOptionClear,
+  onSaveClick,
+  addTagMode,
+  enterAddTagMode,
+  cancelAddTagMode,
+  onTagSaveClick,
+  onTagRemoveClick,
 }) => {
+  const isQuestionEdited = !!questionEdit;
+  const isOptionsEdited = optionEditModes.filter(o => !!o).length > 0;
+  let questionEditNode;
+  let optionNodes = [];
+  let enteredTag;
+  console.log('tags', tags);
+
   return (
     <li className="banked-question">
+      <div className="tag-strip">
+        <p className="label">Tags:</p>
+          {tags
+            .reduce((a, c, i) => [...a, { content: c, index: i }], [])
+            .map((t) => (<Tag
+              key={`${t.index}@@${t.content}@@${id}`}
+              content={t.content}
+              onClearClick={() => {
+                console.log('t', t);
+                console.log('tags', tags);
+                onTagRemoveClick(
+                  t.index,
+                  tags,
+                  id,
+                )
+            }}
+            />))
+          }
+          {!!addTagMode
+            ? <CancelTag onClick={() => cancelAddTagMode(id)} />
+            : <AddTag onClick={() => enterAddTagMode(id)} />
+          }
+      </div>
+      {!!addTagMode
+        ? (<div className="section-add-tag">
+          <TextField
+            hintText="Enter tag here..."
+            id={`${id}**entered-tag`}
+            ref={() => {
+              enteredTag = document.getElementById(`${id}**entered-tag`);
+            }}
+          />
+          <RaisedButton
+            label="save"
+            primary
+            onClick={() => {
+              onTagSaveClick(enteredTag.value, tags, id);
+            }}
+           />
+        </div>
+
+        )
+        : null
+      }
       <div className="strip">
         <p className="strip-label">Question</p>
-        {!!isQuestionEdited
-          ? null
-          : <p className="edited">Edited</p>
+        {!!questionEditMode
+          ? (<div className="r">
+            <a
+              className="cancel"
+              onClick={() => editQuestionClear()}
+            >
+              Press To Cancel
+            </a>
+            <p className="edited">Edited</p>
+          </div>
+            )
+          : null
         }
       </div>
-      <p className="question-content">{content}</p>
+      {!!questionEditMode
+        ? (<textarea
+          className="question-content-edit"
+          defaultValue={question}
+          ref={(n) => {
+            questionEditNode = n;
+          }}
+        />)
+        : (<p
+            className="question-content"
+            onClick={onQuestionClick}
+          >
+            {question}
+          </p>)
+      }
       <div className="strip">
-        <p className="strip-label">Options</p>
-        {!!isContentEdited
-          ? null
-          : <p className="edited">Edited</p>
+        <div className="r">
+          <p className="strip-label">Options</p>
+          <DropdownArrow
+            isOpen={isOptionsVisible}
+            onClick={onOptionsDropdownClick}
+          />
+        </div>
+        {!!isOptionsEdited
+          ? (<div className="r">
+            <a
+              className="cancel"
+              onClick={() => editOptionClear()}
+            >
+              Press To Cancel
+            </a>
+            <p className="edited">Edited</p>
+          </div>)
+          : null
         }
       </div>
-      {options
-        .reduce((acc, cur, i) => [...acc, {...cur, index: i }],[])
+      {!!isOptionsVisible && options
+        .reduce((a, c, index) => [...a, { content: c, index }],[])
         .map((o) => (
           <Option
-            key={o.index}
-            content={o.content}
+            key={`${o.index}$$${o.content}$$${id}`}
+            content={!!optionEditModes[o.index]
+              ? optionsEdited[o.index]
+              : o.content
+            }
+            isEditable={!!optionEditModes[o.index]}
             index={o.index}
-            onClearClick={() => {
+            onClearClick={() => { onOptionClearClick(o.index) }}
+            onContentClick={() => { onOptionClick(o.index) }}
+            editRef={(n) => {
+              optionNodes = [
+                ...optionNodes,
+                n,
+              ];
             }}
           />
       ))}
@@ -41,13 +180,41 @@ const BankedQuestion = ({
         <p className="strip-label">Actions</p>
       </div>
       <div className="bq-actions">
-        <FlatButton
+        <RedRaisedButton
           label="Remove"
-          labelStyle={{ color: Colors.red }}
         />
-        <FlatButton
+        <RaisedButton
+          label="Cancel Edits"
+          // labelStyle={{ color: Colors.red }}
+          secondary
+          onClick={() => {
+            editOptionClear();
+            editQuestionClear();
+          }}
+        />
+        <RaisedButton
           label="Save"
-          labelStyle={{ color: Colors.green }}
+          primary
+          onClick={() => {
+            console.log('click')
+            console.log('questionEditMode', questionEditMode);
+            if (!isOptionsEdited && !questionEditMode) return;
+            const questionToSave = !!questionEditMode
+              ? questionEditNode.value
+              : question;
+            const optionsToSave = !!isOptionsEdited
+              ? (optionsEdited.reduce((a, c, i) => (
+                !!optionEditModes[i]
+                  ? [...a, c]
+                  : [...a, options[i]]
+              ), []))
+              : options;
+            onSaveClick(
+              questionToSave,
+              optionsToSave,
+              id,
+            )
+          }}
         />
       </div>
     </li>

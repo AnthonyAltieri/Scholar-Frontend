@@ -14,6 +14,8 @@ import Overlay from './Overlay';
 import DashStudent from './DashStudent';
 import Dash from './Dash/Dash';
 import Course from './Course';
+import Assess from './Assess/Assess';
+import AssessmentBank from './AssessmentBank/AssessmentBank';
 import {reducer as Toastr} from 'react-redux-toastr'
 import { routerReducer } from 'react-router-redux';
 
@@ -23,15 +25,17 @@ const Root = combineReducers({
   User,
   Course,
   Courses,
-  Admin,
   Overlay,
   DashStudent,
   Dash,
   QuestionList,
   StudentQuestionList,
   SignupInstructor,
+  Assess,
+  AssessmentBank,
   toastr: Toastr,
   routing: routerReducer,
+  Admin,
 });
 
 export default Root;

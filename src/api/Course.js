@@ -6,6 +6,8 @@ import { post } from './Ajax';
 
 const routes = {
   CREATE: '/api/course/create',
+  ADD_BANKED_ASSESSMENT: '/api/course/add/bankedAssessment',
+  GET_BANKED_ASSESSMENTS: '/api/course/get/bankedAssessments',
   ENROLL_STUDENT: '/api/course/enroll/student'
 };
 
@@ -47,7 +49,28 @@ export async function create(
       }
     );
   } catch (e) {
-    return null;
+    return { error: true };
+  }
+}
+
+export async function getBankedAssessments(courseId) {
+  try {
+    return post(routes.GET_BANKED_ASSESSMENTS, { courseId });
+  } catch (e) {
+    console.error('[ERROR] Course Api getBankedAssessments', e);
+    return { error: true };
+  }
+}
+
+export async function addBankedAssessment(courseId, bankedAssessmentId) {
+  try {
+    return post(
+      routes.ADD_BANKED_ASSESSMENT,
+      { courseId, bankedAssessmentId }
+    );
+  } catch (e) {
+    console.error('[ERROR] Course Api addBankedAssessment', e);
+    return { error: true };
   }
 }
 

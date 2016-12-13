@@ -2,6 +2,7 @@ import React from 'react';
 import FontIcon from 'material-ui/FontIcon';
 import IconButton from 'material-ui/IconButton';
 import Colors from '../../../../../../util/Colors';
+import Option from '../../QuestionBank/Option';
 import FlatButton from 'material-ui/FlatButton';
 
 const indexToLetter = (index) => {
@@ -17,38 +18,38 @@ const indexToLetter = (index) => {
   }
 }
 
-const Option = ({
-  index,
-  content,
-}) => (
-  <li className="option">
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-      }}
-    >
-      <p className="letter">{indexToLetter(index)}</p>
-      <p className="content">{content}</p>
-    </div>
-    <IconButton
-        iconStyle={{
-          color: Colors.red,
-        }}
-    >
-      <FontIcon
-        className="material-icons remove"
-      >
-        clear
-      </FontIcon>
-    </IconButton>
-  </li>
-);
+// const Option = ({
+//   index,
+//   content,
+// }) => (
+//   <li className="option">
+//     <div
+//       style={{
+//         display: "flex",
+//         alignItems: "center",
+//       }}
+//     >
+//       <p className="letter">{indexToLetter(index)}</p>
+//       <p className="content">{content}</p>
+//     </div>
+//     <IconButton
+//         iconStyle={{
+//           color: Colors.red,
+//         }}
+//     >
+//       <FontIcon
+//         className="material-icons remove"
+//       >
+//         clear
+//       </FontIcon>
+//     </IconButton>
+//   </li>
+// );
 
 const AddOption = ({
   onOptionAdd,
 }) => {
-  let content = { value: '' };
+  let content;
   return (
   <li className="add-option">
     <textarea
@@ -64,6 +65,7 @@ const AddOption = ({
       }}
       onClick={() => {
         onOptionAdd(content.value)
+        content.value = '';
       }}
     >
       <FontIcon
@@ -78,18 +80,25 @@ const AddOption = ({
 
 const OptionList = ({
   options,
+  optionEditModes,
   onOptionAdd,
+  onOptionClear,
+  onOptionContentClick,
+  onOptionClearClick,
 }) => (
   <ul className="option-list">
     {!options
         ? null
         : options
-          .reduce((acc, cur, i) => [...acc, {...cur, index: i, }], [])
+          .reduce((acc, c, i) => [...acc, { content: c, index: i, }], [])
           .map((o) => (
             <Option
-              key={o.index}
+              key={`${o.index}--${o.content}`}
               index={o.index}
               content={o.content}
+              isEditable={true}
+              onContentClick={() => onOptionContentClick(o.index)}
+              onClearClick={() => onOptionClearClick(o.index)}
             />
           ))
     }
