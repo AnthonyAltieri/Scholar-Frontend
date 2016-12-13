@@ -48,17 +48,20 @@ async function handleStudentAddCourse(
   try {
     const payload = await enrollStudentInCourse(code, userId);
     const { invalidAddCode, course, studentAlreadyEnrolled } = payload;
+
     if (!!invalidAddCode) {
       console.error("[ERROR] in DashCourses.js > handleStudentAddCourse : Invalid Add Code = ", invalidAddCode);
       toastr.error('Incorrect Add Code. Please try again');
       return;
     }
+
     if (!!studentAlreadyEnrolled) {
       console.error("[ERROR] in DashCourses.js > handleStudentAddCourse : Student Already Enrolled = ", studentAlreadyEnrolled);
       toastr.error('You are already enrolled in this course!');
       hideOverlay();
       return;
     }
+
     toastr.success("Success! New course added");
     addCourseSuccess(course);
     hideOverlay();

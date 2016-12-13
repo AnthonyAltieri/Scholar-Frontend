@@ -11,11 +11,11 @@ const getVisibleCourses = (courses, filter) => {
     }
 
     case 'active': {
-      return courses.filter(c => !!c.activeSessionId)
+      return courses.filter(c => !!c.activeCourseSessionId)
     }
 
     case 'inactive': {
-      return courses.filter(c => !c.activeSessionId)
+      return courses.filter(c => !c.activeCourseSessionId)
     }
 
     default: {

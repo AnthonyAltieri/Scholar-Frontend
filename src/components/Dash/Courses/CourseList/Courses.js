@@ -14,6 +14,7 @@ import * as api from '../../../../api/Course';
 let Courses = ({
   courses,
   filter,
+  onEnterClick
 }) => {
   return (
     <ul className="courses">
@@ -28,9 +29,7 @@ let Courses = ({
             instructor={c.instructorName}
             filter={filter}
             onEnterClick={() => {
-            }}
-            onJoinClick={() => {
-              // TODO: call api to join course
+              onEnterClick(c.id);
             }}
           />
         );

@@ -54,7 +54,7 @@ class Root extends Component {
                 <Route path="getUsers" component={GetUsers}/>
               </Route>
               <Route path="student" components={DashStudent}>
-                <Route path="questions" components={StudentQuestionList} />
+                {/*<Route path="questions" components={StudentQuestionList} />*/}
               {/*<Route path="ask" components={AskQuestion} />*/}
               {/*<Route path="assessment" components={} />*/}
               </Route>

@@ -5,9 +5,12 @@
 
 import { post } from './Ajax';
 
+const PREFIX = '/api/courseSession'
+
 const routes = {
-  CREATE: '/api/courseSession/create',
-  END: '/api/courseSession/end',
+  CREATE: PREFIX + '/create',
+  END: PREFIX + '/end',
+  STUDENT_JOIN: PREFIX + '/join/student'
 };
 
 export async function startCourseSession(courseId, instructorId) {
@@ -19,6 +22,18 @@ export async function startCourseSession(courseId, instructorId) {
   } catch (e) {
     console.error('[ERROR] CourseSession api startCourseSession()', e);
     return null;
+  }
+}
+
+export async function enterCourseSession(courseId, studentId) {
+  try {
+    console.log('Enter Course Session for ${courseId} by ' + studentId);
+    return await post(
+      routes.STUDENT_JOIN,
+      { courseId, studentId }
+      );
+  } catch (e) {
+    console.error('[ERROR] CourseSession api > enterCourseSession: ' + e);
   }
 }
 
