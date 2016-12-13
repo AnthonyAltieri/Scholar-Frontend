@@ -23,3 +23,8 @@ export const setVisibilityFilter = (filter) => ({
   filter,
 });
 
+export const addCourse = (course) => ({
+  type: 'ADD_COURSE',
+  course,
+});
+

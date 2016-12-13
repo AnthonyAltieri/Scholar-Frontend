@@ -8,6 +8,7 @@ const routes = {
   CREATE: '/api/course/create',
   ADD_BANKED_ASSESSMENT: '/api/course/add/bankedAssessment',
   GET_BANKED_ASSESSMENTS: '/api/course/get/bankedAssessments',
+  ENROLL_STUDENT: '/api/course/enroll/student'
 };
 
 /**
@@ -70,5 +71,22 @@ export async function addBankedAssessment(courseId, bankedAssessmentId) {
   } catch (e) {
     console.error('[ERROR] Course Api addBankedAssessment', e);
     return { error: true };
+  }
+}
+
+export async function enrollStudentInCourse(
+  addCode,
+  studentId
+) {
+  try {
+    return await post(
+      routes.ENROLL_STUDENT,
+      {
+        addCode,
+        studentId
+      }
+    );
+  } catch (e) {
+    return null;
   }
 }

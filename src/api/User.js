@@ -41,6 +41,9 @@ export async function signUp(
         password,
         firstName,
         lastName,
+        phone,
+        institutionId,
+        school
       }
     );
     return payload;

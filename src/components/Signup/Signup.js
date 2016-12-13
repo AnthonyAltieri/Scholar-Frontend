@@ -112,9 +112,13 @@ async function handleSignUp(
   institutionId,
   school,
   navigate,
-  endLoading
+  endLoading,
+  signUpSuccess,
+  signUpFail
 ) {
+
   try {
+
     const payload = await signUp(
       email,
       password,
@@ -172,13 +176,11 @@ class Signup extends Component {
       signUpFail,
     } = this.props;
 
-    let firstName;
-    let lastName;
-    let email;
-    let password;
-    let phone;
-    let institutionId;
-    let school;
+    let firstName = '';
+    let lastName = '';
+    let email = '';
+    let password = '';
+    let phone = '';
     return (
       <div className="sign-up fullscreen">
         <div className="navigation">
@@ -211,9 +213,12 @@ class Signup extends Component {
           <TextField
             floatingLabelText="School Email"
             hintText="student@college.edu"
+            id="email"
             type="email"
-            onChange={(event) => {
-              email = event.target.value;
+            ref={() => {
+              const node = document.getElementById('email');
+              if (!node) return;
+              email = node;
             }}
             underlineStyle={{
               borderColor: "rgba(0,0,0,0.3)",
@@ -223,9 +228,12 @@ class Signup extends Component {
           <TextField
             floatingLabelText="Password"
             hintText="Minimum 6 Characters"
+            id="password"
             type="password"
-            onChange={(event) => {
-              password = event.target.value;
+            ref={() => {
+              const node = document.getElementById('password');
+              if (!node) return;
+              password = node;
             }}
             underlineStyle={{
               borderColor: "rgba(0,0,0,0.3)",
@@ -235,8 +243,11 @@ class Signup extends Component {
           <TextField
             floatingLabelText="First Name"
             type="text"
-            onChange={(event) => {
-              firstName = event.target.value;
+            id="firstName"
+            ref={() => {
+              const node = document.getElementById('firstName');
+              if (!node) return;
+              firstName = node;
             }}
             underlineStyle={{
               borderColor: "rgba(0,0,0,0.3)",
@@ -246,8 +257,11 @@ class Signup extends Component {
           <TextField
             floatingLabelText="Last Name"
             type="text"
-            onChange={(event) => {
-              lastName = event.target.value;
+            id="lastName"
+            ref={() => {
+              const node = document.getElementById('lastName');
+              if (!node) return;
+              lastName = node;
             }}
             underlineStyle={{
               borderColor: "rgba(0,0,0,0.3)",
@@ -257,8 +271,11 @@ class Signup extends Component {
           <TextField
             floatingLabelText="School Id"
             type="text"
-            onChange={(event) => {
-              institutionId = event.target.value;
+            id="institutionId"
+            ref={() => {
+              const node = document.getElementById('institutionId');
+              if (!node) return;
+              institutionId = node;
             }}
             underlineStyle={{
               borderColor: "rgba(0,0,0,0.3)",
@@ -269,8 +286,11 @@ class Signup extends Component {
             floatingLabelText="Phone Number"
             hintText="xxx-xxx-xxxx"
             type="text"
-            onChange={(event) => {
-              phone = event.target.value;
+            id="phone"
+            ref={() => {
+              const node = document.getElementById('phone');
+              if (!node) return;
+              phone = node;
             }}
             underlineStyle={{
               borderColor: "rgba(0,0,0,0.3)",
@@ -304,28 +324,30 @@ class Signup extends Component {
               marginBottom: "12px",
             }}
             onClick={() => {
-              startLoading();
+              //startLoading();
               const validCredentials = hasValidCredentials(
-                firstName,
-                lastName,
-                email,
-                password,
-                phone,
-                institutionId,
+                firstName.value,
+                lastName.value,
+                email.value,
+                password.value,
+                phone.value,
+                institutionId.value,
                 school.state.searchText,
                 endLoading
               );
               if (validCredentials) {
                 handleSignUp(
-                  firstName,
-                  lastName,
-                  email,
-                  password,
-                  phone,
-                  institutionId,
-                  school,
+                  firstName.value,
+                  lastName.value,
+                  email.value,
+                  password.value,
+                  phone.value,
+                  institutionId.value,
+                  school.state.searchText,
                   navigate,
                   endLoading,
+                  signUpSuccess,
+                  signUpFail
                 );
               }
             }}
@@ -333,8 +355,10 @@ class Signup extends Component {
             SIGN UP
           </ButtonRound>
         </div>
-    </div>
+      </div>
     )
+    let institutionId = '';
+    let school = '';
   }
 }
 Signup = connect(
