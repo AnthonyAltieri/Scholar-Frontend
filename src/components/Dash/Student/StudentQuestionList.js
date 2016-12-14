@@ -6,9 +6,13 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { store } from 'redux';
 import { connect } from 'react-redux';
-import QuestionList from './QuestionList/QuestionList';
+import QuestionResponse from '../Instructor/Course/Ask/QuestionList/QuestionResponse';
 // import { fetchQuesitons } from '../../../api/Questions';
 import * as DashStudentActions from '../../../actions/DashStudent'
+
+const getRank = (votes) => {
+  return votes.filter(v => v.type === 'UP').length
+};
 
 const getVisibleQuestions = (filter, questions = [], userId) => {
   switch (filter) {
@@ -34,6 +38,10 @@ const getVisibleQuestions = (filter, questions = [], userId) => {
           }
         });
     }
+
+    default: {
+      throw new Error(`Invalid filter ${filter}`);
+    }
   }
 };
 
@@ -49,24 +57,47 @@ class StudentQuestionList extends Component {
   }
 
   render() {
+    const {
+      activeCourseSessionId,
+      questions,
+      filter,
+    } = this.props;
+    console.log('filter', filter);
+    console.log('questions', questions);
     return (
-      <div className="student-question-list">
-        <QuestionList {...this.props} />
+      <div
+        className="c"
+        style={{
+          overflowY: "auto",
+          paddingTop: 12,
+        }}
+      >
+        {questions.map((q) => (
+          <QuestionResponse
+            isQuestion
+            key={q.id}
+            rank={getRank(q.votes)}
+            depthRestriction={2}
+            content={q.content}
+            created={q.created}
+            responses={q.responses}
+            id={q.id}
+            courseSessionId={activeCourseSessionId}
+          />
+        ))}
       </div>
     )
   }
 };
 
-const mapStateToProps = (state, ownProps) => {
-  return {
-    questions: getVisibleQuestions(
-      ownProps.filter,
-      state.DashStudent.questions,
-      state.User.id,
-    ),
-    userId: state.User.id,
-  }
-};
+const mapStateToProps = (state, ownProps) => ({
+  questions: getVisibleQuestions(
+    ownProps.filter,
+    state.QuestionList,
+    state.User.id,
+  ),
+  activeCourseSessionId: state.Course.activeCourseSessionId,
+});
 const dispatchToProps = (dispatch) => ({
   retrievedQuestions: (questions) => {
     dispatch(DashStudentActions.retrievedQuestions(questions));

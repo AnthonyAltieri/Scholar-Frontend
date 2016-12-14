@@ -41,6 +41,11 @@ export const addResponse = (
   votes,
 });
 
+export const receivedQuestions = (questions) => ({
+  type: 'RECEIVED_QUESTIONS',
+  questions,
+});
+
 export const removeResponse = (id) => ({
   type: 'REMOVE_RESPONSE',
   id,
@@ -73,4 +78,3 @@ export const addFlag = () => ({
 export const removeFlag = () => ({
   type: 'REMOVE_FLAG',
 });
-

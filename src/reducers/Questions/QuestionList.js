@@ -25,9 +25,7 @@ const removeResponseById = (questions, id) => {
 const QuestionList = (state = [], action) => {
   switch (action.type) {
     case 'RECEIVED_QUESTIONS': {
-      return action.questions.reduce((acc, cur, i) => {
-        return acc = [...acc, Question(cur, action)]
-      }, []);
+      return action.questions.map((q) => Question(q, action));
     }
 
     case 'ADD_QUESTION': {

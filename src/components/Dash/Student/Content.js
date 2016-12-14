@@ -8,23 +8,24 @@ import AskQuestion from './AskQuestion';
 
 const Content = ({
   mode,
-  params
+  params,
 }) => {
   console.log('in Content', params);
-  // const { filter } = params;
+  const { filter } = params;
+  console.log('filter', filter);
 
   switch (mode) {
     case 'ALERT':
     case 'QUESTIONS': {
       return (
-        <div className="content">
-          <StudentQuestionList filter={''} />
+        <div className="displayed-content">
+          <StudentQuestionList filter={filter || ''} />
         </div>);
     }
 
     case 'ASK': {
       return (
-        <div className="content">
+        <div className="displayed-content">
           <AskQuestion />
         </div>
       );

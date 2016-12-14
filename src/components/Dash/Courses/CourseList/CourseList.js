@@ -7,7 +7,8 @@ import { connect } from 'react-redux';
 import Courses from './Courses';
 import { push } from 'react-router-redux';
 import * as OverlayActions from '../../../../actions/Overlay';
-import * as CourseListActions from '../../../../actions/CourseList';
+import * as CourseActions from '../../../../actions/Course';
+import * as QuestionListActions from '../../../../actions/QuestionList';
 import { isLoggedIn } from '../../../../api/User';
 import { enterCourseSession } from '../../../../api/CourseSession';
 import { toastr } from 'react-redux-toastr';
@@ -37,7 +38,8 @@ class CourseList extends Component {
       visibleCourses,
       userId,
       filter,
-      enterCourse
+      enterCourse,
+      receivedQuestions,
     } = this.props;
     console.log('CourseList')
     console.log('visibleCourses', visibleCourses);
@@ -46,17 +48,31 @@ class CourseList extends Component {
         courses={visibleCourses}
         userId={userId}
         filter={filter}
-        onEnterClick={(courseId) => {
-          const payload = enterCourseSession(courseId, userId);
+        onEnterClick={async function(
+          courseId,
+          abbreviation,
+          title,
+          activeCourseSessionId,
+          timeStart,
+          timeEnd,
+        ) {
+          const payload = await enterCourseSession(courseId, userId);
           const { courseSession, error } = payload;
-
-          if( !!error ) {
-            console.log("[ERROR] CourseList (component) > enterCourseSession");
+          if (!!error) {
+            console.error("[ERROR] CourseList (component) > enterCourseSession");
             toastr.error("Error: Could not join the Course. Please Refresh and try again");
-          } else {
-            console.log("Success! We will now enter the course session");
-            enterCourse(courseId);
+            return;
           }
+          console.log("Success! We will now enter the course session");
+          receivedQuestions(courseSession.questions);
+          enterCourse(
+            courseId,
+            abbreviation,
+            title,
+            activeCourseSessionId,
+            timeStart,
+            timeEnd,
+          );
         }}
       />
     );
@@ -74,11 +90,30 @@ const dispatchToProps = (dispatch) => ({
   hideOverlay: () => {
     dispatch(OverlayActions.hideOverlay());
   },
-  enterCourse: (courseId) => {
-    dispatch(CourseListActions.joinCourse(courseId));
+  enterCourse: (
+    courseId,
+    abbreviation,
+    title,
+    activeCourseSessionId,
+    timeStart,
+    timeEnd,
+  ) => {
+    const action =
+      CourseActions.joinCourse(
+        courseId,
+        abbreviation,
+        title,
+        activeCourseSessionId,
+        timeStart,
+        timeEnd,
+      );
+      console.log('action', action);
+    dispatch(action);
     dispatch(push('/dash/student'));
   },
-
+  receivedQuestions: (questions) => {
+    dispatch(QuestionListActions.receivedQuestions(questions));
+  },
 });
 
 CourseList = connect(
