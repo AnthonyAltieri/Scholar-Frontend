@@ -4,17 +4,16 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { typedQuestion } from '../../../actions/CourseSession';
-import { questionSubmitSuccess } from '../../../actions/DashStudent';
+import { modifiedEnteredQuestion, clearEnteredQuestion }
+  from '../../../actions/Dash/Student';
 import ButtonRound from '../../../components/buttons/ButtonRound';
 
 let AskQuestion = ({
   dispatch,
-  questionSoFar,
+  question,
 }) => {
   let input;
   let enteredQuestion = '';
-
   return (
     <div className="ask-question">
       <div
@@ -23,7 +22,7 @@ let AskQuestion = ({
         <ButtonRound
           onClick={() => {
             // Todo: submit the question with server
-            dispatch(questionSubmitSuccess());
+            dispatch(clearEnteredQuestion());
           }}
         >
           SUBMIT
@@ -33,23 +32,23 @@ let AskQuestion = ({
         <textarea
           className="input"
           placeholder="Enter your question here..."
+          defaultValue={question}
           ref={(n) => {
             input = n ;
           }}
           onChange={(event) => {
               enteredQuestion = event.target.value;
-              dispatch(typedQuestion(enteredQuestion));
+              console.log('onChange')
+              dispatch(modifiedEnteredQuestion(enteredQuestion));
            }}
-        >
-          {questionSoFar}
-        </textarea>
+        />
       </div>
 
     </div>
   );
 };
 const stateToProps = (state) => ({
-  questionSoFar: state.CourseSession.enteredQuestion,
+  question: state.Dash.Student.enteredQuestion || '',
 });
 
 AskQuestion = connect(

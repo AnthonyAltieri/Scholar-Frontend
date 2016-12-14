@@ -107,7 +107,8 @@ class DashCourses extends Component {
       filter,
       userId,
       overlayType,
-      addCourseSuccess
+      onLogoutClick,
+      addCourseSuccess,
     } = this.props;
     return (
       <div className="dash-courses fullscreen">
@@ -121,6 +122,7 @@ class DashCourses extends Component {
         <LogOutDialog
           isOpen={isOverlayVisible && overlayType === 'LOG_OUT'}
           onYesClick={() => {
+            onLogoutClick();
           }}
           onNoClick={() => { hideOverlay() }}
         />
@@ -173,6 +175,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     onLogoutClick: () => {
       dispatch(UserActions.logOut());;
+      dispatch(OverlayActions.clearOverlayType());
+      dispatch(OverlayActions.hideOverlay());
       dispatch(push('/login'));
     },
     endLoading: () => {

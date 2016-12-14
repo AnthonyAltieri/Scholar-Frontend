@@ -11,8 +11,12 @@ export async function create(
     creatorId,
     question,
     options,
-    bankId || null,
+    correctOption,
+    bankId = null,
 ) {
+  if (correctOption > (options.length - 1)) {
+    throw new Error(`Invalid correct option of ${correctOption}`);
+  }
   try {
     return await post(
       routes.CREATE,
@@ -22,6 +26,7 @@ export async function create(
         creatorId,
         question,
         options,
+        correctOption,
         bankId,
       }
     )

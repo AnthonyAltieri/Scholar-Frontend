@@ -44,7 +44,6 @@ const CourseNav = ({
 
   return (
     <div className="c">
-      <br />
       <ActiveBar
         isCourseSessionActive={isCourseSessionActive}
       />
@@ -70,13 +69,13 @@ const CourseNav = ({
           showOverlay('COURSE_SESSION');
         }}
       />
-      <NavBtn
+      {/* <NavBtn
         icon="dashboard"
         label="main"
         onClick={() => {
           setMode('MAIN')
         }}
-      />
+      /> */}
       <NavBtn
         icon="chat"
         label="ask  "

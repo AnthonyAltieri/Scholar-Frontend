@@ -80,33 +80,64 @@ const AddOption = ({
 
 const OptionList = ({
   options,
+  optionsRef,
   optionEditModes,
   onOptionAdd,
   onOptionClear,
   onOptionContentClick,
   onOptionClearClick,
-}) => (
-  <ul className="option-list">
-    {!options
-        ? null
-        : options
-          .reduce((acc, c, i) => [...acc, { content: c, index: i, }], [])
-          .map((o) => (
-            <Option
-              key={`${o.index}--${o.content}`}
-              index={o.index}
-              content={o.content}
-              isEditable={true}
-              onContentClick={() => onOptionContentClick(o.index)}
-              onClearClick={() => onOptionClearClick(o.index)}
-            />
-          ))
-    }
-    {!options || options.length < 4
-      ? <AddOption onOptionAdd={onOptionAdd}/>
-      : null
-    }
-  </ul>
-);
+  chooseCorrectOption,
+  unselectCorrectOption,
+  correctOption,
+}) => {
+  return (
+    <ul className="option-list">
+      {(!!options && options.length > 0)
+        ? (<p
+          style={{
+            fontSize: 12,
+            width: '100%',
+            textAlign: 'center',
+            margin: 2,
+          }}
+        >
+          Click letter of correct answer, click again to unselect
+        </p>)
+        : null
+      }
+      {!options
+          ? null
+          : options
+            .reduce((acc, c, i) => [...acc, { content: c, index: i, }], [])
+            .map((o) => (
+              <Option
+                key={`${o.index}--${o.content}`}
+                index={o.index}
+                content={o.content}
+                isEditable={true}
+                isCorrectOption={typeof correctOption !== 'undefined'
+                  ? o.index === correctOption
+                  : false
+                }
+                onLetterClick={() => {
+                  if (correctOption === o.index) {
+                    unselectCorrectOption();
+                    return;
+                  }
+                  chooseCorrectOption(o.index)
+                }}
+                ref={optionsRef}
+                onContentClick={() => onOptionContentClick(o.index)}
+                onClearClick={() => onOptionClearClick(o.index)}
+              />
+            ))
+      }
+      {!options || options.length < 5
+        ? <AddOption onOptionAdd={onOptionAdd}/>
+        : null
+      }
+    </ul>
+  )
+};
 
 export default OptionList;

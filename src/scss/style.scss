@@ -1039,7 +1039,11 @@ $nav-btn-height: 40px;
   margin: 4px 0;
   width: 90%;
   position: relative;
+  min-height: 44px;
   @extend .card, .r-left;
+}
+.bq-option.correct {
+  background-color: $color-green-light;
 }
 .bq-letter {
   line-height: 100%;
@@ -1050,6 +1054,7 @@ $nav-btn-height: 40px;
   padding-left: 8px;
   padding-right: 8px;
   margin: 0;
+  cursor: pointer;
   @extend .no-text-sel;
 }
 .bq-content {
@@ -1415,54 +1420,19 @@ $nav-btn-height: 40px;
     }
   }
 
-  .stats {
-    display: inline-block;
-    height: 28%;
-    width: 100%;
-    //border-top: 2px solid $color-dark;
-    background-color: white;
-    margin-top: 12px;
-
-    #stat-row {
-      height: 100%;
-      width: 90%;
-      @extend .r-around;
-    }
-    .stat {
-      width: 144px;
-      height: 144px;
-      background-color: $color-secondary;
-      border-radius: 5px;
-      box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.14), 0 0 1px 0px rgba(0, 0, 0, 0.2), 0 0 5px 2px rgba(0, 0, 0, 0.12);
-      @extend .c-center;
-    }
+  .stat {
+    margin: 0 8px;
     .name {
-      width: 120px;
-      font-size: 18px;
-      margin: 4px;
-      text-align: center;
-      color: white;
-      @extend .no-text-sel;
+      font-weight: 700;
+      margin: 0 auto;
     }
     .number {
-      font-size: 70px;
-      margin: 0;
+      margin: 0 auto;
+      font-size: 42px;
+      width: 100%;
       text-align: center;
-      color: white;
-      @extend .no-text-sel;
     }
-    .stat.mini {
-      width: 92px;
-      height: 92px;
-      .name {
-        font-size: 16px;
-        width: 72px;
-        margin-bottom: 0;
-      }
-      .number {
-        font-size: 44px;
-      }
-    }
+
   }
 
   .mode-content {
@@ -1487,8 +1457,14 @@ $nav-btn-height: 40px;
 
     .option-list {
       list-style: none;
+      overflow-y: auto;
+      max-height: 240px;
+      min-height: 240px;
+      border-top: 1px solid rgba(0,0,0,0.1);
+      border-bottom: 1px solid rgba(0,0,0,0.1);
       padding: 0 8px;
       margin: 0;
+      @extend .c;
     }
     .option {
       $letter-height: 30px;
@@ -1514,9 +1490,11 @@ $nav-btn-height: 40px;
       @extend .r-between;
     }
     .add-option {
+      width: 100%;
+      min-height: 42px;
       textarea {
         font-size: 14px;
-        width: 90%;
+        width: 100%;
         resize: none;
       }
       @extend .r-between;
@@ -1556,7 +1534,6 @@ $nav-btn-height: 40px;
     display: inline-block;
     height: 100%;
     width: 49.5%;
-    background-color: white;
   }
 
   .top-pane {

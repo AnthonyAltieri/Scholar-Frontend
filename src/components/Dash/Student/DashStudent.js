@@ -19,6 +19,7 @@ import Colors from '../../../util/Colors'
 import ToCourseDialog from './ToCoursesDialog';
 import AlertDialog from './AlertDialog';
 import * as QuestionListActions from '../../../actions/QuestionList';
+import * as UserActions from '../../../actions/User';
 import AlertGraph from './AlertGraph';
 
 const fabAskStyle = {
@@ -161,6 +162,7 @@ class DashStudent extends Component {
       isAlertOverlayVisible,
       isAlertOverlayShown,
       children,
+      logOut,
       params,
     }  = this.props;
     console.log('params', params);
@@ -228,7 +230,7 @@ class DashStudent extends Component {
             }
           </FloatingActionButton>
           <AlertGraph
-            percentage={50}
+            percentage={20}
           />
         </div>
       );
@@ -238,11 +240,11 @@ class DashStudent extends Component {
 const mapStateToProps = (state) => {
   return {
     mode: state.DashStudent.mode || 'QUESTIONS',
-    code: state.CourseSession.code || '',
-    threshold: state.CourseSession.threshold,
-    alertPercentage: state.CourseSession.alertPercentage,
+    // code: state.CourseSession.code || '',
+    // threshold: state.CourseSession.threshold,
+    // alertPercentage: state.CourseSession.alertPercentage,
     isOverlayVisible: !!state.Overlay.isVisible,
-    courseSessionId: state.CourseSession.id,
+    // courseSessionId: state.CourseSession.id,
     isAlertOverlayVisible: !!state.DashStudent.isAlertOverlayVisible,
     // courseSessionId: state.CourseSession.id,
     // courseId: state.Course.id,
@@ -341,6 +343,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     setAlertPercentage: (percentage) => {
       dispatch(CourseSessionActions.setAlertPercentage(percentage))
     },
+    logOut: () => {
+      dispatch(UserActions.logOut());
+    }
   }
 };
 

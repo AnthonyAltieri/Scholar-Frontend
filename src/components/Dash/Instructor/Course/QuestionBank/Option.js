@@ -21,47 +21,61 @@ const Option = ({
   content,
   editContentId,
   isEditable,
+  isCorrectOption,
   onEditContentChange,
   onContentClick,
   onClearClick,
+  onLetterClick,
   editRef,
-}) => (
-  <div
-    key={index}
-    className="bq-option"
-  >
-    <IconButton
-      className="bq-clear"
-      iconStyle={{
-        color: Colors.red,
-      }}
-      onClick={() => {
-        onClearClick(index)
-      }}
+}) => {
+  console.log('index', index);
+  console.log('isCorrectOption', isCorrectOption);
+
+
+  return (
+    <div
+      key={index}
+      className={`bq-option ${isCorrectOption ? 'correct' : ''}` }
     >
-      <FontIcon className="material-icons">
-        clear
-      </FontIcon>
-    </IconButton>
-    <p className="bq-letter">{indexToLetter(index)}</p>
-    {!isEditable
-      ? (<p
-          className="bq-content"
-          onClick={onContentClick}
-        >
-          {content}
-        </p>)
-      : (<textarea
-        className="bq-content editable"
-        id={editContentId}
-        onChange={onEditContentChange}
-        ref={editRef}
-        defaultValue={content}
-      />)
-    }
+      <IconButton
+        className="bq-clear"
+        iconStyle={{
+          color: Colors.red,
+        }}
+        onClick={() => {
+          onClearClick(index)
+        }}
+      >
+        <FontIcon className="material-icons">
+          clear
+        </FontIcon>
+      </IconButton>
+      <p
+        className="bq-letter"
+        onClick={onLetterClick}
+      >
+        {indexToLetter(index)}
+      </p>
+      {!isEditable
+        ? (<p
+            className="bq-content"
+            onClick={onContentClick}
+          >
+            {content}
+          </p>)
+        : (<textarea
+          className="bq-content editable"
+          id={editContentId}
+          onChange={onEditContentChange}
+          ref={editRef}
+          defaultValue={content}
+        />)
+      }
 
-  </div>
+    </div>
 
-);
+  )
+
+};
 
 export default Option;

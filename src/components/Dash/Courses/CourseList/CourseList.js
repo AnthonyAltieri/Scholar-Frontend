@@ -53,13 +53,9 @@ class CourseList extends Component {
           if( !!error ) {
             console.log("[ERROR] CourseList (component) > enterCourseSession");
             toastr.error("Error: Could not join the Course. Please Refresh and try again");
-          }
-          else {
+          } else {
             console.log("Success! We will now enter the course session");
-
-            {//TODO: Implement logic to enter the course
-              /*enterCourse(courseId);*/
-            }
+            enterCourse(courseId);
           }
         }}
       />
