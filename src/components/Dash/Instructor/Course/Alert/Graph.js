@@ -65,7 +65,8 @@ var AlertGraph = React.createClass({
 
 
 const stateToProps = (state) => ({
-  data: state.Graph.Alert.graph
+  data: state.Graph.Alert.graph,
+  activeAlerts : state.Graph.Alert.activeAlerts
 });
 
 const dispatchToProps = (dispatch) => ({

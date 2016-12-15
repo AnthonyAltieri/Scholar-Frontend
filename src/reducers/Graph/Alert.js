@@ -5,7 +5,7 @@ const DEFAULT_THRESHOLD = 50;
 const initialState = {
   threshold: DEFAULT_THRESHOLD,
   graph: null,
-  courseId: null,
+  activeAlerts: 0
 };
 
 const Alert = (state = initialState, action) => {
@@ -40,7 +40,8 @@ const Alert = (state = initialState, action) => {
     case 'RECEIVED_ACTIVE_ALERTS': {
       return {
         ...state,
-        graph : updateInstructorAlertGraph(action.graph, action.activeAlerts, action.attendance, DEFAULT_THRESHOLD)
+        graph : updateInstructorAlertGraph(action.graph, action.activeAlerts, action.attendance, DEFAULT_THRESHOLD),
+        activeAlerts : action.activeAlerts
       }
     }
 
