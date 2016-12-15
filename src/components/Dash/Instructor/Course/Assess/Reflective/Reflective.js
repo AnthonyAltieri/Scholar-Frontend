@@ -5,6 +5,10 @@ import Buttons from '../Buttons';
 const Reflective = ({
   isActive,
   otherAssessmentActive,
+  isCourseSessionActive,
+  onStartClick,
+  onEndClick,
+  questionRef,
 }) => (
   <div
     className="one-thirds-pane"
@@ -21,10 +25,17 @@ const Reflective = ({
     <textarea
       className="reflective-question"
       placeholder="Enter a question..."
+      ref={questionRef}
     />
     <Buttons
-      isStartDisabled={otherAssessmentActive || isActive}
-      isEndDisabled={otherAssessmentActive || !isActive}
+      isStartDisabled={isCourseSessionActive &&
+        (otherAssessmentActive || isActive)
+      }
+      onStartClick={onStartClick}
+      isEndDisabled={isCourseSessionActive &&
+        (otherAssessmentActive || !isActive)
+      }
+      onEndClick={onEndClick}
     />
   </div>
 );

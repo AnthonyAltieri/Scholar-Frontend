@@ -12,7 +12,7 @@ export async function getByUser(userId) {
   try {
     return await post(routes.GET_BY_USER, { userId });
   } catch (e) {
+    console.error('[ERROR] Courses Api getByUser', e);
     return null;
   }
 }
-

@@ -18,6 +18,14 @@ function connect() {
 function subscribe(name) {
   if (!pusher) connect();
   channels[name] = pusher.subscribe(name);
+  if (!console.group) {
+    console.log('[SOCKET] subscribed to ' + name);
+  } else {
+    console.group('[SOCKET]')
+    console.log('%c Subscribe To', 'color: red', name);
+    console.log('%c Now Subscribed To', 'color: blue', channels);
+    console.groupEnd();
+  }
 }
 
 function bind(channelName, event, callback) {
@@ -25,13 +33,45 @@ function bind(channelName, event, callback) {
   if (!channel) {
     throw new Error(`Channel ${channelName} does not exist.`);
   }
-  channel.bind(event, callback);
+  channel.bind(event, (data) => {
+    if (!data) {
+      console.log('[SOCKET] data undefined')
+      return () => {};
+    }
+    if (!console.group) {
+      console.log(`[SOCKET] channelName: ${channelName} | event: ${event}`);
+    } else {
+      console.group('[SOCKET]')
+      console.log('%c Channel Name', 'color: blue', channelName)
+      console.log('%c Event', 'color: green', event)
+      console.log('%c Data', 'color: gray', data)
+      console.groupEnd();
+    }
+    return callback(data)
+  }
+  );
+}
+
+function disconnect() {
+  if (!pusher) return;
+  try {
+    unsubscribeAll();
+    pusher.disconnect();
+  } catch (e) {
+    console.error('Socket disconnect', e);
+  }
+}
+
+function unsubscribeAll() {
+  if (!pusher) return;
+  const keys = Object.keys(channels);
+  keys.forEach(k => { pusher.unsubscribe(k) });
+  channels = {};
 }
 
 export default {
   connect,
   subscribe,
   bind,
+  disconnect,
 }
-
-

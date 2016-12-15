@@ -52,10 +52,8 @@ const stateToProps = (state) => ({
   // isOverlayVisible: state.Overlay.isVisible,
   // hasCourseSession: state.CourseSession.active,
   courseId: !!state.User.inCourse ? state.User.inCourse.id : null,
-  isCourseSessionActive: !!state.User.inCourse
-    ? !!state.User.inCourse.activeCourseSessionId : false,
-  courseAbbreviation: !!state.User.inCourse
-    ? state.User.inCourse.abbreviation : null,
+  isCourseSessionActive: !!state.Course.activeCourseSessionId,
+  courseAbbreviation: state.Course.abbreviation,
   pathname: state.routing.locationBeforeTransitions.pathname,
 });
 const dispatchToProps = (dispatch) => ({

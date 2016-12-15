@@ -24,6 +24,8 @@ const Assess = (state = initialState, action) => {
       }
     }
 
+    case 'ASSESS_UNSELECT_CORRECT_OPTION':
+    case 'ASSESS_CHOOSE_CORRECT_OPTION':
     case 'ASSESS_INSTANT_ADD_OPTION':
     case 'ASSESS_INSTANT_REMOVE_OPTION': {
       return {

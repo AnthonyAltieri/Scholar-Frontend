@@ -14,45 +14,61 @@ const Instant = ({
   questionRef,
   onStartClick,
   onEndClick,
-}) => (
-  <div
-    className="two-thirds-pane c-between fullwidth"
-    style={{
-      marginBottom: "1%",
-    }}
-  >
-    <div className="fullwidth">
-      <Heading
-        text="Instant"
-        hasActive
-        isLeft
-        isActive={isActive}
-      />
-      <OptionList
-        options={options}
-        onOptionContentClick={onOptionContentClick}
-        onOptionClearClick={onOptionClearClick}
-        onOptionAdd={onOptionAdd}
-        onOptionClear={onOptionClear}
-      />
+  isCourseSessionActive,
+  optionsRef,
+  chooseCorrectOption,
+  unselectCorrectOption,
+  correctOption,
+}) => {
+  return (
+    <div
+      className="two-thirds-pane c-between fullwidth"
+      style={{
+        marginBottom: "1%",
+      }}
+    >
+      <div className="fullwidth">
+        <Heading
+          text="Instant"
+          hasActive
+          isLeft
+          isActive={isActive}
+        />
+        <OptionList
+          options={options}
+          onOptionContentClick={onOptionContentClick}
+          chooseCorrectOption={chooseCorrectOption}
+          unselectCorrectOption={unselectCorrectOption}
+          onOptionClearClick={onOptionClearClick}
+          onOptionAdd={onOptionAdd}
+          onOptionClear={onOptionClear}
+          optionsRef={optionsRef}
+          correctOption={correctOption}
+        />
+      </div>
+      <div className="fullwidth">
+        <textarea
+          placeholder="Enter question here..."
+          className="reflective-question"
+          style={{
+            height: 52,
+          }}
+          ref={questionRef}
+        />
+        <Buttons
+          isStartDisabled={isCourseSessionActive &&
+            (otherAssessmentActive || isActive)
+          }
+          isEndDisabled={isCourseSessionActive &&
+            (otherAssessmentActive || !isActive)
+          }
+          onStartClick={() => onStartClick()}
+          onEndClick={onEndClick}
+        />
+      </div>
     </div>
-    <div className="fullwidth">
-      <textarea
-        placeholder="Enter question here..."
-        className="reflective-question"
-        style={{
-          height: 52,
-        }}
-        ref={questionRef}
-      />
-      <Buttons
-        isStartDisabled={otherAssessmentActive || isActive}
-        isEndDisabled={otherAssessmentActive || !isActive}
-        onStartClick={onStartClick}
-        onEndClick={onEndClick}
-      />
-    </div>
-  </div>
-);
+
+  )
+};
 
 export default Instant;

@@ -136,7 +136,12 @@ class Ask extends Component {
     return (
       <div className="ask r-between">
         <div className="left-pane c">
-          <div className="most-voted">
+          <div
+            className="two-thirds-pane"
+            style={{
+              marginBottom: '1%',
+            }}
+            >
             <div className="heading">
               <h2 className="header">MOST VOTED</h2>
             </div>
@@ -163,11 +168,21 @@ class Ask extends Component {
               }
             </div>
           </div>
-          <div className="stats c-between card">
+          <div
+            className="one-thirds-pane card"
+            style={{
+              marginTop: '1%',
+            }}
+            >
             <div className="heading">
               <h2 className="header">STATS</h2>
             </div>
-            <div className="r-around" id="stat-row">
+            <div
+              className="r-around"
+              style={{
+                height: '75%',
+              }}
+            >
               <StatBlock
                 name="Questions"
                 number={questions.length}
@@ -181,7 +196,7 @@ class Ask extends Component {
             </div>
           </div>
         </div>
-        <div className="right-pane">
+        <div className="right-pane card">
           <div className="heading">
             <h2 className="header">MOST RECENT</h2>
           </div>
@@ -212,8 +227,8 @@ class Ask extends Component {
 };
 
 const stateToProps = (state) => ({
-  isCourseSessionActive: !!state.User.inCourse.activeCourseSessionId,
-  activeCourseSessionId: state.User.inCourse.activeCourseSessionId,
+  isCourseSessionActive: !!state.Course.activeCourseSessionId,
+  activeCourseSessionId: state.Course.activeCourseSessionId,
   questions: state.QuestionList,
   mostVotedQuestions: filterQuestions(
     'MOST_VOTED',

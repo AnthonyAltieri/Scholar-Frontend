@@ -39,6 +39,20 @@ const Instant = (state = {}, action) => {
       }
     }
 
+    case 'ASSESS_CHOOSE_CORRECT_OPTION': {
+      return {
+        ...state,
+        correctOption: action.correctOption,
+      }
+    }
+
+    case 'ASSESS_UNSELECT_CORRECT_OPTION': {
+      return {
+        ...state,
+        correctOption: -1,
+      }
+    }
+
     default: {
       return state;
     }

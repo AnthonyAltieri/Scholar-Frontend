@@ -87,6 +87,7 @@ export async function enrollStudentInCourse(
       }
     );
   } catch (e) {
+    console.error('[ERROR] Course Api enrollStudentInCourse', e);
     return null;
   }
 }
