@@ -1674,10 +1674,13 @@ $nav-btn-height: 40px;
     margin: 0 8px 0 8px;
   }
   .filter {
-    margin: 0 12px 0 0;
+    // margin: 0 12px 0 0;
+    width: 40px;
+    height: 40px;
     border-bottom: 2px solid transparent;
-    position: relative;
-    top: 2px;
+    text-align: center;
+    font-size: 0.8em;
+    @extend .c-center;
   }
   .filter.active {
     color: $color-bright;

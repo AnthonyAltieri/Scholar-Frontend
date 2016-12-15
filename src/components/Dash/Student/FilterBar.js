@@ -5,12 +5,14 @@ const Filter = ({
   isActive,
   onClick,
 }) => (
-  <a
+  <div
     className={'filter' + (!!isActive ? ' active' : '')}
     onClick={onClick}
   >
-    {text}
-  </a>
+    <a>
+      {text}
+    </a>
+  </div>
 )
 
 const FilterBar = ({
@@ -23,21 +25,33 @@ const FilterBar = ({
   return (
     <div className="filter-bar">
       <p className="filter-label">Filter:</p>
-      <Filter
-        text="All"
-        onClick={() => navigate('/dash/student/')}
-        isActive={!filter || filter === ''}
-      />
-      <Filter
-        text="Most Recent"
-        onClick={() => navigate('/dash/student/mostRecent')}
-        isActive={filter === 'mostRecent'}
-      />
-      <Filter
-        text="Most Voted"
-        onClick={() => navigate('/dash/student/mostVoted')}
-        isActive={filter === 'mostVoted'}
-      />
+      <div className="r-around fullwidth">
+        <Filter
+          text="All"
+          onClick={() => navigate('/dash/student/')}
+          isActive={!filter || filter === ''}
+        />
+        <Filter
+          text="Most Recent"
+          onClick={() => navigate('/dash/student/mostRecent')}
+          isActive={filter === 'mostRecent'}
+        />
+        <Filter
+          text="Least Recent"
+          onClick={() => navigate('/dash/student/leastRecent')}
+          isActive={filter === 'leastRecent'}
+        />
+        <Filter
+          text="Most Voted"
+          onClick={() => navigate('/dash/student/mostVoted')}
+          isActive={filter === 'mostVoted'}
+        />
+        <Filter
+          text="Least Voted"
+          onClick={() => navigate('/dash/student/leastVoted')}
+          isActive={filter === 'leastVoted'}
+        />
+      </div>
     </div>
   );
 }

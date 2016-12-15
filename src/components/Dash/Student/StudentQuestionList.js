@@ -17,6 +17,7 @@ const getRank = (votes) => {
 };
 
 const getVisibleQuestions = (filter, questions = [], userId) => {
+  console.log("getVisibleQuestions", 'filter', filter);
   switch (filter) {
     case '': {
       return questions.filter((q) => q.userId === userId);
@@ -28,6 +29,12 @@ const getVisibleQuestions = (filter, questions = [], userId) => {
         .sort((l, r) => r.votes.length - l.votes.length);
     }
 
+    case 'leastVoted': {
+      return questions
+        .slice(0)
+        .sort((l, r) => l.votes.length - r.votes.length);
+    }
+
     case 'mostRecent': {
       return questions
         .slice(0).sort((l, r) => {
@@ -35,6 +42,19 @@ const getVisibleQuestions = (filter, questions = [], userId) => {
             return -1;
           } else if (l.created > r.created) {
             return 1;
+          } else {
+            return 0;
+          }
+        });
+    }
+
+    case 'leastRecent': {
+      return questions
+        .slice(0).sort((l, r) => {
+          if (l.created < r.created) {
+            return 1;
+          } else if (l.created > r.created) {
+            return -1;
           } else {
             return 0;
           }
