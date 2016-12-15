@@ -43,18 +43,9 @@ const QuestionList = (state = [], action) => {
       return removeResponseById(state, action.id);
     }
 
-    case 'ADD_VOTE': {
-      return [
-        ...state.filter((q) => q.id !== action.id),
-        Question(state.filter((q) => q.id === action.id)[0], action),
-      ]
-    }
-
+    case 'ADD_VOTE': 
     case 'REMOVE_VOTE': {
-      return [
-        ...state.filter((q) => q.id !== action.id),
-        Question(state.filter((q) => q.id === action.id)[0] , action),
-      ]
+      return state.map(q => Question(q, action));
     }
 
     default: {

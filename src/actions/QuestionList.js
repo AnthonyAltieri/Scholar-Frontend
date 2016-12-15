@@ -65,9 +65,11 @@ export const addVote = (
 });
 
 export const removeVote = (
+  id,
   userId,
 ) => ({
   type: 'REMOVE_VOTE',
+  id,
   userId,
 });
 

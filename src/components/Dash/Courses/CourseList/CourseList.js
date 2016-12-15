@@ -109,7 +109,7 @@ const dispatchToProps = (dispatch) => ({
       );
       console.log('action', action);
     dispatch(action);
-    dispatch(push('/dash/student'));
+    dispatch(push('/dash/student/'));
   },
   receivedQuestions: (questions) => {
     dispatch(QuestionListActions.receivedQuestions(questions));

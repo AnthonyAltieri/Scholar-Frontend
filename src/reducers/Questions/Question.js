@@ -25,9 +25,7 @@ let Question = (state = {}, action) => {
     case 'RECEIVED_QUESTIONS': {
       return {
         ...state,
-        responses: state.responses.reduce((acc, cur, i) => (
-          acc = [...acc, Response(cur, action)]
-        ), [])
+        responses: state.responses.map(r => Response(r, action)),
       };
 
       return action.questions.reduce((acc, cur, i) => {
@@ -36,23 +34,19 @@ let Question = (state = {}, action) => {
       }, []);
     }
 
+    case 'REMOVE_VOTE':
     case 'ADD_VOTE': {
-      const votes = Votes(undefined, action);
-      const rank = votes.length;
-      return {
-        ...state,
-        votes,
-        rank,
+      let votes = state.votes;
+      let rank = state.rank;
+      if (action.id === state.id) {
+        votes = Votes(undefined, action);
+        rank = votes.length;
       }
-    }
-
-    case 'REMOVE_VOTE': {
-      const votes = Votes(state.votes, action);
-      const rank = votes.length;
       return {
         ...state,
         votes,
         rank,
+        responses: state.responses.map(r => Response(r, action))
       }
     }
 
