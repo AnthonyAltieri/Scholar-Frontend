@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { toastr } from 'react-redux-toastr';
 import * as OverlayActions from '../../../../actions/Overlay';
 import * as CourseActions from '../../../../actions/Dash/Courses/Courses';
+import * as AlertActions from '../../../../actions/Alert';
 import { startCourseSession, endCourseSession } from '../../../../api/CourseSession';
 import Ask from './Ask/Ask';
 import Alert from './Alert/Alert';
@@ -14,6 +15,8 @@ import Graph from './Alert/Graph';
 import Assess from './Assess/Assess';
 import QuestionBank from './QuestionBank/QuestionBank';
 import CourseSessionDialog from './CourseSessionDialog';
+import { initInstructorAlertGraph, getAlerts, INTERVAL_TIME } from '../../../../util/AlertGraph'
+
 
 async function handleCourseSessionStart(
   courseId,
@@ -40,6 +43,23 @@ async function handleCourseSessionEnd(
 }
 
 class DashCourse extends Component {
+
+  async componentDidMount() {
+    const { updateAlertGraph, alertGraph } = this.props;
+    window.intervalGetAlerts =  window.setInterval( async () => {
+      try {
+        let alerts = await getAlerts();
+        let attendance = 40;
+        updateAlertGraph(alerts, attendance, alertGraph);
+      }
+      catch (e) {
+        console.error("[ERROR] in DashCourse Component > ComponentDidMount : " + e)
+      }
+    }, INTERVAL_TIME);
+  }
+   componentWillUnmount() {
+    window.clearInterval(window.intervalGetAlerts);
+  }
   render() {
     const {
       mode,
@@ -136,6 +156,7 @@ const stateToProps = state => ({
   isOverlayVisible: state.Overlay.isVisible,
   overlayType: state.Overlay.type,
   userId: state.User.id,
+  alertGraph: state.Graph.Alert.graph
 });
 
 const dispatchToProps = (dispatch, ownProps) => ({
@@ -149,9 +170,23 @@ const dispatchToProps = (dispatch, ownProps) => ({
   },
   deactivateCourseSession: () => {
     dispatch(CourseActions.deactivateCourse(ownProps.params.courseId));
+    window.clearInterval(window.intervalGetAlerts);
   },
-  activateCourseSession: (courseSessionId) => {
+  updateAlertGraph: (activeAlerts, attendance, graph) => {
+   dispatch(AlertActions.receivedActiveAlerts(activeAlerts, attendance, graph));
+  },
+  activateCourseSession: async (courseSessionId) => {
     dispatch(CourseActions.activateCourse(ownProps.params.courseId, courseSessionId));
+    window.intervalGetAlerts =  window.setInterval(async () => {
+      try {
+        let activeAlerts = await getAlerts();
+        let attendance = 40;
+        dispatch(AlertActions.receivedActiveAlerts(activeAlerts, attendance));
+      }
+      catch (e) {
+        console.error("[ERROR] in DashCourse Component > ComponentDidMount : " + e)
+      }
+    }, INTERVAL_TIME);
   },
 });
 

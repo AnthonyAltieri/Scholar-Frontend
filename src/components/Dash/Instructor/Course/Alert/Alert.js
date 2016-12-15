@@ -27,6 +27,7 @@ class Alert extends Component {
 }
 
 const stateToProps = (state) => ({
+  alertGraph: state.Graph.Alert.graph
 });
 
 const dispatchToProps = (dispatch) => ({

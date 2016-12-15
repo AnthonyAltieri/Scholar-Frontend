@@ -12,11 +12,11 @@ import Loading from './Loading';
 import Admin from './Admin';
 import Overlay from './Overlay';
 import DashStudent from './DashStudent';
-import Alert from './Alert';
 import Dash from './Dash/Dash';
 import Course from './Course';
 import Assess from './Assess/Assess';
 import AssessmentBank from './AssessmentBank/AssessmentBank';
+import Graph  from './Graph/Graph'
 import {reducer as Toastr} from 'react-redux-toastr'
 import { routerReducer } from 'react-router-redux';
 
@@ -34,6 +34,7 @@ const Root = combineReducers({
   SignupInstructor,
   Assess,
   AssessmentBank,
+  Graph,
   toastr: Toastr,
   routing: routerReducer,
   Admin,

@@ -1,10 +1,11 @@
 import React from 'react';
 import NVD3Chart from 'react-nvd3';
 import '../../../../../../node_modules/react-nvd3/node_modules/nvd3/build/nv.d3.min.css'
-import { initAlertGraph } from '../../../../../util/Graph'
+import { initInstructorAlertGraph } from '../../../../../util/AlertGraph'
+import { connect } from 'react-redux';
 
 function getDatum() {
- return initAlertGraph();
+ return initInstructorAlertGraph();
 }
 
 var AlertGraph = React.createClass({
@@ -14,8 +15,11 @@ var AlertGraph = React.createClass({
   handleClick: function() {
     this.setState({count: this.state.count + 1})
   },
+  componentWillMount: function(){
+    console.log("GRAPH WILL MOUNT HERE IS WUT IT IS");
+    console.log(JSON.stringify(this.props.data));
+  },
   render: function() {
-    const data = getDatum();
     return (
       <div id="lineChart">
         {
@@ -31,7 +35,7 @@ var AlertGraph = React.createClass({
             },
             yDomain: [0, 100],
             type:'lineChart',
-            datum: data,
+            datum: this.props.data,
             x: 'label',
             y: 'value',
             callback: (graph) => {
@@ -58,5 +62,20 @@ var AlertGraph = React.createClass({
     )
   }
 });
+
+
+const stateToProps = (state) => ({
+  data: state.Graph.Alert.graph
+});
+
+const dispatchToProps = (dispatch) => ({
+
+});
+
+AlertGraph = connect(
+  stateToProps,
+  dispatchToProps,
+)(AlertGraph);
+
 
 export default AlertGraph;
