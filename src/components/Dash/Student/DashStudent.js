@@ -71,12 +71,18 @@ function setUpSockets(props) {
   Socket.bind(
     courseSessionChannel,
     Events.ADD_VOTE,
-    (data) => { addVote(data.vote) }
+    (data) => {
+      if (data.vote.userId === userId) return;
+      addVote(data.vote)
+    }
   );
   Socket.bind(
     courseSessionChannel,
     Events.REMOVE_VOTE,
-    (data) => { removeVote(data.userId) }
+    (data) => {
+      if (data.vote.userId === userId) return;
+      removeVote(data.userId)
+    }
   );
   Socket.bind(
     courseSessionChannel,

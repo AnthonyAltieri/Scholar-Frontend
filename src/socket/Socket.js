@@ -63,10 +63,15 @@ function disconnect() {
 }
 
 function unsubscribeAll() {
+  console.log('[SOCKET] unscubscribe all');
   if (!pusher) return;
   const keys = Object.keys(channels);
   keys.forEach(k => { pusher.unsubscribe(k) });
   channels = {};
+}
+
+function getPusher() {
+  return pusher;
 }
 
 export default {
@@ -74,4 +79,5 @@ export default {
   subscribe,
   bind,
   disconnect,
+  getPusher,
 }

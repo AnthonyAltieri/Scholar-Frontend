@@ -34,7 +34,7 @@ export async function questionAdd(
 export async function questionRemove(userId, id) {
   try {
     return await post(
-      routes.QUESTION_ADD,
+      routes.QUESTION_REMOVE,
       { userId, id }
     );
   } catch (e) {

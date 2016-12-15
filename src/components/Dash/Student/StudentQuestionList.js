@@ -7,6 +7,7 @@ import ReactDOM from 'react-dom';
 import { store } from 'redux';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import * as QuestionListActions from '../../../actions/QuestionList';
 import QuestionResponse from '../Instructor/Course/Ask/QuestionList/QuestionResponse';
 // import { fetchQuesitons } from '../../../api/Questions';
 import * as DashStudentActions from '../../../actions/DashStudent'
@@ -87,6 +88,8 @@ class StudentQuestionList extends Component {
       filter,
       userType,
       navigate,
+      addVote,
+      removeVote,
     } = this.props;
     return (
       <div
@@ -112,6 +115,8 @@ class StudentQuestionList extends Component {
             id={q.id}
             hasBeenEndorsed={!!q.isEndorsed}
             isInstructor={userType === 'INSTRUCTOR'}
+            addVote={addVote}
+            removeVote={removeVote}
           />
         ))}
       </div>
@@ -137,6 +142,24 @@ const dispatchToProps = (dispatch) => ({
   navigate: (url) => {
     dispatch(push(url))
   },
+  addVote: (
+    id,
+    voteType,
+    userId,
+    created,
+  ) => {
+    dispatch(
+      QuestionListActions.addVote(
+        id,
+        voteType,
+        userId,
+        created,
+      )
+    );
+  },
+  removeVote: (id, userId) => {
+    dispatch(QuestionListActions.removeVote(id, userId));
+  }
 });
 
 StudentQuestionList = connect(

@@ -5,6 +5,7 @@
 import React from 'react';
 import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
+import { toastr } from 'react-redux-toastr';
 import { dismiss as dismissQuestion, endorseAdd as endorseAddQuestion }
   from '../../../../../../api/Questions';
 import { dismiss as dismissResponse, endorseAdd as endorseAddResponse }
@@ -27,6 +28,8 @@ const QuestionResponse = ({
   id,
   hasBeenEndorsed,
   isInstructor,
+  addVote,
+  removeVote,
 }) => {
   const rank = !!votes
     ? votes.filter(v => v.type === 'UP').length
@@ -83,7 +86,7 @@ const QuestionResponse = ({
             if (!hasVotedOn) {
               if (isQuestion) {
                 try {
-                  const payload = await Vote.questionAdd(
+                  const payload = await VoteApi.questionAdd(
                     userId,
                     courseId,
                     courseSessionId,
@@ -94,7 +97,7 @@ const QuestionResponse = ({
                     toastr.error('Something went wrong please try again');
                     return;
                   }
-                  // TODO: add vote action
+                  addVote(id, 'UP', userId, new Date());
                   return;
                 } catch (e) {
                   toastr.error('Something went wrong please try again');
@@ -103,7 +106,7 @@ const QuestionResponse = ({
                 }
               } else {
                 try {
-                  const payload = await Vote.responseAdd(
+                  const payload = await VoteApi.responseAdd(
                     userId,
                     courseId,
                     courseSessionId,
@@ -114,7 +117,7 @@ const QuestionResponse = ({
                     toastr.error('Something went wrong please try again');
                     return;
                   }
-                  // TODO: add response action
+                  addVote(id, 'UP', userId, new Date());
                   return;
                 } catch (e) {
                   toastr.error('Something went wrong please try again');
@@ -125,7 +128,7 @@ const QuestionResponse = ({
             } else {
               if (isQuestion) {
                 try {
-                  const payload = await Vote.questionRemove(
+                  const payload = await VoteApi.questionRemove(
                     userId,
                     id,
                   );
@@ -133,7 +136,7 @@ const QuestionResponse = ({
                     toastr.error('Something went wrong please try again');
                     return;
                   }
-                  // TODO: question remove action
+                  removeVote(id, userId);
                   return;
                 } catch (e) {
                   toastr.error('Something went wrong please try again');
@@ -142,7 +145,7 @@ const QuestionResponse = ({
                 }
               } else {
                 try {
-                  const payload = await Vote.responseRemove(
+                  const payload = await VoteApi.responseRemove(
                     userId,
                     id,
                   );
@@ -150,7 +153,7 @@ const QuestionResponse = ({
                     toastr.error('Something went wrong please try again');
                     return;
                   }
-                  // TODO: response remove action
+                  removeVote(id, userId);
                   return;
                 } catch (e) {
                   toastr.error('Something went wrong please try again');
@@ -216,6 +219,8 @@ const QuestionResponse = ({
                 depth={typeof depth === 'undefined' ? 1 : depth++}
                 id={r.id}
                 courseSessionId={courseSessionId}
+                addVote={addVote}
+                removeVote={removeVote}
               />
             )))
           : null
