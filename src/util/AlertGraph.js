@@ -5,7 +5,7 @@ import { getActiveAlerts } from '../api/Alert'
 /*
 Constants for the alert Graph initialization
  */
-export const INTERVAL_TIME = 1000;//1 request per second
+export const INTERVAL_TIME = 3000;//1 request per second
 const TOTAL_MINUTES = 10;//the amount we want to show the instructor
 const TOTAL_TIME = TOTAL_MINUTES * 60000;//convert from minutes to milliseconds
 export const NUM_DATAPOINTS = TOTAL_TIME / INTERVAL_TIME;
@@ -13,7 +13,7 @@ const STEP_SIZE = Number((TOTAL_MINUTES / NUM_DATAPOINTS).toFixed(2));
 const COLOR_BLUE = '#7777ff';
 const COLOR_GREEN = '#42AFAC';
 const COLOR_RED = '#FC539C';
-const DEFAULT_THRESHOLD = 10;
+const DEFAULT_THRESHOLD = 50;
 
 export function initInstructorAlertGraph(currentThreshold = DEFAULT_THRESHOLD) {
   let confusionValues =  [];
@@ -73,21 +73,22 @@ export async function getAlerts(courseSessionId) {
 export function updateInstructorAlertGraph(graph, activeAlerts, attendance, currentThreshold = DEFAULT_THRESHOLD) {
 try {
 
+  let returnGraph = graph;
 
   if (( activeAlerts / attendance * 100 ) >= currentThreshold) {
-    graph[0].color = COLOR_RED;
+    returnGraph[0].color = COLOR_RED;
   }
   else {
-    graph[0].color = COLOR_BLUE;
+    returnGraph[0].color = COLOR_BLUE;
   }
 
   let i = 0;
 
   //slide the window forward by shifting values left one datapoint on the x axis
   for (i; i < graph.length; i++) {
-    graph[i].values = graph[i].values.slice(1, (graph[i].values.length - 1));
+    returnGraph[i].values = graph[i].values.slice(1, (graph[i].values.length));
 
-    graph[i].values.forEach((val) => {
+    returnGraph[i].values.forEach((val) => {
       val.x = Number((val.x - STEP_SIZE).toFixed(2));
     });
   }
@@ -105,13 +106,13 @@ try {
     currentThreshold = 0;
   }
 
-  graph[0].values.push({
+  returnGraph[0].values.push({
     x: 0,
     y: mostRecentConfusionPercentage,
     series: 0
   });
 
-  graph[1].values.push({
+  returnGraph[1].values.push({
     x: 0,
     y: currentThreshold,
     series: 1

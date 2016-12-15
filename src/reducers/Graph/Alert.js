@@ -1,6 +1,6 @@
 import { initInstructorAlertGraph, updateInstructorAlertGraph } from '../../util/AlertGraph'
 
-const DEFAULT_THRESHOLD = 10;
+const DEFAULT_THRESHOLD = 50;
 
 const initialState = {
   threshold: DEFAULT_THRESHOLD,
@@ -15,15 +15,13 @@ const Alert = (state = initialState, action) => {
     case 'ACTIVATE_COURSE': {
       return {
         ...state,
-        courseId : action.id,//TODO: check if we really need this
-        courseSessionId : action.courseSessionId,//TODO: check if we really need this
         graph : initInstructorAlertGraph(DEFAULT_THRESHOLD)
       }
     }
 
-    case 'DEACTIVATE_COURSE': {
-      return initialState;
-    }
+    // case 'DEACTIVATE_COURSE': {
+    //   return initialState;
+    // }
 
     case 'SET_ALERT_THRESHOLD': {
       return {

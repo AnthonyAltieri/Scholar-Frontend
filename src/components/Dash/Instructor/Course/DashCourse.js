@@ -51,6 +51,7 @@ class DashCourse extends Component {
         let alerts = await getAlerts();
         let attendance = 40;
         updateAlertGraph(alerts, attendance, alertGraph);
+        this.forceUpdate();
       }
       catch (e) {
         console.error("[ERROR] in DashCourse Component > ComponentDidMount : " + e)
