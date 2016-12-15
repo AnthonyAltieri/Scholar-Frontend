@@ -27,6 +27,7 @@ import DashCourse from './Dash/Instructor/Course/DashCourse';
 import InstructorSettings from './Dash/Instructor/InstructorSettings';
 import InstructorConfusion from './Dash/Instructor/Course/Confusion';
 import InstructorAsk from './Dash/Instructor/Course/Ask/Ask';
+import Alert from '../components/Dash/Instructor/Course/Alert/Alert'
 
 class Root extends Component {
   componentWillMount() {
@@ -40,6 +41,7 @@ class Root extends Component {
         <Router history={syncHistoryWithStore(browserHistory, store)}>
           <Route path="/" component={AppWithToast}>
             <IndexRedirect to="/login/"/>
+            <Route path="graph" component={Alert}/>
             <Route path="login" component={Login}/>
             <Route path="signup" components={Signup}/>
             <Route path="signup/instructor" components={SignupInstructor}/>

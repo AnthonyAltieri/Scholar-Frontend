@@ -17,6 +17,8 @@
     "react-addons-css-transition-group": "^15.3.1",
     "react-dom": "^15.3.1",
     "react-ink": "^5.1.1",
+    "d3": "^3.5.16",
+    "nvd3": "^1.8.2",
     "react-nvd3": "^0.5.7",
     "react-redux": "^4.4.5",
     "react-redux-toastr": "^3.7.0",

@@ -10,6 +10,7 @@ import * as CourseActions from '../../../../actions/Dash/Courses/Courses';
 import { startCourseSession, endCourseSession } from '../../../../api/CourseSession';
 import Ask from './Ask/Ask';
 import Alert from './Alert/Alert';
+import Graph from './Alert/Graph';
 import Assess from './Assess/Assess';
 import QuestionBank from './QuestionBank/QuestionBank';
 import CourseSessionDialog from './CourseSessionDialog';
@@ -71,7 +72,7 @@ class DashCourse extends Component {
       }
 
       case 'ALERT': {
-        content = (<Alert />);
+        content = (<Graph />);
         break;
       }
 

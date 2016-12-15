@@ -12,6 +12,7 @@ import Loading from './Loading';
 import Admin from './Admin';
 import Overlay from './Overlay';
 import DashStudent from './DashStudent';
+import Alert from './Alert';
 import Dash from './Dash/Dash';
 import Course from './Course';
 import Assess from './Assess/Assess';

@@ -23,6 +23,19 @@ $color-blue-light: #B0E9E9;
 
 // Fonts
 $font-default: Lato, Helvetica, SansSerif;
+//svg.nvd3-svg {
+//  height: 400px;
+//  width: 100%;
+//}
+//
+//g.nvd3.nv-wrap.nv-lineChart{
+//  width: 100%;
+//}
+
+#lineChart svg {
+  height: 400px;
+  width: 700px;
+}
 
 * {
   font-family: $font-default;
