@@ -141,8 +141,11 @@ class DashStudent extends Component {
     //   setAlertThreshold,
     //   setAlertPercentage
     // );
-    // setUpSockets(this.props)
+    setUpSockets(this.props)
+  }
 
+  componentWillUnmount() {
+    Socket.disconnect();
   }
 
   render() {
@@ -240,14 +243,13 @@ class DashStudent extends Component {
 const mapStateToProps = (state) => {
   return {
     mode: state.DashStudent.mode || 'QUESTIONS',
-    // code: state.CourseSession.code || '',
+    code: state.Course.abbreviation || '',
     // threshold: state.CourseSession.threshold,
     // alertPercentage: state.CourseSession.alertPercentage,
     isOverlayVisible: !!state.Overlay.isVisible,
-    // courseSessionId: state.CourseSession.id,
     isAlertOverlayVisible: !!state.DashStudent.isAlertOverlayVisible,
-    // courseSessionId: state.CourseSession.id,
-    // courseId: state.Course.id,
+    courseSessionId: state.Course.activeCourseSessionId,
+    courseId: state.Course.id,
   }
 };
 

@@ -5,8 +5,11 @@
 import React from 'react';
 import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
-import { dismiss as dismissQuestion } from '../../../../../../api/Questions';
-import { dismiss as dismissResponse } from '../../../../../../api/Response';
+import { dismiss as dismissQuestion, endorseAdd as endorseAddQuestion }
+  from '../../../../../../api/Questions';
+import { dismiss as dismissResponse, endorseAdd as endorseAddResponse }
+  from '../../../../../../api/Response';
+import * as VoteApi from '../../../../../../api/Vote';
 import Actions from './Actions';
 
 
@@ -14,6 +17,8 @@ const QuestionResponse = ({
   isQuestion,
   votes,
   userId,
+  courseId,
+  courseSessionId,
   depth,
   depthRestriction,
   content,
@@ -22,7 +27,6 @@ const QuestionResponse = ({
   id,
   hasBeenEndorsed,
   isInstructor,
-  courseSessionId,
 }) => {
   const rank = !!votes
     ? votes.filter(v => v.type === 'UP').length
@@ -76,15 +80,126 @@ const QuestionResponse = ({
             }
           }}
           onVoteClick={async function() {
-            if (hasVotedOn) {
-              try {
-                // TODO: vote api
-              } catch (e) {
-                toastr.error('Something went wrong please try again');
-                console.error('[ERROR]')
-                return;
+            if (!hasVotedOn) {
+              if (isQuestion) {
+                try {
+                  const payload = await Vote.questionAdd(
+                    userId,
+                    courseId,
+                    courseSessionId,
+                    'QUESTION',
+                    id,
+                  );
+                  if (!!payload.error) {
+                    toastr.error('Something went wrong please try again');
+                    return;
+                  }
+                  // TODO: add vote action
+                  return;
+                } catch (e) {
+                  toastr.error('Something went wrong please try again');
+                  console.error('[ERROR] questionAdd', e);
+                  return;
+                }
+              } else {
+                try {
+                  const payload = await Vote.responseAdd(
+                    userId,
+                    courseId,
+                    courseSessionId,
+                    'RESPONSE',
+                    id,
+                  );
+                  if (!!payload.error) {
+                    toastr.error('Something went wrong please try again');
+                    return;
+                  }
+                  // TODO: add response action
+                  return;
+                } catch (e) {
+                  toastr.error('Something went wrong please try again');
+                  console.error('[ERROR] responseAdd', e);
+                  return;
+                }
+              }
+            } else {
+              if (isQuestion) {
+                try {
+                  const payload = await Vote.questionRemove(
+                    userId,
+                    id,
+                  );
+                  if (!!payload.error) {
+                    toastr.error('Something went wrong please try again');
+                    return;
+                  }
+                  // TODO: question remove action
+                  return;
+                } catch (e) {
+                  toastr.error('Something went wrong please try again');
+                  console.error('[ERROR] questionRemove', e);
+                  return;
+                }
+              } else {
+                try {
+                  const payload = await Vote.responseRemove(
+                    userId,
+                    id,
+                  );
+                  if (!!payload.error) {
+                    toastr.error('Something went wrong please try again');
+                    return;
+                  }
+                  // TODO: response remove action
+                  return;
+                } catch (e) {
+                  toastr.error('Something went wrong please try again');
+                  console.error('[ERROR] responseRemove', e);
+                  return;
+                }
               }
             }
+          }}
+          onEndorseClick={async function() {
+            if (!!hasBeenEndorsed) {
+              const type = isQuestion ? 'question' : 'response';
+              toastr.info(`This ${type} has already been endorsed`);
+              return;
+            }
+            if (isQuestion) {
+              try {
+                const payload = await endorseAddQuestion(
+                  userId,
+                  id,
+                  courseSessionId,
+                );
+                if (!!payload.error) {
+                  toastr.error('Something went wrong please try again');
+                  return;
+                }
+                // TODO: question endorse add action
+                return;
+              } catch (e) {
+                toastr.error('Something went wrong please try again');
+                console.error('[ERROR] endorseAddQuestion', e);
+              }
+            } else {
+              try {
+                const payload = await endorseAddResponse(
+                  userId,
+                  id,
+                  courseSessionId,
+                );
+                if (!!payload.error) {
+                  toastr.error('Something went wrong please try again');
+                  return;
+                }
+              } catch (e) {
+                toastr.error('Something went wrong please try again');
+                console.error('[ERROR] endorseAddResponse', e);
+              }
+            }
+
           }}
         />
       </div>

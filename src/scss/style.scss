@@ -1601,26 +1601,29 @@ $nav-btn-height: 40px;
   // margin: 8px 0 auto auto;
   margin-left: 10px;
   position: relative;
-  background-color: rgba(0,0,0,0.02);
+  background-color: rgba(0,0,0,0.01);
+  border-bottom: 1px solid rgba(0,0,0,0.05);
   .rank {
     //float: left;
     width: 20px;
     height: 20px;
     background-color: $color-dark;
     color: $color-white;
-    text-align: center;
-    line-height: 20px;
     border-radius: 50%;
     display: block;
-    //position: relative;
-    //top: 8px;
-    //left: 8px;
-    //margin-right: 14px !important;
     margin: 0;
     font-weight: 800;
     font-size: 12px;
     box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.14), 0 0 1px 0px rgba(0, 0, 0, 0.2), 0 0 5px 2px rgba(0, 0, 0, 0.12);
     @extend .no-text-sel;
+  }
+  .rank-text {
+    width: 20px;
+    line-height: 20px;
+    text-align: center;
+    position: relative;
+    right: 0.5px;
+    margin: 0;
   }
   .content {
     font-size: 14px;
@@ -1629,16 +1632,18 @@ $nav-btn-height: 40px;
     margin: 0;
   }
   .buttons {
+    height: 26px;
     padding: 0 8px;
     background-color: rgba(210, 210, 210, 0.38);
     border-radius: 3px;
     @extend .r-between;
   }
   .time {
+    width: 52px;
     font-size: 8px;
     font-weight: 800;
+    text-align: center;
     margin: 0;
-    padding: 0 2px 0 8px;
     @extend .no-text-sel;
   }
   .clear {
@@ -1658,6 +1663,27 @@ $nav-btn-height: 40px;
   border-left: solid 1px #cccccc;
   background-color: rgba(0,0,0, 0.02);
   margin: 0;
+}
+
+.filter-bar {
+  width: 100%;
+  min-height: 42px;
+  background-color: rgba(210, 210, 210, 0.38);
+  .filter-label {
+    display: inline-block;
+    margin: 0 8px 0 8px;
+  }
+  .filter {
+    margin: 0 12px 0 0;
+    border-bottom: 2px solid transparent;
+    position: relative;
+    top: 2px;
+  }
+  .filter.active {
+    color: $color-bright;
+    border-bottom: 2px solid $color-bright;
+  }
+  @extend .r;
 }
 
 .alert-graph {

@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { toastr } from 'react-redux-toastr';
 import { modifiedEnteredQuestion, clearEnteredQuestion }
   from '../../../actions/Dash/Student';
+import { setDashMode } from '../../../actions/DashStudent';
 import ButtonRound from '../../../components/buttons/ButtonRound';
 import RaisedButton from 'material-ui/RaisedButton';
 import { create } from '../../../api/Question';
@@ -49,8 +50,9 @@ let AskQuestion = ({
                 toastr.error('Something went wrong please try again')
                 return;
               }
-              input.value = '';
               dispatch(clearEnteredQuestion());
+              dispatch(setDashMode('QUESTIONS'));
+              // input.value = '';
             } catch (e) {
               console.error('[ERROR] onClick', e);
               toastr.error('Something went wrong please try again')

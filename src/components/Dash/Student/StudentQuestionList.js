@@ -6,9 +6,11 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { store } from 'redux';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import QuestionResponse from '../Instructor/Course/Ask/QuestionList/QuestionResponse';
 // import { fetchQuesitons } from '../../../api/Questions';
 import * as DashStudentActions from '../../../actions/DashStudent'
+import FilterBar from './FilterBar';
 
 const getRank = (votes) => {
   return votes.filter(v => v.type === 'UP').length
@@ -60,29 +62,36 @@ class StudentQuestionList extends Component {
     const {
       activeCourseSessionId,
       questions,
+      courseId,
+      userId,
       filter,
+      userType,
+      navigate,
     } = this.props;
-    console.log('filter', filter);
-    console.log('questions', questions);
     return (
       <div
-        className="c"
+        className="c fullheight"
         style={{
           overflowY: "auto",
-          paddingTop: 12,
+          paddingBottom: 150,
         }}
       >
+        <FilterBar filter={filter} navigate={navigate}/>
         {questions.map((q) => (
           <QuestionResponse
+            key={`qr-${q.id}`}
             isQuestion
-            key={q.id}
-            rank={getRank(q.votes)}
+            votes={q.votes}
+            userId={userId}
+            courseId={courseId}
+            courseSessionId={activeCourseSessionId}
             depthRestriction={2}
             content={q.content}
             created={q.created}
             responses={q.responses}
             id={q.id}
-            courseSessionId={activeCourseSessionId}
+            hasBeenEndorsed={!!q.isEndorsed}
+            isInstructor={userType === 'INSTRUCTOR'}
           />
         ))}
       </div>
@@ -96,16 +105,23 @@ const mapStateToProps = (state, ownProps) => ({
     state.QuestionList,
     state.User.id,
   ),
+  userId: state.User.id,
+  courseId: state.Course.id,
   activeCourseSessionId: state.Course.activeCourseSessionId,
+  userType: state.User.type,
 });
 const dispatchToProps = (dispatch) => ({
   retrievedQuestions: (questions) => {
     dispatch(DashStudentActions.retrievedQuestions(questions));
-  }
+  },
+  navigate: (url) => {
+    dispatch(push(url))
+  },
 });
 
 StudentQuestionList = connect(
   mapStateToProps,
+  dispatchToProps,
 )(StudentQuestionList);
 
 export default StudentQuestionList;
