@@ -24,4 +24,34 @@ export const receivedActiveAssessment = (
 export const setViewMode = (mode) => ({
   type: 'SET_ASSESS_VIEW_MODE',
   mode,
-})
+});
+
+export const foundActiveInstantAssessment = (
+  id,
+  question,
+  assessmentType,
+  options,
+  answers,
+) => ({
+  type: 'FOUND_ACTIVE_INSTANT_ASSESSMENT',
+  id,
+  question,
+  assessmentType,
+  options,
+  answers,
+});
+
+export const foundActiveReflectiveAssessment =(
+  id,
+  question,
+  assessmentType,
+  numberAnswers,
+  numberReviews,
+) => ({
+  type: 'FOUND_ACTIVE_REFLECTIVE_ASSESSMENT',
+  id,
+  question,
+  assessmentType,
+  numberAnswers,
+  numberReviews,
+});

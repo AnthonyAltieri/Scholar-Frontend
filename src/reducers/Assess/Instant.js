@@ -16,11 +16,20 @@ const Instant = (state = initialState, action) => {
 
     }
 
+    case 'FOUND_ACTIVE_INSTANT_ASSESSMENT': {
+      return {
+        ...state,
+        options: action.options,
+        answers: action.answers,
+      }
+    }
+
     case 'ASSESS_ACTIVATE_ASSESSMENT': {
       return action.assessmentType === 'INSTANT'
         ? {
           ...state,
           isActive: true,
+          answers: [],
         }
         : state;
     }

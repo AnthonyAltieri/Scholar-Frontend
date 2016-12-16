@@ -48,6 +48,7 @@ async function handleCourseSessionEnd(
 function handleSockets(props) {
   const {
     courseSessionId,
+    instantAnswerReceived,
   } = props;
   const courseSessionChannel = `private-${courseSessionId}`;
   Socket.subscribe(courseSessionChannel);
@@ -55,7 +56,10 @@ function handleSockets(props) {
     courseSessionChannel,
     Events.INSTANT_ASSESSMENT_ANSWERED,
     (data) => {
-
+      instantAnswerReceived(
+        data.userId,
+        data.optionIndex
+      )
     }
   )
 

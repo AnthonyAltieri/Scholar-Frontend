@@ -5,6 +5,8 @@ const Reflective = (state = {}, action) => {
         ? {
           ...state,
           isActive: true,
+          numberAnswers: 0,
+          numberReviews: 0,
         }
         : state;
     }
@@ -20,6 +22,14 @@ const Reflective = (state = {}, action) => {
       return {
         ...state,
         isActive: true,
+      }
+    }
+
+    case 'FOUND_ACTIVE_REFLECTIVE_ASSESSMENT': {
+      return {
+        ...state,
+        numberAnswers: action.numberAnswers,
+        numberReviews: action.numberReviews,
       }
     }
 

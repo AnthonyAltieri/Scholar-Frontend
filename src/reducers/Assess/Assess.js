@@ -50,6 +50,20 @@ const Assess = (state = initialState, action) => {
       }
     }
 
+    // For instructors joining a course
+    case 'FOUND_ACTIVE_REFLECTIVE_ASSESSMENT':
+    case 'FOUND_ACTIVE_INSTANT_ASSESSMENT': {
+      return {
+        ...state,
+        Instant: Instant(state.Instant, action),
+        Reflective: Reflective(state.Reflective, action),
+        question: action.question,
+        activeType: action.assessmentType,
+        activeAssessmentId: action.id,
+      }
+    }
+
+    // For students on socket
     case 'RECEIVED_ACTIVE_ASSESSMENT': {
       return {
         ...state,

@@ -9,10 +9,63 @@ import * as InstantActions from '../../../../../actions/Assess/Instant'
 import * as AssessActions from '../../../../../actions/Assess/Assess'
 import * as InstantApi from '../../../../../api/Assessment/Instant';
 import * as ReflectiveApi from '../../../../../api/Assessment/Reflective';
+import * as CourseSessionApi from '../../../../../api/CourseSession';
 import AssessmentViewer from './AssessmentViewer';
 
 class Assess extends Component {
-  componentDidMount() {
+  async componentDidMount() {
+    const {
+      isCourseSessionActive,
+      courseSessionId,
+      foundActiveInstantAssessment,
+      foundActiveReflectiveAssessment,
+    } = this.props;
+    if (isCourseSessionActive) {
+      try {
+        const payload = await CourseSessionApi
+          .getActiveAssessment(courseSessionId);
+        if (!!payload.error) {
+          return;
+        }
+        const { activeAssessmentType, activeAssessment } = payload;
+        if (activeAssessmentType === 'INSTANT') {
+          const {
+            question,
+            assessmentType,
+            options,
+            answers,
+          } = activeAssessment;
+          foundActiveInstantAssessment(
+            activeAssessmentId,
+            question,
+            assessmentType,
+            options,
+            answers,
+          );
+        } else if (activeAssessmentType === 'REFLECTIVE') {
+          const {
+            question,
+            assessmentType,
+            numberAnswers,
+            numberReviews,
+          } = activeAssessment;
+          foundActiveReflectiveAssessment(
+            activeAssessmentId,
+            question,
+            assessmentType,
+            numberAnswers,
+            numberReviews,
+          );
+        } else {
+          throw new Error(
+            `Invalid active assessment type ${activeAssessmentType}`
+          );
+        }
+      } catch (e) {
+        console.error('[]')
+
+      }
+    }
   }
 
   render() {
@@ -115,6 +168,18 @@ class Assess extends Component {
   }
 }
 
+function getInstantAssessmentAnswers(answers = []) {
+  return answers.reduce((a, c) => {
+    switch (c.optionIndex) {
+      case 0: return {...a, a: (a.a + 1) }
+      case 1: return {...a, b: (a.b + 1) }
+      case 2: return {...a, c: (a.c + 1) }
+      case 3: return {...a, d: (a.d + 1) }
+      case 4: return {...a, e: (a.e + 1) }
+    }
+  }, { a:0, b:0, c:0, d:0, e:0 });
+}
+
 const stateToProps = (state) => ({
   userId: state.User.id,
   courseId: state.Course.id,
@@ -127,6 +192,9 @@ const stateToProps = (state) => ({
   correctOption: state.Assess.Instant.correctOption,
   mode: state.Assess.mode,
   assessmentId: state.Assess.activeAssessmentId || null,
+  instantAssessmentAnswers: getInstantAssessmentAnswers(
+    state.Assess.Instant.answers
+  ),
 });
 
 const dispatchToProps = (dispatch) => ({
@@ -154,6 +222,36 @@ const dispatchToProps = (dispatch) => ({
   setAssessmentViewMode: (mode) => {
     dispatch(AssessActions.setViewMode(mode));
   },
+  foundActiveInstantAssessment: (
+    id,
+    question,
+    assessmentType,
+    options,
+    answers,
+  ) => {
+    dispatch(AssessActions.foundActiveInstantAssessment(
+      id,
+      question,
+      assessmentType,
+      options,
+      answers,
+    ))
+  },
+  foundActiveReflectiveAssessment: (
+    id,
+    question,
+    assessmentType,
+    numberAnswers,
+    numberReviews,
+  ) => {
+    dispatch(AssessActions.foundActiveReflectiveAssessment(
+      id,
+      question,
+      assessmentType,
+      numberAnswers,
+      numberReviews,
+    ))
+  }
 });
 
 Assess = connect(
