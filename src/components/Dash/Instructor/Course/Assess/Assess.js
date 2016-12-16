@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Instant from './Instant/Instant';
-import Reflective from './Reflective/Reflective';
 import QuestionBank from './QuestionBank';
 import Heading from '../../Heading/Heading';
 import { toastr } from 'react-redux-toastr';
@@ -11,6 +9,7 @@ import * as InstantActions from '../../../../../actions/Assess/Instant'
 import * as AssessActions from '../../../../../actions/Assess/Assess'
 import * as InstantApi from '../../../../../api/Assessment/Instant';
 import * as ReflectiveApi from '../../../../../api/Assessment/Reflective';
+import AssessmentViewer from './AssessmentViewer';
 
 class Assess extends Component {
   componentDidMount() {
@@ -36,123 +35,17 @@ class Assess extends Component {
       unselectCorrectOption,
       correctOption,
       activeAssessmentType,
+      mode,
+      setAssessmentViewMode,
     } = this.props;
 
-    let instantQuestion;
-    let optionNodes = [];
-    let reflectiveQuestion;
 
     return (
       <div className="assess r-between">
         <div className="left-pane c">
-          <Instant
-            options={instantOptions}
-            isActive={isInstantActive}
-            otherAssessmentActive={isReflectiveActive}
-            onOptionAdd={onOptionAdd}
-            onOptionClear={onOptionClear}
-            onOptionClearClick={onOptionClearClick}
-            onOptionContentClick={onOptionContentClick}
-            isCourseSessionActive={isCourseSessionActive}
-            chooseCorrectOption={chooseCorrectOption}
-            unselectCorrectOption={unselectCorrectOption}
-            correctOption={correctOption}
-            questionRef={(n) => {
-              instantQuestion = n;
-            }}
-            optionsRef={(n) => {
-              optionNodes = [
-                ...optionNodes,
-                n
-              ];
-            }}
-            onStartClick={async function(
-              correctOption,
-            ) {
-              const question = instantQuestion.value;
-              const options = optionNodes.reduce((a, c) => (
-                [...a, c.value]
-              ), []);
-              try {
-                const payload = await InstantApi.create(
-                  courseId,
-                  courseSessionId,
-                  userId,
-                  question,
-                  options,
-                  correctOption,
-                );
-                if (!!payload.error) {
-                  toastr.error('Something went wrong please try again');
-                  return;
-                }
-                activateInstant();
-              } catch (e) {
-                console.error('[ERROR] onStartClick', e);
-                toastr.error('Something went wrong please try again');
-              }
-            }}
-            onEndClick={async function() {
-              try {
-                const payload = await InstantApi.deactivate(courseSessionId);
-                if (!!payload.error) {
-                  toastr.error('Something went wrong please try again');
-                  return;
-                }
-                deactivate();
-              } catch (e) {
-                console.error('[ERROR] onEndClick', e);
-              }
-            }}
+          <AssessmentViewer
+            {...this.props}
           />
-          <Reflective
-            isActive={isReflectiveActive}
-            otherAssessmentActive={isInstantActive}
-            isCourseSessionActive={isCourseSessionActive}
-            questionRef={(n) => {
-              reflectiveQuestion = n;
-            }}
-            onStartClick={async function() {
-              const question = reflectiveQuestion.value;
-              try {
-                const payload = await ReflectiveApi
-                  .create(
-                    courseId,
-                    courseSessionId,
-                    userId,
-                    question,
-                  );
-                if (!!payload.error) {
-                  toastr.error('Something went wrong please try again');
-                  return;
-                }
-                activateReflective();
-              } catch (e) {
-                console.error('[ERROR] onStartClick', e);
-              }
-            }}
-            onEndClick={async function() {
-              try {
-                const payload = await InstantApi.deactivate(courseSessionId);
-                if (!!payload.error) {
-                  toastr.error('Something went wrong please try again');
-                  return;
-                }
-                deactivate();
-              } catch (e) {
-                console.error('[ERROR] onEndClick', e);
-              }
-            }}
-          />
-        </div>
-        <div className="right-pane c">
-          <div
-            className="two-thirds-pane"
-            style={{
-              marginBottom: '1%',
-            }}
-          >
-          </div>
           <div
             className="one-thirds-pane"
             style={{
@@ -197,6 +90,25 @@ class Assess extends Component {
 
             </div>
           </div>
+
+        </div>
+        <div className="right-pane c">
+          <div
+            className="half-pane"
+            style={{
+              marginBottom: '1%',
+            }}
+          >
+            Assessment Bank
+          </div>
+          <div
+            className="half-pane"
+            style={{
+              marginTop: '1%',
+            }}
+          >
+            Instant Assessment Graph
+          </div>
         </div>
       </div>
     );
@@ -213,6 +125,8 @@ const stateToProps = (state) => ({
   instantOptions: state.Assess.Instant.options || [],
   isReflectiveActive: !!state.Assess.Reflective.isActive,
   correctOption: state.Assess.Instant.correctOption,
+  mode: state.Assess.mode,
+  assessmentId: state.Assess.activeAssessmentId || null,
 });
 
 const dispatchToProps = (dispatch) => ({
@@ -228,14 +142,17 @@ const dispatchToProps = (dispatch) => ({
   unselectCorrectOption: () => {
     dispatch(InstantActions.unselectCorrectOption());
   },
-  activateInstant: () => {
-    dispatch(AssessActions.activate('INSTANT'));
+  activateInstant: (activeAssessmentId) => {
+    dispatch(AssessActions.activate('INSTANT', activeAssessmentId));
   },
-  activateReflective: () => {
-    dispatch(AssessActions.activate('REFLECTIVE'));
+  activateReflective: (activeAssessmentId) => {
+    dispatch(AssessActions.activate('REFLECTIVE', activeAssessmentId));
   },
   deactivate: () => {
     dispatch(AssessActions.deactivate());
+  },
+  setAssessmentViewMode: (mode) => {
+    dispatch(AssessActions.setViewMode(mode));
   },
 });
 

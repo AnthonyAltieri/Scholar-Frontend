@@ -13,15 +13,18 @@ const Nav = ({
 }) => (
   <div className="nav">
     <div className="nav-top">
-      <div className="navigation">
+      <div
+        className="navigation"
+        onClick={onBackClick}
+      >
         <img
           className="arrow"
-          onClick={onBackClick}
           src={backSrc}
         />
+        <p>To Courses</p>
       </div>
       <h1 className="code">
-        CSE 100
+        {code}
       </h1>
     </div>
   </div>

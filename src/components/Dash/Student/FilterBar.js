@@ -19,9 +19,6 @@ const FilterBar = ({
   navigate,
   filter,
 }) => {
-  console.log('FilterBar')
-  console.log('filter', filter);
-
   return (
     <div className="filter-bar">
       <p className="filter-label">Filter:</p>

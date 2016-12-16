@@ -3,6 +3,7 @@ import { post } from '../Ajax';
 const routes = {
   'CREATE': '/api/instantAssessment/create',
   'DEACTIVATE': '/api/instantAssessment/deactivate',
+  ANSWER: '/api/instantAssessment/answer',
 }
 
 export async function create(
@@ -35,10 +36,43 @@ export async function create(
   }
 }
 
-export async function deactivate(courseSessionId) {
+export async function deactivate(
+  courseSessionId,
+  correctOption,
+  assessmentId,
+) {
+  console.log('courseSessionId', courseSessionId);
+  console.log('correctOption', correctOption);
+  console.log('assessmentId', assessmentId);
   try {
-    return await post(routes.DEACTIVATE, { courseSessionId });
+    return await post(
+      routes.DEACTIVATE,
+      { courseSessionId, correctOption, assessmentId }
+    );
   } catch (e) {
     console.error('[ERROR] Instant Api deactivate', e);
+  }
+}
+
+export async function answer(
+  courseSessionId,
+  userId,
+  assessmentId,
+  courseId,
+  optionIndex,
+) {
+  try {
+    return await post(
+      routes.ANSWER,
+      {
+        courseSessionId,
+        userId,
+        assessmentId,
+        courseId,
+        optionIndex,
+      }
+    );
+  } catch (e) {
+    console.error('[ERROR] Instant Api answer', e);
   }
 }

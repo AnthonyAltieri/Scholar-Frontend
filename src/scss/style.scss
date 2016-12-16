@@ -20,6 +20,7 @@ $color-primary-light: #80E59B;
 $color-secondary: #2196F3;
 $color-dark: #333;
 $color-blue-light: #B0E9E9;
+$color-blue-light-light: #E1F5FE;
 
 // Fonts
 $font-default: Lato, Helvetica, SansSerif;
@@ -726,6 +727,65 @@ $nav-top_height: 34px;
 
   @extend .fullscreen;
 }
+
+.assessment {
+  overflow-y: auto;
+  .choice {
+    border-top: 1px solid rgba(0,0,0,0.2);
+    border-bottom: 1px solid rgba(0,0,0,0.2);
+    // background-color: $color-blue-light-light;
+    .text {
+      font-size: 16px;
+      max-width: 80%;
+    }
+    .letter-box {
+      width: 40px;
+      height: 40px;
+      background-color: $color-secondary;
+      @extend .card, .c-center;
+    }
+    .letter-box.active {
+      background-color: $color-green;
+    }
+    .letter {
+      font-size: 18px;
+      margin: 0;
+      color: white;
+    }
+    @extend .c-center;
+  }
+  .choice.active {
+    background-color: $color-green-light;
+  }
+  .assessment-question {
+    font-size: 18px;
+    padding-left: 12px;
+    padding-right: 12px;
+    span {
+      font-size: 24px;
+      font-weight: bolder;
+      margin-right: 8px;
+    }
+
+  }
+
+  .response {
+    width: 95%;
+    margin: 8px auto;
+    .text {
+      padding: 8px;
+      font-size: 14px;
+      margin-bottom: 0;
+    }
+    .buttons {
+      padding: 4px 0 8px 0;
+      @extend .r-around;
+    }
+    @extend .card;
+  }
+
+  @extend .displayed-content;
+}
 $nav-btn-height: 40px;
 .nav-btns {
   height: 40px;
@@ -800,28 +860,51 @@ $nav-btn-height: 40px;
   @extend  .fullscreen, .c-center;
 }
 
-.ask-question {
-  background-color: $color-white;
-
-  .container-input {
-    margin-top: 6px;
-    .input {
-      width: 90vw;
-      height: 240px;
-      max-width: 600px;
-      font-family: $font-default;
-      font-size: 15px;
-      border-radius: 3px;
-      border: 2px solid #c1c1c1;
-      padding: 8px;
-      resize: none;
-    }
-    .input:focus {
-      box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 9px, rgba(0, 0, 0, 0.2) 0px 0px 3px;
-      outline: none;
-    }
-    @extend .r-center;
+.container-input {
+  margin-top: 6px;
+  .input {
+    width: 90vw;
+    height: 240px;
+    max-width: 600px;
+    font-family: $font-default;
+    font-size: 15px;
+    border-radius: 3px;
+    border: 2px solid #c1c1c1;
+    padding: 8px;
+    resize: none;
   }
+  .input:focus {
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 9px, rgba(0, 0, 0, 0.2) 0px 0px 3px;
+    outline: none;
+  }
+  @extend .r-center;
+}
+.ask-question {
+  .ask-a-question {
+    width: 100%;
+    text-align: center;
+    font-weight: 300;
+  }
+}
+
+.assessment-box {
+  width: 98%;
+  margin: 0 auto;
+  h3 {
+    margin: 2px auto;
+    font-weight: bolder;
+  }
+  p {
+    margin: 2px auto;
+    line-height: 110%;
+  }
+  span {
+    margin-right: 8px;
+    margin-left: 8px;
+    font-weight: bolder;
+    line-height: 110%;
+  }
+  @extend .card;
 }
 
 .dash-admin {
@@ -1013,7 +1096,7 @@ $nav-btn-height: 40px;
   @extend .card, .r;
 }
 .tag.add {
-  width: 100px;
+  width: 120px;
   background-color: $color-green-light;
   cursor: pointer;
   p {
@@ -1050,7 +1133,7 @@ $nav-btn-height: 40px;
 }
 .bq-letter {
   line-height: 100%;
-  width: 20px;
+  width: 38px;
   text-align: center;
   font-size: 1.4em;
   font-weight: bolder;
@@ -1404,7 +1487,7 @@ $nav-btn-height: 40px;
       width: auto;
     }
     .active-status {
-      width: 58px;
+      width: 88px;
       color: white;
       margin: 0;
       position: absolute;

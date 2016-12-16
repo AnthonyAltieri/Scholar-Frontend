@@ -11,7 +11,7 @@ const Reflective = ({
   questionRef,
 }) => (
   <div
-    className="one-thirds-pane"
+    className=""
     style={{
       marginTop: "1%",
     }}

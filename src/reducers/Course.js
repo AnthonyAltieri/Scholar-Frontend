@@ -60,6 +60,10 @@ const Course = (state = {}, action) => {
       }
     }
 
+    case 'CLEAR_COURSE': {
+      return {}
+    }
+
     default: {
       return state;
     }

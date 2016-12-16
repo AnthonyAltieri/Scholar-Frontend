@@ -12,6 +12,7 @@ import QuestionResponse from '../Instructor/Course/Ask/QuestionList/QuestionResp
 // import { fetchQuesitons } from '../../../api/Questions';
 import * as DashStudentActions from '../../../actions/DashStudent'
 import FilterBar from './FilterBar';
+import AssessmentBox from './AssessmentBox';
 
 const getRank = (votes) => {
   return votes.filter(v => v.type === 'UP').length
@@ -90,6 +91,11 @@ class StudentQuestionList extends Component {
       navigate,
       addVote,
       removeVote,
+      setDashMode,
+      isAssessmentActive,
+      activeAssessmentType,
+      assessmentQuestion,
+      selectedOption,
     } = this.props;
     return (
       <div
@@ -99,6 +105,17 @@ class StudentQuestionList extends Component {
           paddingBottom: 150,
         }}
       >
+        {isAssessmentActive
+          ? (
+            <AssessmentBox
+              type={activeAssessmentType}
+              question={assessmentQuestion}
+              activateAssessmentMode={() => setDashMode('ASSESSMENT')}
+              selectedOption={selectedOption}
+            />
+          )
+          : null
+        }
         <FilterBar filter={filter} navigate={navigate}/>
         {questions.map((q) => (
           <QuestionResponse
@@ -134,6 +151,10 @@ const mapStateToProps = (state, ownProps) => ({
   courseId: state.Course.id,
   activeCourseSessionId: state.Course.activeCourseSessionId,
   userType: state.User.type,
+  isAssessmentActive: !!state.Assess.activeType,
+  activeAssessmentType: state.Assess.activeType,
+  assessmentQuestion: state.Assess.question,
+  selectedOption: state.Dash.Student.selectedOption,
 });
 const dispatchToProps = (dispatch) => ({
   retrievedQuestions: (questions) => {
@@ -159,7 +180,10 @@ const dispatchToProps = (dispatch) => ({
   },
   removeVote: (id, userId) => {
     dispatch(QuestionListActions.removeVote(id, userId));
-  }
+  },
+  setDashMode: (mode) => {
+    dispatch(DashStudentActions.setDashMode(mode))
+  },
 });
 
 StudentQuestionList = connect(

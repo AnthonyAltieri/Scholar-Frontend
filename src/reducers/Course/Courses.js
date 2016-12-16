@@ -4,7 +4,7 @@
 
 import CourseList from './CourseList';
 
-const getVisibleCourses = (courses, filter) => {
+const getVisibleCourses = (courses = [], filter) => {
   switch (filter) {
     case 'all': {
       return courses

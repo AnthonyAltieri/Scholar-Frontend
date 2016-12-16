@@ -18,7 +18,6 @@ import DeleteCourse from '../components/Dash/Admin/DeleteCourse';
 import GetCourses from '../components/Dash/Admin/GetCourses';
 import AddUser from '../components/Dash/Admin/AddUser';
 import GetUsers from '../components/Dash/Admin/GetUsers';
-import DashStudent from './Dash/Student/DashStudent';
 import StudentQuestionList from './Dash/Student/StudentQuestionList';
 import InstructorHome from './Dash/Instructor/Home/Home';
 import DashInstructor from './Dash/Instructor/DashInstructor';
@@ -27,6 +26,7 @@ import DashCourse from './Dash/Instructor/Course/DashCourse';
 import InstructorSettings from './Dash/Instructor/InstructorSettings';
 import InstructorConfusion from './Dash/Instructor/Course/Confusion';
 import InstructorAsk from './Dash/Instructor/Course/Ask/Ask';
+import DashStudent from './Dash/Student/DashStudent';
 
 class Root extends Component {
   componentWillMount() {

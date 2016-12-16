@@ -7,7 +7,10 @@ import { connect } from 'react-redux';
 import { toastr } from 'react-redux-toastr';
 import * as OverlayActions from '../../../../actions/Overlay';
 import * as CourseActions from '../../../../actions/Dash/Courses/Courses';
+import * as InstantActions from '../../../../actions/Assess/Instant';
 import { startCourseSession, endCourseSession } from '../../../../api/CourseSession';
+import Socket from '../../../../socket/Socket'
+import Events from '../../../../socket/Events';
 import Ask from './Ask/Ask';
 import Alert from './Alert/Alert';
 import Assess from './Assess/Assess';
@@ -38,7 +41,30 @@ async function handleCourseSessionEnd(
   }
 }
 
+function handleSockets(props) {
+  const {
+    courseSessionId,
+  } = props;
+  const courseSessionChannel = `private-${courseSessionId}`;
+  Socket.subscribe(courseSessionChannel);
+  Socket.bind(
+    courseSessionChannel,
+    Events.INSTANT_ASSESSMENT_ANSWERED,
+    (data) => {
+
+    }
+  )
+
+}
+
 class DashCourse extends Component {
+  componentDidMount() {
+    if (this.props.isCourseSessionActive) {
+      handleSockets(this.props);
+    }
+  }
+
+
   render() {
     const {
       mode,
@@ -135,6 +161,8 @@ const stateToProps = state => ({
   isOverlayVisible: state.Overlay.isVisible,
   overlayType: state.Overlay.type,
   userId: state.User.id,
+  isCourseSessionActive: !!state.Course.activeCourseSessionId,
+  courseSessionId: state.Course.activeCourseSessionId,
 });
 
 const dispatchToProps = (dispatch, ownProps) => ({
@@ -151,6 +179,10 @@ const dispatchToProps = (dispatch, ownProps) => ({
   },
   activateCourseSession: (courseSessionId) => {
     dispatch(CourseActions.activateCourse(ownProps.params.courseId, courseSessionId));
+    handleSockets(ownProps)
+  },
+  instantAnswerReceived: (userId, optionIndex) => {
+    dispatch(InstantActions.answerReceived(userId, optionIndex));
   },
 });
 

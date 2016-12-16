@@ -105,7 +105,7 @@ class LogIn extends Component {
       switch (this.props.userType) {
         case 'INSTRUCTOR':
         case 'STUDENT': {
-          this.props.navigate('/dash/courses/active');
+          this.props.navigate('/dash/courses/active/');
           break;
         }
 

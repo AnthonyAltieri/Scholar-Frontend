@@ -16,6 +16,13 @@ const Reflective = (state = {}, action) => {
       }
     }
 
+    case 'RECEIVED_ACTIVE_ASSESSMENT': {
+      return {
+        ...state,
+        isActive: true,
+      }
+    }
+
 
     default: {
       return state;

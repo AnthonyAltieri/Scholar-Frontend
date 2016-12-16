@@ -22,7 +22,7 @@ const Instant = ({
 }) => {
   return (
     <div
-      className="two-thirds-pane c-between fullwidth"
+      className="c-between fullwidth"
       style={{
         marginBottom: "1%",
       }}
@@ -35,12 +35,14 @@ const Instant = ({
           isActive={isActive}
         />
         <OptionList
+          isActive={isActive}
           options={options}
           onOptionContentClick={onOptionContentClick}
           chooseCorrectOption={chooseCorrectOption}
           unselectCorrectOption={unselectCorrectOption}
           onOptionClearClick={onOptionClearClick}
           onOptionAdd={onOptionAdd}
+          onOptionContentClick={() => {}}
           onOptionClear={onOptionClear}
           optionsRef={optionsRef}
           correctOption={correctOption}

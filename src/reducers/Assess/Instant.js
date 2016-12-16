@@ -1,5 +1,21 @@
-const Instant = (state = {}, action) => {
+const initialState = {
+  options: [],
+  answers: [],
+}
+
+const Instant = (state = initialState, action) => {
   switch (action.type) {
+    case 'RECEIVED_ACTIVE_ASSESSMENT': {
+      return action.assessmentType === 'INSTANT'
+        ? {
+          ...state,
+          isActive: true,
+          options: action.options,
+        }
+        : state;
+
+    }
+
     case 'ASSESS_ACTIVATE_ASSESSMENT': {
       return action.assessmentType === 'INSTANT'
         ? {
@@ -13,6 +29,8 @@ const Instant = (state = {}, action) => {
       return {
         ...state,
         isActive: false,
+        options: [],
+        answers: [],
       }
     }
 
@@ -50,6 +68,21 @@ const Instant = (state = {}, action) => {
       return {
         ...state,
         correctOption: -1,
+      }
+    }
+
+    case 'ASSESS_INSTANT_ANSWER_RECEIVED': {
+      const answers = state.answers
+        .filter(a => a.userId !== action.userId);
+      return {
+        ...state,
+        answers: [
+          ...state.answers,
+          {
+            userId: answer.userId,
+            optionIndex: action.optionIndex
+          },
+        ]
       }
     }
 

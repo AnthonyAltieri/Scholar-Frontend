@@ -5,6 +5,7 @@
 import React from 'react';
 import StudentQuestionList from './StudentQuestionList';
 import AskQuestion from './AskQuestion';
+import Assessment from './Assessment';
 
 const Content = ({
   mode,
@@ -31,10 +32,10 @@ const Content = ({
       );
     }
 
-    //
-    // case 'ASSESSMENT': {
-    //   return <Assessment />
-    // }
+
+    case 'ASSESSMENT': {
+      return <Assessment />
+    }
 
     default:
       throw new Error(`Invalid mode: ${mode}`);

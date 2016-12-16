@@ -13,7 +13,7 @@ const addLoggingToDispatch = (store) => {
   const rawDispatch = store.dispatch;
   if (!console.group) return rawDispatch;
   return (action) => {
-    if (action.type.split('/')[0] === '@@router') {
+    if (action.type.split('')[0] === '@') {
       return rawDispatch(action);
     }
     console.group(action.type);

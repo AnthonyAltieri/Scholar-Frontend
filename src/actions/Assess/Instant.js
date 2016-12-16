@@ -16,3 +16,12 @@ export const chooseCorrectOption = (correctOption) => ({
 export const unselectCorrectOption = () => ({
   type: 'ASSESS_UNSELECT_CORRECT_OPTION',
 });
+
+export const answerReceived = (
+  userId,
+  optionIndex,
+) => ({
+  type: 'ASSESS_INSTANT_ANSWER_RECEIVED',
+  userId,
+  optionIndex,
+});

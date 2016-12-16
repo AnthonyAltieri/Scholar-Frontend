@@ -76,6 +76,7 @@ let AskQuestion = ({
            }}
         />
       </div>
+      <h1 className="ask-a-question">Ask A Question</h1>
 
     </div>
   );

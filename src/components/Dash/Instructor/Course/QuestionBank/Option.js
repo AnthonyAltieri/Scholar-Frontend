@@ -26,6 +26,7 @@ const Option = ({
   onContentClick,
   onClearClick,
   onLetterClick,
+  isAssessmentActive,
   editRef,
 }) => {
   console.log('index', index);
@@ -37,19 +38,24 @@ const Option = ({
       key={index}
       className={`bq-option ${isCorrectOption ? 'correct' : ''}` }
     >
-      <IconButton
-        className="bq-clear"
-        iconStyle={{
-          color: Colors.red,
-        }}
-        onClick={() => {
-          onClearClick(index)
-        }}
-      >
-        <FontIcon className="material-icons">
-          clear
-        </FontIcon>
-      </IconButton>
+      {!isAssessmentActive
+        ? (
+          <IconButton
+            className="bq-clear"
+            iconStyle={{
+              color: Colors.red,
+            }}
+            onClick={() => {
+              onClearClick(index)
+            }}
+          >
+            <FontIcon className="material-icons">
+              clear
+            </FontIcon>
+          </IconButton>
+        )
+        : null
+      }
       <p
         className="bq-letter"
         onClick={onLetterClick}

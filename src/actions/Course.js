@@ -18,3 +18,7 @@ export const joinCourse = (
   timeStart,
   timeEnd,
 });
+
+export const clearCourse = () => ({
+  type: 'CLEAR_COURSE',
+});

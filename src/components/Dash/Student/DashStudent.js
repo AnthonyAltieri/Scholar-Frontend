@@ -8,6 +8,7 @@ import { push } from 'react-router-redux';
 import * as OverlayActions from '../../../actions/Overlay';
 import * as DashStudentActions from '../../../actions/DashStudent';
 import * as CourseSessionActions from '../../../actions/CourseSession'
+import * as AssessmentActions from '../../../actions/Assess/Assess'
 import Content from './Content';
 import Socket from '../../../socket/Socket';
 import Events from '../../../socket/Events';
@@ -45,6 +46,8 @@ function setUpSockets(props) {
     removeQuestion,
     addFlag,
     removeFlag,
+    receivedActiveAssessment,
+    deactivateAssessment,
   } = props;
   const courseSessionChannel = `private-${courseSessionId}`;
   Socket.subscribe(courseSessionChannel);
@@ -94,6 +97,25 @@ function setUpSockets(props) {
     Events.REMOVE_FLAG,
     (data) => { removeFlag(data.id) }
   );
+  Socket.bind(
+    courseSessionChannel,
+    Events.ASSESSMENT_ACTIVATED,
+    (data) => {
+      receivedActiveAssessment(
+        data.assessmentId,
+        data.assessmentType,
+        data.question,
+        data.options,
+      )
+    }
+  );
+  Socket.bind(
+    courseSessionChannel,
+    Events.ASSESSMENT_DEACTIVATED,
+    (data) => {
+      deactivateAssessment();
+    }
+  )
 }
 
 async function handleAlertThreshold(
@@ -131,7 +153,6 @@ async function handleAlertThreshold(
 
 
 class DashStudent extends Component {
-
   componentDidMount() {
     const {
       endLoading,
@@ -161,8 +182,8 @@ class DashStudent extends Component {
       courseSessionId,
       onConfirmClick,
       onAlertClick,
-      onAskActiveClick,
-      onAskInactiveClick,
+      setModeToAsk,
+      setModeToQuestions,
       promptGoToCourses,
       goToCourses,
       isOverlayVisible,
@@ -205,42 +226,52 @@ class DashStudent extends Component {
             courseSessionId={courseSessionId}
           />
           <Content params={params || {}} mode={mode} />
-          <FloatingActionButton
-            style={fabAlertStyle}
-            backgroundColor={Colors.red}
-            onClick={() => {
-              //TODO: Send data to server
-              onAlertClick();
-            }}
-            mini
-          >
-            <FontIcon className="material-icons">
-              error_outline
-            </FontIcon>
-          </FloatingActionButton>
+          {mode !== 'ASSESSMENT'
+            ? (
+              <FloatingActionButton
+                style={fabAlertStyle}
+                backgroundColor={Colors.red}
+                onClick={() => {
+                  //TODO: Send data to server
+                  onAlertClick();
+                }}
+                mini
+              >
+                <FontIcon className="material-icons">
+                  error_outline
+                </FontIcon>
+              </FloatingActionButton>
+            )
+            : null
+          }
           <FloatingActionButton
             style={fabAskStyle}
             secondary
             onClick={() => {
-              if (mode !== 'ASK') {
-                onAskInactiveClick();
-                return;
+              if (mode === 'ASK' || mode === 'ASSESSMENT') {
+                setModeToQuestions();
+              } else {
+                setModeToAsk();
               }
-              onAskActiveClick();
             }}
           >
-            {mode !== 'ASK'
+            {mode === 'ASK' || mode === 'ASSESSMENT'
               ? <FontIcon className="material-icons">
-                chat
+                view_list
               </FontIcon>
               : <FontIcon className="material-icons">
-                view_list
+                chat
               </FontIcon>
             }
           </FloatingActionButton>
-          <AlertGraph
-            percentage={20}
-          />
+          {mode !== 'ASSESSMENT'
+            ? (
+              <AlertGraph
+                percentage={20}
+              />
+            )
+            : null
+          }
         </div>
       );
     }
@@ -266,6 +297,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     goToCourses: () => {
       dispatch(push('/dash/courses'))
+      dispatch(DashStudentActions.setDashMode('QUESTIONS'))
     },
     hidePrompt: () => {
       dispatch(OverlayActions.hideOverlay());
@@ -276,10 +308,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onAlertClick: () => {
       dispatch(DashStudentActions.showAlertOverlay());
     },
-    onAskInactiveClick: () => {
+    setModeToAsk: () => {
       dispatch(DashStudentActions.setDashMode('ASK'));
     },
-    onAskActiveClick: () => {
+    setModeToQuestions: () => {
       dispatch(DashStudentActions.setDashMode('QUESTIONS'))
     },
     onConfirmClick: () => {
@@ -353,6 +385,25 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     logOut: () => {
       dispatch(UserActions.logOut());
+    },
+    receivedActiveAssessment: (
+      assessmentId,
+      assessmentType,
+      question,
+      options,
+    ) => {
+      dispatch(AssessmentActions
+        .receivedActiveAssessment(
+          assessmentId,
+          assessmentType,
+          question,
+          options,
+        )
+      )
+    },
+    deactivateAssessment: () => {
+      dispatch(DashStudentActions.setDashMode('QUESTIONS'));
+      dispatch(AssessmentActions.deactivate());
     }
   }
 };

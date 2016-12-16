@@ -89,6 +89,7 @@ const OptionList = ({
   chooseCorrectOption,
   unselectCorrectOption,
   correctOption,
+  isActive,
 }) => {
   return (
     <ul className="option-list">
@@ -114,7 +115,7 @@ const OptionList = ({
                 key={`${o.index}--${o.content}`}
                 index={o.index}
                 content={o.content}
-                isEditable={true}
+                isEditable={!isActive}
                 isCorrectOption={typeof correctOption !== 'undefined'
                   ? o.index === correctOption
                   : false
@@ -126,13 +127,14 @@ const OptionList = ({
                   }
                   chooseCorrectOption(o.index)
                 }}
-                ref={optionsRef}
+                editRef={optionsRef}
+                isAssessmentActive={isActive}
                 onContentClick={() => onOptionContentClick(o.index)}
                 onClearClick={() => onOptionClearClick(o.index)}
               />
             ))
       }
-      {!options || options.length < 5
+      {(!options || options.length < 5) && !isActive
         ? <AddOption onOptionAdd={onOptionAdd}/>
         : null
       }

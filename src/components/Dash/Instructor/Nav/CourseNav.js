@@ -40,6 +40,7 @@ const CourseNav = ({
   showOverlay,
   isCourseSessionActive,
   courseAbbreviation,
+  clearCourse,
 }) => {
 
   return (
@@ -52,7 +53,9 @@ const CourseNav = ({
         icon="home"
         label="home"
         onClick={() => {
+          console.log('CLICK HOME')
           navigate('/dash/instructor/home')
+          clearCourse();
         }}
       />
       <NavBtn
