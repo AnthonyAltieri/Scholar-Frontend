@@ -8,14 +8,18 @@ import { toastr } from 'react-redux-toastr';
 import * as OverlayActions from '../../../../actions/Overlay';
 import * as CourseActions from '../../../../actions/Dash/Courses/Courses';
 import * as InstantActions from '../../../../actions/Assess/Instant';
+import * as AlertActions from '../../../../actions/Alert';
 import { startCourseSession, endCourseSession } from '../../../../api/CourseSession';
 import Socket from '../../../../socket/Socket'
 import Events from '../../../../socket/Events';
 import Ask from './Ask/Ask';
 import Alert from './Alert/Alert';
+import Graph from './Alert/Graph';
 import Assess from './Assess/Assess';
 import QuestionBank from './QuestionBank/QuestionBank';
 import CourseSessionDialog from './CourseSessionDialog';
+import { getAlerts, INTERVAL_TIME } from '../../../../util/AlertGraph'
+
 
 async function handleCourseSessionStart(
   courseId,
@@ -58,12 +62,25 @@ function handleSockets(props) {
 }
 
 class DashCourse extends Component {
-  componentDidMount() {
+  async componentDidMount() {
     if (this.props.isCourseSessionActive) {
       handleSockets(this.props);
     }
+    const { updateAlertGraph, alertGraph } = this.props;
+    window.intervalGetAlerts =  window.setInterval( async () => {
+      try {
+        let alerts = await getAlerts();
+        let attendance = 40;
+        updateAlertGraph(alerts, attendance, alertGraph);
+      }
+      catch (e) {
+        console.error("[ERROR] in DashCourse Component > ComponentDidMount : " + e)
+      }
+    }, INTERVAL_TIME);
   }
-
+   componentWillUnmount() {
+    window.clearInterval(window.intervalGetAlerts);
+  }
 
   render() {
     const {
@@ -75,6 +92,7 @@ class DashCourse extends Component {
       params,
       activateCourseSession,
       deactivateCourseSession,
+      alertGraph
     } = this.props;
 
     const { courseId } = params;
@@ -97,7 +115,7 @@ class DashCourse extends Component {
       }
 
       case 'ALERT': {
-        content = (<Alert />);
+        content = (<Graph />);
         break;
       }
 
@@ -128,7 +146,7 @@ class DashCourse extends Component {
                   return;
                 }
                 hideOverlay();
-                activateCourseSession(courseSessionId);
+                activateCourseSession(courseSessionId, graph);
               })
               .catch(() => {
                 toastr.error('Something went wrong please try again');
@@ -163,6 +181,7 @@ const stateToProps = state => ({
   userId: state.User.id,
   isCourseSessionActive: !!state.Course.activeCourseSessionId,
   courseSessionId: state.Course.activeCourseSessionId,
+  alertGraph: state.Graph.Alert.graph,
 });
 
 const dispatchToProps = (dispatch, ownProps) => ({
@@ -176,8 +195,12 @@ const dispatchToProps = (dispatch, ownProps) => ({
   },
   deactivateCourseSession: () => {
     dispatch(CourseActions.deactivateCourse(ownProps.params.courseId));
+    window.clearInterval(window.intervalGetAlerts);
   },
-  activateCourseSession: (courseSessionId) => {
+  updateAlertGraph: (activeAlerts, attendance, graph) => {
+    dispatch(AlertActions.receivedActiveAlerts(activeAlerts, attendance, graph));
+   },
+  activateCourseSession: async (courseSessionId) => {
     dispatch(CourseActions.activateCourse(ownProps.params.courseId, courseSessionId));
     handleSockets(ownProps)
   },

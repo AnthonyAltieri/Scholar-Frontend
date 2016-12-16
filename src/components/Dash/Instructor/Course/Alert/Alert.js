@@ -3,34 +3,37 @@
  */
 
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom'
 import { connect } from 'react-redux';
 import Stats from './Stats';
 import Graph from './Graph';
+import * as OverlayActions from '../../../../../actions/Loading';
 
 class Alert extends Component {
+  componentDidMount() {
+    this.props.endLoading();
+  }
 
   render() {
     return (
-      <div className="full-pane">
-        <div className="heading">
-          <h2 className="header">ALERT</h2>
+      <div>
+        <div id="lineChart">
+          <Graph />
         </div>
-        <div className="alert-graph">
-        </div>
-        <Graph
-          graphData={[
-            20, 20, 30, 50, 10, 40, 60, 10, 10, 20
-          ]}
-        />
         <Stats />
       </div>
     );
   }
 }
+
 const stateToProps = (state) => ({
+  alertGraph: state.Graph.Alert.graph
 });
 
 const dispatchToProps = (dispatch) => ({
+  endLoading: () => {
+    dispatch(OverlayActions.endLoading());
+  },
 });
 
 Alert = connect(
