@@ -10,7 +10,8 @@ const Graph = (state = initialState, action) => {
     case 'ACTIVATE_COURSE':
     case 'SET_ALERT_THRESHOLD':
     case 'DEFAULT_ALERT_THRESHOLD':
-    case 'RECEIVED_ACTIVE_ALERTS': {
+    case 'RECEIVED_ACTIVE_ALERTS':
+    case 'UPDATE_ACTIVE_ALERTS_STUDENT' : {
       return {
         ...state,
         Alert: Alert(state.Alert, action),

@@ -21,6 +21,8 @@ import AlertDialog from './AlertDialog';
 import * as QuestionListActions from '../../../actions/QuestionList';
 import * as UserActions from '../../../actions/User';
 import AlertGraph from './AlertGraph';
+import { getAlerts, INTERVAL_TIME } from '../../../util/AlertGraph'
+import * as AlertActions from '../../../actions/Alert'
 
 const fabAskStyle = {
   position: "absolute",
@@ -132,13 +134,14 @@ async function handleAlertThreshold(
 
 class DashStudent extends Component {
 
-  componentDidMount() {
+  async componentDidMount() {
     const {
       endLoading,
       courseId,
       courseSessionId,
       setAlertThreshold,
       setAlertPercentage,
+      updateAlertGraph
     } = this.props;
     endLoading();
     // handleAlertThreshold(
@@ -147,12 +150,25 @@ class DashStudent extends Component {
     //   setAlertThreshold,
     //   setAlertPercentage
     // );
+    window.intervalGetAlerts =  window.setInterval( async () => {
+      try {
+        let alerts = await getAlerts();
+        let attendance = 40;
+        updateAlertGraph(alerts, attendance);
+      }
+      catch (e) {
+        console.error("[ERROR] in DashCourse Component > ComponentDidMount : " + e)
+      }
+    }, INTERVAL_TIME);
 
     setUpSockets(this.props)
   }
 
   componentWillUnmount() {
+
     Socket.disconnect();
+    window.clearInterval(window.intervalGetAlerts);
+
   }
 
   render() {
@@ -174,6 +190,9 @@ class DashStudent extends Component {
       children,
       logOut,
       params,
+      activeAlerts,
+      attendance,
+      threshold
     }  = this.props;
     console.log('params', params);
         return (
@@ -240,8 +259,8 @@ class DashStudent extends Component {
             }
           </FloatingActionButton>
           <AlertGraph
-            percentage={20}
-            isPastThreshold={1}
+            percentage={(activeAlerts/attendance)*100}
+            isPastThreshold={(((activeAlerts/attendance)*100) >= threshold) ? 1 : 0}
           />
         </div>
       );
@@ -258,6 +277,9 @@ const mapStateToProps = (state) => {
     isAlertOverlayVisible: !!state.DashStudent.isAlertOverlayVisible,
     courseSessionId: state.Course.activeCourseSessionId,
     courseId: state.Course.id,
+    activeAlerts: state.Graph.Alert.activeAlerts,
+    attendance: state.Graph.Alert.attendance,
+    threshold: state.Graph.Alert.threshold
   }
 };
 
@@ -267,7 +289,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch(setDashMode('QUESTIONS'))
     },
     goToCourses: () => {
-      dispatch(push('/dash/courses'))
+      dispatch(push('/dash/courses'));
+      window.clearInterval(window.intervalGetAlerts);
     },
     hidePrompt: () => {
       dispatch(OverlayActions.hideOverlay());
@@ -355,7 +378,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     logOut: () => {
       dispatch(UserActions.logOut());
-    }
+      window.clearInterval(window.intervalGetAlerts);
+    },
+    updateAlertGraph: (activeAlerts, attendance) => {
+      dispatch(AlertActions.updateActiveAlertsStudent(activeAlerts, attendance));
+    },
   }
 };
 

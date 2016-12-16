@@ -10,7 +10,7 @@ export const receivedActiveAlerts = (activeAlerts, attendance, graph) => {
   }
 };
 
-export const updateActiveAlertsStudent = (activeAlerts, attendance, graph) => {
+export const updateActiveAlertsStudent = (activeAlerts, attendance) => {
   return {
     type: 'UPDATE_ACTIVE_ALERTS_STUDENT',
     activeAlerts,

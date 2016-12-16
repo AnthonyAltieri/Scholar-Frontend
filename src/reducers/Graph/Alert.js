@@ -39,26 +39,32 @@ const Alert = (state = initialState, action) => {
     case 'DEFAULT_ALERT_THRESHOLD': {
       return {
         ...state,
-        threshold: DEFAULT_ALERT_THRESHOLD,
+        threshold: DEFAULT_THRESHOLD,
       }
     }
 
     case 'RECEIVED_ACTIVE_ALERTS': {
       return {
         ...state,
-        activeAlerts : action.activeAlerts,
+        activeAlerts : (!!action.activeAlerts) ? action.activeAlerts : state.activeAlerts,
         graph : (!!state.graph) ?
-          updateInstructorAlertGraph(action.graph, action.activeAlerts, action.attendance, DEFAULT_THRESHOLD)
-          : initInstructorAlertGraph(),
-        attendance : action.attendance
+          updateInstructorAlertGraph(
+            action.graph,
+            (!!action.activeAlerts) ? action.activeAlerts : state.activeAlerts,
+            (!!action.attendance) ? action.attendance : state.attendance,
+            DEFAULT_THRESHOLD
+          )
+          :
+          initInstructorAlertGraph(),
+        attendance : (!!action.attendance) ? action.attendance : state.attendance
       }
     }
 
     case 'UPDATE_ACTIVE_ALERTS_STUDENT': {
     return {
         ...state,
-        activeAlerts : action.activeAlerts,
-        attendance : action.attendance
+        activeAlerts : (!!action.activeAlerts) ? action.activeAlerts : state.activeAlerts,
+        attendance : (!!action.attendance) ? action.attendance : state.attendance
       }
     }
 

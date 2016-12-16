@@ -17,7 +17,7 @@ const Bar = ({
       width: `${percentage}%`
     }}
   >
-    <p>{percentage}</p>
+    <p>{percentage.toFixed(2)}%</p>
   </div>
 );
 
