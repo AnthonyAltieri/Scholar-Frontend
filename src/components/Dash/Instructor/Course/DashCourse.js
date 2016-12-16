@@ -9,6 +9,7 @@ import * as OverlayActions from '../../../../actions/Overlay';
 import * as CourseActions from '../../../../actions/Dash/Courses/Courses';
 import * as InstantActions from '../../../../actions/Assess/Instant';
 import * as AlertActions from '../../../../actions/Alert';
+import * as ReflectiveActions from '../../../../actions/Assess/Reflelctive';
 import { startCourseSession, endCourseSession } from '../../../../api/CourseSession';
 import Socket from '../../../../socket/Socket'
 import Events from '../../../../socket/Events';
@@ -49,6 +50,8 @@ function handleSockets(props) {
   const {
     courseSessionId,
     instantAnswerReceived,
+    reflectiveAssessmentReviewed,
+    reflectiveAssessmentAnswered,
   } = props;
   const courseSessionChannel = `private-${courseSessionId}`;
   Socket.subscribe(courseSessionChannel);
@@ -61,8 +64,21 @@ function handleSockets(props) {
         data.optionIndex
       )
     }
-  )
-
+  );
+  Socket.bind(
+    courseSessionChannel,
+    Events.REFLECTIVE_ASSESSMENT_REVIEWED,
+    (data) => {
+      reflectiveAssessmentReviewed();
+    }
+  );
+  Socket.bind(
+    courseSessionChannel,
+    Events.REFLECTIVE_ASSESSMENT_ANSWERED,
+    (data) => {
+      reflectiveAssessmentAnswered();
+    }
+  );
 }
 
 class DashCourse extends Component {
@@ -211,6 +227,12 @@ const dispatchToProps = (dispatch, ownProps) => ({
   instantAnswerReceived: (userId, optionIndex) => {
     dispatch(InstantActions.answerReceived(userId, optionIndex));
   },
+  reflectiveAssessmentReviewed: () => ({
+    dispatch(ReflectiveActions.reflectiveAssessmentReviewed());
+  }),
+  reflectiveAssessmentAnswered: () => ({
+    dispatch(ReflectiveActions.reflectiveAssessmentAnswered());
+  }),
 });
 
 DashCourse = connect(

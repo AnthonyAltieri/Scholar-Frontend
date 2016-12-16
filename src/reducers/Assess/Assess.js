@@ -50,6 +50,14 @@ const Assess = (state = initialState, action) => {
       }
     }
 
+    case 'REFLECTIVE_ASSESSMENT_ANSWERED':
+    case 'REFLECTIVE_ASSESSMENT_REVIEWED': {
+      return {
+        ...state,
+        Reflective: Reflective(state.Reflective, action),
+      }
+    }
+
     // For instructors joining a course
     case 'FOUND_ACTIVE_REFLECTIVE_ASSESSMENT':
     case 'FOUND_ACTIVE_INSTANT_ASSESSMENT': {

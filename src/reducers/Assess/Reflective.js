@@ -1,4 +1,11 @@
-const Reflective = (state = {}, action) => {
+const initialState = {
+  isActive: false,
+  hasAnswered: false,
+  numberAnswers: 0,
+  numberReviews: 0,
+}
+
+const Reflective = (state = initialState, action) => {
   switch (action.type) {
     case 'ASSESS_ACTIVATE_ASSESSMENT': {
       return action.assessmentType === 'REFLECTIVE'
@@ -15,6 +22,7 @@ const Reflective = (state = {}, action) => {
       return {
         ...state,
         isActive: false,
+        hasAnswered: false,
       }
     }
 
@@ -30,6 +38,27 @@ const Reflective = (state = {}, action) => {
         ...state,
         numberAnswers: action.numberAnswers,
         numberReviews: action.numberReviews,
+      }
+    }
+
+    case 'SUCCESSFULLY_SUBMITTED_REFLECTIVE_ANSWER': {
+      return {
+        ...state,
+        hasAnswered: true,
+      }
+    }
+
+    case 'REFLECTIVE_ASSESSMENT_REVIEWED': {
+      return {
+        ...state,
+        numberReviews: (state.numberReviews + 1),
+      }
+    }
+
+    case 'REFLECTIVE_ASSESSMENT_ANSWERED': {
+      return {
+        ...state,
+        numberAnswers: (state.numberAnswers + 1),
       }
     }
 
