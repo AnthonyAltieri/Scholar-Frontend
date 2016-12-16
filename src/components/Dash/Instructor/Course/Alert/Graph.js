@@ -1,5 +1,6 @@
 import React from 'react';
 import NVD3Chart from 'react-nvd3';
+import { selectAll } from 'd3-selection';
 import '../../../../../../node_modules/react-nvd3/node_modules/nvd3/build/nv.d3.min.css'
 import { initInstructorAlertGraph } from '../../../../../util/AlertGraph'
 import { connect } from 'react-redux';
@@ -15,9 +16,13 @@ var AlertGraph = React.createClass({
   handleClick: function() {
     this.setState({count: this.state.count + 1})
   },
-  componentWillMount: function(){
-    console.log("GRAPH WILL MOUNT HERE IS WUT IT IS");
-    console.log(JSON.stringify(this.props.data));
+  componentWillReceiveProps: function(nextProps){
+    let graph = selectAll("#lineChart");
+    let circles = graph.selectAll("path");
+    circles.remove();
+  },
+  componentDidMount: function() {
+
   },
   render: function() {
     return (
@@ -36,22 +41,11 @@ var AlertGraph = React.createClass({
             yDomain: [0, 100],
             type:'lineChart',
             datum: this.props.data,
+            tooltip: {
+              enabled : false
+            },
             x: 'label',
             y: 'value',
-            callback: (graph) => {
-              console.log(" Alert Chart Callback");
-              console.log(" Alert Chart Callback");
-              console.log(" Alert Chart Callback");
-              console.log(" Alert Chart Callback");
-              console.log(" Alert Chart Callback");
-            },
-            renderEnd: (graph) => {
-              console.log(" render end");
-              console.log(" render end");
-              console.log(" render end");
-              console.log(" render end");
-            },
-
             duration: 1,
             margin: {
               left: 200

@@ -1,6 +1,6 @@
 import { initInstructorAlertGraph, updateInstructorAlertGraph } from '../../util/AlertGraph'
 
-const DEFAULT_THRESHOLD = 50;
+const DEFAULT_THRESHOLD = 30;
 
 const initialState = {
   threshold: DEFAULT_THRESHOLD,
@@ -15,13 +15,19 @@ const Alert = (state = initialState, action) => {
     case 'ACTIVATE_COURSE': {
       return {
         ...state,
-        graph : initInstructorAlertGraph(DEFAULT_THRESHOLD)
+        graph : initInstructorAlertGraph(DEFAULT_THRESHOLD),
+        activeAlerts: 0
       }
     }
 
-    // case 'DEACTIVATE_COURSE': {
-    //   return initialState;
-    // }
+    case 'DEACTIVATE_COURSE': {
+      console.log("Course Deactivated - In the alert Reducer");
+      return {
+        ...state,
+        graph : initInstructorAlertGraph(DEFAULT_THRESHOLD),
+        activeAlerts: 0
+      }
+    }
 
     case 'SET_ALERT_THRESHOLD': {
       return {
@@ -40,10 +46,22 @@ const Alert = (state = initialState, action) => {
     case 'RECEIVED_ACTIVE_ALERTS': {
       return {
         ...state,
-        graph : updateInstructorAlertGraph(action.graph, action.activeAlerts, action.attendance, DEFAULT_THRESHOLD),
-        activeAlerts : action.activeAlerts
+        activeAlerts : action.activeAlerts,
+        graph : (!!state.graph) ?
+          updateInstructorAlertGraph(action.graph, action.activeAlerts, action.attendance, DEFAULT_THRESHOLD)
+          : initInstructorAlertGraph(),
+        attendance : action.attendance
       }
     }
+
+    case 'UPDATE_ACTIVE_ALERTS_STUDENT': {
+    return {
+        ...state,
+        activeAlerts : action.activeAlerts,
+        attendance : action.attendance
+      }
+    }
+
 
     default: {
       return state;

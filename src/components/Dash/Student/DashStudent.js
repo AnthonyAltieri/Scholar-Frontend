@@ -147,6 +147,7 @@ class DashStudent extends Component {
     //   setAlertThreshold,
     //   setAlertPercentage
     // );
+
     setUpSockets(this.props)
   }
 
@@ -240,6 +241,7 @@ class DashStudent extends Component {
           </FloatingActionButton>
           <AlertGraph
             percentage={20}
+            isPastThreshold={1}
           />
         </div>
       );

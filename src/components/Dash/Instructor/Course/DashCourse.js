@@ -15,7 +15,7 @@ import Graph from './Alert/Graph';
 import Assess from './Assess/Assess';
 import QuestionBank from './QuestionBank/QuestionBank';
 import CourseSessionDialog from './CourseSessionDialog';
-import { initInstructorAlertGraph, getAlerts, INTERVAL_TIME } from '../../../../util/AlertGraph'
+import { getAlerts, INTERVAL_TIME } from '../../../../util/AlertGraph'
 
 
 async function handleCourseSessionStart(
@@ -51,7 +51,6 @@ class DashCourse extends Component {
         let alerts = await getAlerts();
         let attendance = 40;
         updateAlertGraph(alerts, attendance, alertGraph);
-        this.forceUpdate();
       }
       catch (e) {
         console.error("[ERROR] in DashCourse Component > ComponentDidMount : " + e)
@@ -71,6 +70,7 @@ class DashCourse extends Component {
       params,
       activateCourseSession,
       deactivateCourseSession,
+      alertGraph
     } = this.props;
 
     const { courseId } = params;
@@ -124,7 +124,7 @@ class DashCourse extends Component {
                   return;
                 }
                 hideOverlay();
-                activateCourseSession(courseSessionId);
+                activateCourseSession(courseSessionId, graph);
               })
               .catch(() => {
                 toastr.error('Something went wrong please try again');
@@ -157,7 +157,7 @@ const stateToProps = state => ({
   isOverlayVisible: state.Overlay.isVisible,
   overlayType: state.Overlay.type,
   userId: state.User.id,
-  alertGraph: state.Graph.Alert.graph
+  alertGraph: state.Graph.Alert.graph,
 });
 
 const dispatchToProps = (dispatch, ownProps) => ({
@@ -174,15 +174,16 @@ const dispatchToProps = (dispatch, ownProps) => ({
     window.clearInterval(window.intervalGetAlerts);
   },
   updateAlertGraph: (activeAlerts, attendance, graph) => {
-   dispatch(AlertActions.receivedActiveAlerts(activeAlerts, attendance, graph));
-  },
+    dispatch(AlertActions.receivedActiveAlerts(activeAlerts, attendance, graph));
+   },
   activateCourseSession: async (courseSessionId) => {
     dispatch(CourseActions.activateCourse(ownProps.params.courseId, courseSessionId));
     window.intervalGetAlerts =  window.setInterval(async () => {
       try {
-        let activeAlerts = await getAlerts();
+        let activeAlerts = 0;
         let attendance = 40;
         dispatch(AlertActions.receivedActiveAlerts(activeAlerts, attendance));
+
       }
       catch (e) {
         console.error("[ERROR] in DashCourse Component > ComponentDidMount : " + e)
