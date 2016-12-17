@@ -24,6 +24,7 @@ import * as UserActions from '../../../actions/User';
 import AlertGraph from './AlertGraph';
 import { getAlerts, INTERVAL_TIME } from '../../../util/AlertGraph'
 import * as AlertActions from '../../../actions/Alert'
+import { createAlert } from '../../../api/Alert'
 
 const fabAskStyle = {
   position: "absolute",
@@ -150,7 +151,7 @@ async function handleAlertThreshold(
     })
     .catch((error) => {
       console.error('error getting alert threshold')
-    })
+    });
 
   setAlertPercentage(courseSessionId)
     .then((payload) => {
@@ -186,7 +187,7 @@ class DashStudent extends Component {
     // );
     window.intervalGetAlerts =  window.setInterval( async () => {
       try {
-        let alerts = await getAlerts();
+        let alerts = await getAlerts(courseSessionId);
         let attendance = 40;
         updateAlertGraph(alerts, attendance);
       }
@@ -209,7 +210,9 @@ class DashStudent extends Component {
     const {
       mode,
       code,
+      courseId,
       courseSessionId,
+      userId,
       onConfirmClick,
       onAlertClick,
       setModeToAsk,
@@ -266,6 +269,15 @@ class DashStudent extends Component {
                 backgroundColor={Colors.red}
                 onClick={() => {
                   //TODO: Send data to server
+                  const payload = createAlert(courseSessionId, courseId, userId);
+                  const { error, alert } = payload;
+                  if(!!error) {
+                    console.error("[ERROR] in DashStudent > onClick of Alert FAB : couldn't create the alert");
+                    //TODO: consider adding Toastr Error
+                  }
+                  else {
+                    console.info("[INFO] alert added ");
+                  }
                   onAlertClick();
                 }}
                 mini
@@ -321,6 +333,7 @@ const mapStateToProps = (state) => {
     isAlertOverlayVisible: !!state.DashStudent.isAlertOverlayVisible,
     courseSessionId: state.Course.activeCourseSessionId,
     courseId: state.Course.id,
+    userId: state.User.id,
     activeAlerts: state.Graph.Alert.activeAlerts,
     attendance: state.Graph.Alert.attendance,
     threshold: state.Graph.Alert.threshold
