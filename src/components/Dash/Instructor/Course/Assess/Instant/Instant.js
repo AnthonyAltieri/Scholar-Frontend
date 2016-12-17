@@ -42,7 +42,6 @@ const Instant = ({
           unselectCorrectOption={unselectCorrectOption}
           onOptionClearClick={onOptionClearClick}
           onOptionAdd={onOptionAdd}
-          onOptionContentClick={() => {}}
           onOptionClear={onOptionClear}
           optionsRef={optionsRef}
           correctOption={correctOption}
