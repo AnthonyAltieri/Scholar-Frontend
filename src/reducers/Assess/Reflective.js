@@ -3,6 +3,8 @@ const initialState = {
   hasAnswered: false,
   numberAnswers: 0,
   numberReviews: 0,
+  hasStartedReview: false,
+  toReview: [],
 }
 
 const Reflective = (state = initialState, action) => {
@@ -14,6 +16,9 @@ const Reflective = (state = initialState, action) => {
           isActive: true,
           numberAnswers: 0,
           numberReviews: 0,
+          hasAnswered: false,
+          hasStartedReview: false,
+          toReview: [],
         }
         : state;
     }
@@ -22,7 +27,11 @@ const Reflective = (state = initialState, action) => {
       return {
         ...state,
         isActive: false,
+        hasStartedReview: false,
         hasAnswered: false,
+        numberAnswers: 0,
+        numberReviews: 0,
+        toReview: [],
       }
     }
 
@@ -48,6 +57,30 @@ const Reflective = (state = initialState, action) => {
       }
     }
 
+    case 'SUCCESSFULLY_SUBMITTED_REFLECTIVE_REVIEW': {
+      return {
+        ...state,
+        toReview: [
+          ...toReview.slice(0, action.reviewIndex),
+          ...toReview.slice(action.reviewIndex + 1),
+        ],
+      }
+    }
+
+    case 'REFLECTIVE_ASSESSMENT_START_REVIEW': {
+      return {
+        ...state,
+        hasStartedReview: true,
+      }
+    }
+
+    case 'ASSESSMENT_REFLECTIVE_RECEIVED_ANSWERS_TO_REVIEW': {
+      return {
+        ...state,
+        toReview: action.toReview,
+      }
+    }
+
     case 'REFLECTIVE_ASSESSMENT_REVIEWED': {
       return {
         ...state,
@@ -61,6 +94,8 @@ const Reflective = (state = initialState, action) => {
         numberAnswers: (state.numberAnswers + 1),
       }
     }
+
+
 
 
     default: {

@@ -79,6 +79,7 @@ function handleSockets(props) {
       reflectiveAssessmentAnswered();
     }
   );
+  console.log('pusher', Socket.getPusher());
 }
 
 class DashCourse extends Component {
@@ -227,12 +228,12 @@ const dispatchToProps = (dispatch, ownProps) => ({
   instantAnswerReceived: (userId, optionIndex) => {
     dispatch(InstantActions.answerReceived(userId, optionIndex));
   },
-  reflectiveAssessmentReviewed: () => ({
+  reflectiveAssessmentReviewed: () => {
     dispatch(ReflectiveActions.reflectiveAssessmentReviewed());
-  }),
-  reflectiveAssessmentAnswered: () => ({
+  },
+  reflectiveAssessmentAnswered: () => {
     dispatch(ReflectiveActions.reflectiveAssessmentAnswered());
-  }),
+  },
 });
 
 DashCourse = connect(

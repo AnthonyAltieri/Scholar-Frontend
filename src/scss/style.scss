@@ -1284,6 +1284,19 @@ $nav-btn-height: 40px;
   cursor: pointer;
 }
 
+.reflective-review {
+  .placeholder {
+    font-weight: 300;
+    padding: 0 20%;
+    text-align: center;
+    position: relative;
+    font-size: 24px;
+    color: rgba(0,0,0,0.2);
+    bottom: 5%;
+
+  }
+}
+
 .dash-instructor {
   $side-nav-width: 124px;
   min-height: 660px;

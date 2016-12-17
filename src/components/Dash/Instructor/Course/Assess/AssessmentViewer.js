@@ -3,6 +3,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Instant from './Instant/Instant';
 import Reflective from './Reflective/Reflective';
 import * as InstantApi from '../../../../../api/Assessment/Instant';
+import * as ReflectiveApi from '../../../../../api/Assessment/Reflective';
 import { toastr } from 'react-redux-toastr';
 
 
@@ -131,7 +132,7 @@ const AssessmentViewer = ({
         }}
         onEndClick={async function() {
           try {
-            const payload = await InstantApi.deactivate(courseSessionId);
+            const payload = await ReflectiveApi.deactivate(courseSessionId);
             if (!!payload.error) {
               toastr.error('Something went wrong please try again');
               return;
@@ -159,7 +160,10 @@ const AssessmentViewer = ({
           <RaisedButton
             label="reflective"
             primary={mode === 'REFLECTIVE'}
-            onClick={() => setAssessmentViewMode('REFLECTIVE')}
+            onTouchTap={() => {
+              if (mode === 'REFLECTIVE') return;
+              setAssessmentViewMode('REFLECTIVE')
+            }}
             fullWidth
           />
         </div>
@@ -171,7 +175,10 @@ const AssessmentViewer = ({
           <RaisedButton
             label="instant"
             primary={mode === 'INSTANT'}
-            onClick={() => setAssessmentViewMode('INSTANT')}
+            onTouchTap={() => {
+              if (mode === 'INSTANT') return;
+              setAssessmentViewMode('INSTANT')
+            }}
             fullWidth
           />
         </div>

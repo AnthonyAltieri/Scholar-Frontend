@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import RedRaisedButton from '../../buttons/RedRaisedButton';
+import { toastr } from 'react-redux-toastr';
 import GreenRaisedButton from '../../buttons/GreenRaisedButton';
 import * as InstantApi  from '../../../api/Assessment/Instant';
+import * as ReflectiveApi from '../../../api/Assessment/Reflective';
 import { connect } from 'react-redux';
 import * as DashStudentActions from '../../../actions/DashStudent';
 import * as StudentActions from '../../../actions/Dash/Student';
+import * as ReflectiveActions from '../../../actions/Assess/Reflelctive';
 
 
 function indexToLetter(index) {
@@ -102,8 +105,13 @@ const Instant = ({
 }
 
 const ReflectiveRespond = ({
+  courseSessionId,
+  userId,
+  assessmentId,
+  courseId,
   enteredAnswer,
   modifiedEnteredAnswer,
+  reflectiveAnswered,
 }) => {
   let input = '';
   return (
@@ -112,7 +120,26 @@ const ReflectiveRespond = ({
         label="submit"
         secondary
         fullWidth
-        onClick={async () => {
+        onTouchTap={async () => {
+          try {
+            console.log('mark')
+            const payload = await ReflectiveApi
+              .answer(
+                courseSessionId,
+                userId,
+                assessmentId,
+                courseId,
+                enteredAnswer,
+              );
+            if (!!payload.error) {
+              toastr.error('Something went wrong please try again');
+              return;
+            }
+            reflectiveAnswered();
+          } catch (e) {
+            console.error('[ERROR] Assessment submit', e);
+            toastr.error('Something went wrong please try again');
+          }
         }}
       />
       <div className="container-input">
@@ -144,14 +171,14 @@ const Response = ({
       <div className="buttons">
         <RedRaisedButton
           label="incorrect"
-          onClick={onIncorrectClick}
+          onTouchTap={onIncorrectClick}
           style={{
             width: 120,
           }}
         />
         <GreenRaisedButton
           label="correct"
-          onClick={onCorrectClick}
+          onTouchTap={onCorrectClick}
           style={{
             width: 120,
           }}
@@ -162,15 +189,69 @@ const Response = ({
 }
 const ReflectiveReview = ({
   responses,
+  courseSessionId,
+  courseId,
+  userId,
+  reflectiveReview,
 }) => {
   return (
-    <div>
+    <div
+      className={'reflective-review ' +
+      (responses.length === 0
+        ? 'c-center fullheight'
+        : '')
+      }
+    >
+      {responses.length === 0
+        ? <p className="placeholder">Nothing to review right now...</p>
+        : null
+      }
       {responses
-        .reduce((a, c, i) => [...a, { c, i }], [])
+        .reduce((a, c, i) => ([...a, {...c, i, }]), [])
         .map((r) => (
           <Response
-            key={`${r.i}()()${r.c}`}
-            text={r.c}
+            key={`${r.i}()()${r.content}`}
+            text={r.content}
+            onCorrectClick={async () => {
+              try {
+                const payload = await ReflectiveApi
+                  .review(
+                    courseSessionId,
+                    courseId,
+                    userId,
+                    'CORRECT',
+                    answerId,
+                  )
+                if (!!payload.error) {
+                  toastr.error('Something went wrong please try again');
+                  return;
+                }
+                reflectiveReview(r.i);
+              } catch (e) {
+                console.error('[ERROR] onCorrectClick', e);
+                toastr.error('Something went wrong please try again');
+              }
+            }}
+            onIncorrectClick={async () => {
+              try {
+                const payload = await ReflectiveApi
+                  .review(
+                    courseSessionId,
+                    courseId,
+                    userId,
+                    'CORRECT',
+                    answerId,
+                  )
+                if (!!payload.error) {
+                  toastr.error('Something went wrong please try again');
+                  return;
+                }
+                reflectiveReview(r.i);
+              } catch (e) {
+                console.error('[ERROR] onIncorrectClick', e);
+                toastr.error('Something went wrong please try again');
+              }
+            }}
           />
 
         ))
@@ -220,6 +301,12 @@ class Assessment extends Component {
       assessmentId,
       responses,
       courseId,
+      toReview,
+      hasAnsweredReflective,
+      reflectiveAnswered,
+      answerId,
+      hasStartedReview,
+      reflectiveReview,
     } = this.props;
     let displayedAssessment = null;
     console.log('question', question);
@@ -241,12 +328,17 @@ class Assessment extends Component {
           </div>
         )
       } else if (assessmentType === 'REFLECTIVE') {
-        if (!!isInRespondMode) {
+        if (!hasAnsweredReflective && !hasStartedReview) {
           displayedAssessment = (
             <div>
               <ReflectiveRespond
                 modifiedEnteredAnswer={modifiedEnteredAnswer}
                 enteredAnswer={enteredAnswer}
+                courseSessionId={courseSessionId}
+                userId={userId}
+                assessmentId={assessmentId}
+                courseId={courseId}
+                reflectiveAnswered={reflectiveAnswered}
               />
               <Question question={question} />
             </div>
@@ -255,6 +347,12 @@ class Assessment extends Component {
           displayedAssessment = (
             <ReflectiveReview
               responses={responses}
+              toReview={toReview}
+              courseSessionId={courseSessionId}
+              courseId={courseId}
+              userId={userId}
+              answerId={answerId}
+              reflectiveReview={reflectiveReview}
             />
           )
         }
@@ -285,6 +383,10 @@ const stateToProps = (state) => ({
   assessmentId: state.Assess.activeAssessmentId,
   courseId: state.Course.id,
   question: state.Assess.question || 'Verbal/Slide question asked',
+  hasAnsweredReflective: !!state.Assess.Reflective.hasAnswered,
+  toReview: state.Assess.Reflective.toReview || [],
+  hasStartedReview: state.Assess.Reflective.hasStartedReview || false,
+  responses: state.Assess.Reflective.toReview || [],
 });
 
 const dispatchToProps = (dispatch) => ({
@@ -296,6 +398,12 @@ const dispatchToProps = (dispatch) => ({
   },
   selectOption: (selectedOption) => {
     dispatch(StudentActions.selectOption(selectedOption));
+  },
+  reflectiveAnswered: () => {
+    dispatch(ReflectiveActions.answered());
+  },
+  reflectiveReview: (reviewIndex) => {
+    dispatch(ReflectiveActions.review(reviewIndex));
   },
 });
 

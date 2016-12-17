@@ -86,9 +86,9 @@ const Instant = (state = initialState, action) => {
       return {
         ...state,
         answers: [
-          ...state.answers,
+          ...answers,
           {
-            userId: answer.userId,
+            userId: action.userId,
             optionIndex: action.optionIndex
           },
         ]

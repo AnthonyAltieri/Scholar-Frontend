@@ -50,8 +50,13 @@ function setUpSockets(props) {
     removeFlag,
     receivedActiveAssessment,
     deactivateAssessment,
+    reflectiveStartReview,
   } = props;
   const courseSessionChannel = `private-${courseSessionId}`;
+  if (!Socket.getPusher() ||
+      !Socket.getPusher().connection.connection) {
+    Socket.connect();
+  }
   Socket.subscribe(courseSessionChannel);
   Socket.bind(
     courseSessionChannel,
@@ -117,7 +122,15 @@ function setUpSockets(props) {
     (data) => {
       deactivateAssessment();
     }
-  )
+  );
+  Socket.bind(
+    courseSessionChannel,
+    Events.REFLECTIVE_ASSESSMENT_START_REVIEW,
+    (data) => {
+      reflectiveStartReview();
+    }
+  );
+  console.log('pusher', Socket.getPusher());
 }
 
 async function handleAlertThreshold(
@@ -432,6 +445,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     updateAlertGraph: (activeAlerts, attendance) => {
       dispatch(AlertActions.updateActiveAlertsStudent(activeAlerts, attendance));
+    },
+    reflectiveStartReview: () => {
+      dispatch(ReflectiveActions.startReview());
     },
   }
 };

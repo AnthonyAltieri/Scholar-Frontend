@@ -15,6 +15,8 @@ const addLoggingToDispatch = (store) => {
   return (action) => {
     if (action.type.split('')[0] === '@') {
       return rawDispatch(action);
+    } else if (action.type === 'UPDATE_ACTIVE_ALERTS_STUDENT') {
+      return rawDispatch(action);
     }
     console.group(action.type);
     console.log('%c prev state', 'color: gray', store.getState());

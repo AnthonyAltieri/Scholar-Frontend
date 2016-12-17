@@ -12,7 +12,9 @@ export const send = (type, url, params = {}, withCredentials = true) => {
     if (type !== 'POST' && type !== 'GET') {
       throw new Error(`Invalid xmlhttp type ${type}`);
     }
-    console.log(`sending ${type} at ${SERVER_PREFIX + url}`);
+    if (url !== '/api/alert/get/active') {
+      console.log(`sending ${type} at ${SERVER_PREFIX + url}`);
+    }
     xmlhttp.open(type, SERVER_PREFIX + url, true);
     xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xmlhttp.withCredentials = withCredentials;
@@ -21,7 +23,9 @@ export const send = (type, url, params = {}, withCredentials = true) => {
       if (xmlhttp.status === 200) {
         try {
           const payload = JSON.parse(xmlhttp.responseText);
-          console.log('payload', payload);
+          if (url !== '/api/alert/get/active') {
+            console.log('payload', payload);
+          }
           resolve(payload);
         } catch (e) {
           reject({
@@ -37,7 +41,9 @@ export const send = (type, url, params = {}, withCredentials = true) => {
     }
     try {
       const parameters = JSON.stringify(params);
-      console.log('parameters', parameters);
+      if (url !== '/api/alert/get/active') {
+        console.log('parameters', parameters);
+      }
       xmlhttp.send(parameters);
     } catch (e) {
       reject({
