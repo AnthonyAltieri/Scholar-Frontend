@@ -39,7 +39,6 @@ const Instant = (state = initialState, action) => {
         ...state,
         isActive: false,
         options: [],
-        answers: [],
       }
     }
 

@@ -12,6 +12,7 @@ import * as ReflectiveApi from '../../../../../api/Assessment/Reflective';
 import * as CourseSessionApi from '../../../../../api/CourseSession';
 import * as ReflectiveActions from '../../../../../actions/Assess/Reflelctive';
 import AssessmentViewer from './AssessmentViewer';
+import InstantAssessmentGraph from './Instant/Graph'
 
 class Assess extends Component {
   async componentDidMount() {
@@ -20,6 +21,7 @@ class Assess extends Component {
       courseSessionId,
       foundActiveInstantAssessment,
       foundActiveReflectiveAssessment,
+      assessmentId
     } = this.props;
     if (isCourseSessionActive) {
       try {
@@ -51,7 +53,7 @@ class Assess extends Component {
             numberReviews,
           } = activeAssessment;
           foundActiveReflectiveAssessment(
-            activeAssessmentId,
+            assessmentId,
             question,
             assessmentType,
             numberAnswers,
@@ -63,7 +65,7 @@ class Assess extends Component {
           );
         }
       } catch (e) {
-        console.error('[]')
+        console.error('[ERROR] in Assess component > ComponentDidMount : ' + e);
 
       }
     }
@@ -164,6 +166,9 @@ class Assess extends Component {
             }}
           >
             Instant Assessment Graph
+            <div id="instantGraph"> 
+              <InstantAssessmentGraph /> 
+            </div>
           </div>
         </div>
       </div>

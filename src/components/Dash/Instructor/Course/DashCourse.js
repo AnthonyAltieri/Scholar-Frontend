@@ -84,13 +84,14 @@ function handleSockets(props) {
 
 class DashCourse extends Component {
   async componentDidMount() {
+    const { courseSessionId } = this.props;
     if (this.props.isCourseSessionActive) {
       handleSockets(this.props);
     }
     const { updateAlertGraph, alertGraph } = this.props;
     window.intervalGetAlerts =  window.setInterval( async () => {
       try {
-        let alerts = await getAlerts();
+        let alerts = await getAlerts( courseSessionId );
         let attendance = 40;
         updateAlertGraph(alerts, attendance, alertGraph);
       }
