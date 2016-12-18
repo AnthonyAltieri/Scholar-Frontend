@@ -14,16 +14,24 @@ import Socket from '../../../socket/Socket';
 import Events from '../../../socket/Events';
 import Nav from '../../Navigation/DashStudent/Nav';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
-import FontIcon from 'material-ui/FontIcon';
 import * as LoadingActions from '../../../actions/Loading'
 import Colors from '../../../util/Colors'
 import ToCourseDialog from './ToCoursesDialog';
 import AlertDialog from './AlertDialog';
+import AttendanceDialog from './AttendanceDialog';
+import Paper from 'material-ui/Paper';
+import Menu from 'material-ui/Menu';
+import MenuItem from 'material-ui/MenuItem';
+import IconButton from 'material-ui/IconButton';
+import FontIcon from 'material-ui/FontIcon';
+import Drawer from 'material-ui/Drawer';
 import * as QuestionListActions from '../../../actions/QuestionList';
 import * as UserActions from '../../../actions/User';
+import * as DrawerActions from '../../../actions/Drawer';
 import AlertGraph from './AlertGraph';
 import { getAlerts, INTERVAL_TIME } from '../../../util/AlertGraph'
 import * as AlertActions from '../../../actions/Alert'
+import * as MenuActions from '../../../actions/Menu'
 import * as ReflectiveActions from '../../../actions/Assess/Reflelctive';
 import { createAlert } from '../../../api/Alert'
 
@@ -229,38 +237,92 @@ class DashStudent extends Component {
       params,
       activeAlerts,
       attendance,
-      threshold
+      threshold,
+      isDrawerOpen,
+      openDrawer,
+      closeDrawer,
+      isInAttendance,
+      overlayType,
+      openAttendanceDialog,
+      closeAttendanceDialog,
     }  = this.props;
-    console.log('params', params);
+    console.log('overlayType', overlayType);
         return (
           <div className="dash-student">
           <ToCourseDialog
             onYesClick={() => {
               // TODO: account for student leaving
               hideOverlay();
+              closeDrawer();
               goToCourses();
             }}
             onNoClick={() => {
               hideOverlay();
             }}
-            isOpen={isOverlayVisible}
+            isOpen={isOverlayVisible && overlayType === 'GO_TO_COURSES'}
           />
           <AlertDialog
-            onOkClick={() => {
-              hideAlertOverlay();
-            }}
+            onOkClick={() => hideAlertOverlay()}
             isOpen={isAlertOverlayVisible}
+          />
+          <AttendanceDialog
+            onSubmitClick={async () => {
+            }}
+            onCancelClick={() => closeAttendanceDialog()}
+            isOpen={isOverlayVisible && overlayType === 'ATTENDANCE'}
           />
           <Nav
             {...this.props}
             mode={mode}
             code={code}
             onBackClick={() => {
-              promptGoToCourses();
             }
           }
             courseSessionId={courseSessionId}
           />
+          <Drawer
+            docked={false}
+            width={200}
+            open={isDrawerOpen}
+            onRequestChange={(open, reason) => {
+              if (!open) {
+                closeDrawer();
+              }
+            }}
+          >
+            {isInAttendance
+              ? (
+                <p className="in-attendance yes">
+                  In Attendance
+                </p>
+              )
+              : (
+                <p className="in-attendance no">
+                  Out of Attendance
+                </p>
+              )
+            }
+            <MenuItem
+              onTouchTap={() => promptGoToCourses()}
+              rightIcon={
+                <FontIcon className="material-icons">
+                  list
+                </FontIcon>
+              }
+            >
+              Go To Courses
+            </MenuItem>
+            <MenuItem
+              onTouchTap={() => openAttendanceDialog()}
+              rightIcon={
+                <FontIcon className="material-icons">
+                  pan_tool
+                </FontIcon>
+              }
+            >
+              Attendance
+            </MenuItem>
+          </Drawer>
           <Content params={params || {}} mode={mode} />
           {mode !== 'ASSESSMENT'
             ? (
@@ -336,7 +398,10 @@ const mapStateToProps = (state) => {
     userId: state.User.id,
     activeAlerts: state.Graph.Alert.activeAlerts,
     attendance: state.Graph.Alert.attendance,
-    threshold: state.Graph.Alert.threshold
+    threshold: state.Graph.Alert.threshold,
+    isDrawerOpen: !!state.Drawer.isOpen,
+    isInAttendance: !!state.Drawer.isInAttendance,
+    overlayType: state.Overlay.type,
   }
 };
 
@@ -369,10 +434,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch(DashStudentActions.setDashMode('QUESTIONS'))
     },
     promptGoToCourses: () => {
+      dispatch(OverlayActions.setOverlayType('GO_TO_COURSES'));
       dispatch(OverlayActions.showOverlay());
     },
     hideOverlay: () => {
-      dispatch(OverlayActions.hideOverlay())
+      dispatch(OverlayActions.hideOverlay());
+      dispatch(OverlayActions.clearOverlayType());
     },
     endLoading: () => {
       dispatch(LoadingActions.endLoading());
@@ -461,6 +528,23 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     reflectiveStartReview: (toReview) => {
       dispatch(ReflectiveActions.startReview(toReview));
+    },
+    openMenu: () => {
+      dispatch(MenuActions.openMenu());
+    },
+    openDrawer: () => {
+      dispatch(DrawerActions.openDrawer());
+    },
+    closeDrawer: () => {
+      dispatch(DrawerActions.closeDrawer())
+    },
+    openAttendanceDialog: () => {
+      dispatch(OverlayActions.setOverlayType('ATTENDANCE'));
+      dispatch(OverlayActions.showOverlay());
+    },
+    closeAttendanceDialog: () => {
+      dispatch(OverlayActions.hideOverlay());
+      dispatch(OverlayActions.clearOverlayType());
     },
   }
 };

@@ -17,6 +17,8 @@ import Course from './Course';
 import Assess from './Assess/Assess';
 import AssessmentBank from './AssessmentBank/AssessmentBank';
 import Graph  from './Graph/Graph'
+import Menu from './Menu';
+import Drawer from './Drawer';
 import {reducer as Toastr} from 'react-redux-toastr'
 import { routerReducer } from 'react-router-redux';
 
@@ -35,6 +37,8 @@ const Root = combineReducers({
   Assess,
   AssessmentBank,
   Graph,
+  Menu,
+  Drawer,
   toastr: Toastr,
   routing: routerReducer,
   Admin,

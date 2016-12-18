@@ -532,6 +532,10 @@ body {
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
     position: fixed;
     top: 0; left: 0; right: 0;
+    .three-dots-menu {
+      position: absolute !important;
+      right: 0;
+    }
   }
   $nav-top-height: 34px;
   .nav-top {
@@ -685,54 +689,13 @@ $nav-top_height: 34px;
     height: 140px;
   }
 }
+.dialog-text {
+  line-height: 130%;
+}
 
 .dash-student {
   //$nav_height: 68px;
-  $top-height: 42px;
-  .nav {
-    //height: $nav_height;
-    position: absolute;
-    top: 0;  left: 0;  right: 0;
-    margin: 0;
-    background: -webkit-linear-gradient(top right, $color-primary-dark, $color-primary-light);/* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(bottom left, $color-primary-dark, $color-primary-light); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(bottom left, $color-primary-dark, $color-primary-light);/* For Firefox 3.6 to 15 */
-    background: linear-gradient(to bottom left, $color-primary-dark, $color-primary-light); /* Standard syntax */
-    display: flex;
-    flex-flow: column;
-    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
-
-    .nav-top {
-      height: $top-height;
-      width: 100%;
-      position: relative;
-      .navigation {
-        position: absolute;
-        left: 4px;
-        display: flex;
-        flex-flow: row;
-        align-items: center;
-      }
-      .arrow {
-        width: 22px;
-        height: 22px;
-        margin-right: 8px;
-        cursor: pointer;
-      }
-      .text {
-        font-family: Lato;
-        font-weight: 400;
-        font-size: 14px;
-        line-height: $top-height;
-        color: #333;
-        margin: 0;
-        z-index: 40;
-        cursor: pointer;
-      }
-
-      @extend .r-center;
-    }
-  }
+  $top-height: 64px;
   .header {
     height: 28px;
     font-family: $font-default;
@@ -746,8 +709,19 @@ $nav-top_height: 34px;
   }
   .displayed-content {
     position: absolute;
-    top: $top-height + 2;
+    top: $top-height;
     left: 0; right: 0; bottom: 0;
+  }
+  .in-attendance {
+    width: 100%;
+    text-align: center;
+    font-weight: bolder;
+  }
+  .in-attendance.yes {
+    color: $color-green;
+  }
+  .in-attendance.no {
+    color: $color-red;
   }
 
   @extend .fullscreen;
