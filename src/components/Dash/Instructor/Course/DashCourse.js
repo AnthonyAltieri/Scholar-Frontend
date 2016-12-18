@@ -232,7 +232,7 @@ const dispatchToProps = (dispatch, ownProps) => ({
     dispatch(ReflectiveActions.reflectiveAssessmentReviewed());
   },
   reflectiveAssessmentAnswered: () => {
-    dispatch(ReflectiveActions.reflectiveAssessmentAnswered());
+    dispatch(ReflectiveActions.answered());
   },
 });
 

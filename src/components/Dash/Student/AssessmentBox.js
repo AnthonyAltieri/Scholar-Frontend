@@ -59,6 +59,8 @@ const AssessmentBox = ({
   question,
   selectedOption,
   activateAssessmentMode,
+  hasAnsweredReflective,
+  toReview,
 }) => {
   let typeText;
   let backgroundColor;
@@ -73,6 +75,12 @@ const AssessmentBox = ({
   }
   const questionText = calculateQuestionText(question);
   const answerText = calculateAnswerText(type, selectedOption);
+  let reflectiveDisplay = null;
+  if (hasAnsweredReflective) {
+    reflectiveDisplay = (<p><span>{toReview.length} to review</span></p>);
+  } else {
+    reflectiveDisplay = (<p><span>A:</span>{answerText}</p>);
+  }
   return (
     <div
       className="assessment-box"
@@ -86,7 +94,14 @@ const AssessmentBox = ({
         <h3>{typeText} Assessment Active</h3>
       </div>
       <p><span>Q:</span>{questionText}</p>
-      <p><span>A:</span>{answerText}</p>
+      {type === 'REFLECTIVE'
+        ? reflectiveDisplay
+        : null
+      }
+      {type === 'INSTANT'
+        ? (<p><span>A:</span>{answerText}</p>)
+        : null
+      }
       <div className="r-right">
         <RaisedButton
           label="Answer"

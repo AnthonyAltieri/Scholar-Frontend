@@ -96,6 +96,8 @@ class StudentQuestionList extends Component {
       activeAssessmentType,
       assessmentQuestion,
       selectedOption,
+      toReview,
+      hasAnsweredReflective,
     } = this.props;
     return (
       <div
@@ -112,6 +114,8 @@ class StudentQuestionList extends Component {
               question={assessmentQuestion}
               activateAssessmentMode={() => setDashMode('ASSESSMENT')}
               selectedOption={selectedOption}
+              toReview={toReview}
+              hasAnsweredReflective={hasAnsweredReflective}
             />
           )
           : null
@@ -155,6 +159,9 @@ const mapStateToProps = (state, ownProps) => ({
   activeAssessmentType: state.Assess.activeType,
   assessmentQuestion: state.Assess.question,
   selectedOption: state.Dash.Student.selectedOption,
+  toReview: state.Assess.Reflective.toReview || [],
+  hasStartedReview: state.Assess.Reflective.hasStartedReview || false,
+  hasAnsweredReflective: !!state.Assess.Reflective.hasAnswered,
 });
 const dispatchToProps = (dispatch) => ({
   retrievedQuestions: (questions) => {

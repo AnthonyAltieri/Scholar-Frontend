@@ -1284,6 +1284,19 @@ $nav-btn-height: 40px;
   cursor: pointer;
 }
 
+.reflective {
+  .stage {
+    width: 100%;
+    text-align: center;
+    span {
+      font-weight: bolder;
+      font-size: 18px;
+      margin-right: 8px;
+    }
+  }
+  @extend .no-text-sel;
+}
+
 .reflective-review {
   .placeholder {
     font-weight: 300;

@@ -4,6 +4,7 @@ import Instant from './Instant/Instant';
 import Reflective from './Reflective/Reflective';
 import * as InstantApi from '../../../../../api/Assessment/Instant';
 import * as ReflectiveApi from '../../../../../api/Assessment/Reflective';
+import * as ReflectiveActions from '../../../../../actions/Assess/Reflelctive';
 import { toastr } from 'react-redux-toastr';
 
 
@@ -29,6 +30,8 @@ const AssessmentViewer = ({
   correctOption,
   activeAssessmentType,
   assessmentId,
+  hasReviewStarted,
+  startReflectiveReview,
 }) => {
   let instantQuestion;
   let optionNodes = [];
@@ -108,10 +111,11 @@ const AssessmentViewer = ({
         isActive={isReflectiveActive}
         otherAssessmentActive={isInstantActive}
         isCourseSessionActive={isCourseSessionActive}
+        hasReviewStarted={hasReviewStarted}
         questionRef={(n) => {
           reflectiveQuestion = n;
         }}
-        onStartClick={async function() {
+        onStartAnsweringClick={async () => {
           const question = reflectiveQuestion.value;
           try {
             const payload = await ReflectiveApi
@@ -128,6 +132,22 @@ const AssessmentViewer = ({
             activateReflective();
           } catch (e) {
             console.error('[ERROR] onStartClick', e);
+          }
+        }}
+        onStartReviewClick={async () => {
+          console.log('onStartReviewClick()');
+          try {
+            const payload = await ReflectiveApi.startReview(
+              courseSessionId,
+              assessmentId
+            );
+            if (!!payload.error) {
+              toastr.error('Something went wrong please try again');
+              return;
+            }
+            startReflectiveReview();
+          } catch (e) {
+            console.error('[ERROR] onStartReviewCLick', e);
           }
         }}
         onEndClick={async function() {

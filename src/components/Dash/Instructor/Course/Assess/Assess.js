@@ -10,6 +10,7 @@ import * as AssessActions from '../../../../../actions/Assess/Assess'
 import * as InstantApi from '../../../../../api/Assessment/Instant';
 import * as ReflectiveApi from '../../../../../api/Assessment/Reflective';
 import * as CourseSessionApi from '../../../../../api/CourseSession';
+import * as ReflectiveActions from '../../../../../actions/Assess/Reflelctive';
 import AssessmentViewer from './AssessmentViewer';
 
 class Assess extends Component {
@@ -90,6 +91,8 @@ class Assess extends Component {
       activeAssessmentType,
       mode,
       setAssessmentViewMode,
+      hasReviewStarted,
+      startReflectiveReview,
     } = this.props;
 
 
@@ -195,6 +198,7 @@ const stateToProps = (state) => ({
   instantAssessmentAnswers: getInstantAssessmentAnswers(
     state.Assess.Instant.answers
   ),
+  hasReviewStarted: !!state.Assess.Reflective.hasStartedReview,
 });
 
 const dispatchToProps = (dispatch) => ({
@@ -251,7 +255,10 @@ const dispatchToProps = (dispatch) => ({
       numberAnswers,
       numberReviews,
     ))
-  }
+  },
+  startReflectiveReview: () => {
+    dispatch(ReflectiveActions.startReview([]));
+  },
 });
 
 Assess = connect(

@@ -74,10 +74,33 @@ function getPusher() {
   return pusher;
 }
 
+function mainTainPersistence() {
+  // 2 seconds
+  const PERSISTENCE_TIME = 2000;
+  window.socketPersistence = window.setInterval(() => {
+    try {
+      if (!pusher || !pusher.connection.connection) {
+        connect();
+      }
+    } catch (e) {
+
+    }
+  }, PERSISTENCE_TIME);
+}
+
+function clearPersistenceInterval() {
+  if (!!window.socketPersistence) {
+    clearInterval(window.socketPersistence);
+  }
+}
+
+
 export default {
   connect,
   subscribe,
   bind,
   disconnect,
   getPusher,
+  mainTainPersistence,
+  clearPersistenceInterval,
 }

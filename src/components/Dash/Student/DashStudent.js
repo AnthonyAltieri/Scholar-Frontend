@@ -24,6 +24,7 @@ import * as UserActions from '../../../actions/User';
 import AlertGraph from './AlertGraph';
 import { getAlerts, INTERVAL_TIME } from '../../../util/AlertGraph'
 import * as AlertActions from '../../../actions/Alert'
+import * as ReflectiveActions from '../../../actions/Assess/Reflelctive';
 
 const fabAskStyle = {
   position: "absolute",
@@ -127,10 +128,10 @@ function setUpSockets(props) {
     courseSessionChannel,
     Events.REFLECTIVE_ASSESSMENT_START_REVIEW,
     (data) => {
-      reflectiveStartReview();
+      reflectiveStartReview(data.toReview);
     }
   );
-  console.log('pusher', Socket.getPusher());
+  Socket.mainTainPersistence();
 }
 
 async function handleAlertThreshold(
@@ -199,10 +200,9 @@ class DashStudent extends Component {
   }
 
   componentWillUnmount() {
-
     Socket.disconnect();
+    Socket.clearPersistenceInterval();
     window.clearInterval(window.intervalGetAlerts);
-
   }
 
   render() {
@@ -446,8 +446,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     updateAlertGraph: (activeAlerts, attendance) => {
       dispatch(AlertActions.updateActiveAlertsStudent(activeAlerts, attendance));
     },
-    reflectiveStartReview: () => {
-      dispatch(ReflectiveActions.startReview());
+    reflectiveStartReview: (toReview) => {
+      dispatch(ReflectiveActions.startReview(toReview));
     },
   }
 };

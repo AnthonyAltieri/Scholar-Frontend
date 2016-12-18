@@ -16,6 +16,7 @@ export const receivedAnswersToReview = (toReview) => ({
   toReview,
 })
 
-export const startReview = () => ({
+export const startReview = (toReview) => ({
   type: 'REFLECTIVE_ASSESSMENT_START_REVIEW',
+  toReview,
 });

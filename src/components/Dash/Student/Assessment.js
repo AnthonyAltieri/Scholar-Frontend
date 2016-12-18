@@ -122,7 +122,6 @@ const ReflectiveRespond = ({
         fullWidth
         onTouchTap={async () => {
           try {
-            console.log('mark')
             const payload = await ReflectiveApi
               .answer(
                 courseSessionId,
@@ -151,7 +150,7 @@ const ReflectiveRespond = ({
             input = n;
           }}
           onChange={(e) => {
-            enteredAnswer = event.target.value;
+            enteredAnswer = e.target.value;
             modifiedEnteredAnswer(enteredAnswer);
           }}
         />
@@ -162,23 +161,23 @@ const ReflectiveRespond = ({
 
 const Response = ({
   text,
-  onCorrectClick,
-  onIncorrectClick,
+  onAgreeClick,
+  onDisagreeClick,
 }) => {
   return (
     <div className="response">
       <p className="text">{text}</p>
       <div className="buttons">
         <RedRaisedButton
-          label="incorrect"
-          onTouchTap={onIncorrectClick}
+          label="Disagree"
+          onTouchTap={onDisagreeClick}
           style={{
             width: 120,
           }}
         />
         <GreenRaisedButton
-          label="correct"
-          onTouchTap={onCorrectClick}
+          label="Agree"
+          onTouchTap={onAgreeClick}
           style={{
             width: 120,
           }}
@@ -212,7 +211,7 @@ const ReflectiveReview = ({
           <Response
             key={`${r.i}()()${r.content}`}
             text={r.content}
-            onCorrectClick={async () => {
+            onAgreeClick={async () => {
               try {
                 const payload = await ReflectiveApi
                   .review(
@@ -232,7 +231,7 @@ const ReflectiveReview = ({
                 toastr.error('Something went wrong please try again');
               }
             }}
-            onIncorrectClick={async () => {
+            onDisagreeClick={async () => {
               try {
                 const payload = await ReflectiveApi
                   .review(

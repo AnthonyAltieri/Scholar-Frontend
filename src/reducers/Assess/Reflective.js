@@ -71,6 +71,7 @@ const Reflective = (state = initialState, action) => {
       return {
         ...state,
         hasStartedReview: true,
+        toReview: action.toReview || [],
       }
     }
 
