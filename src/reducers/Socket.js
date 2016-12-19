@@ -1,4 +1,4 @@
-const Socket = (state = {}, action) {
+const Socket = (state = {}, action) => {
   switch (action.type) {
     case 'SOCKET_CONNECT': {
       return {
@@ -17,3 +17,5 @@ const Socket = (state = {}, action) {
     }
   }
 }
+
+export default Socket;

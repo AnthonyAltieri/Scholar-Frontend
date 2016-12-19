@@ -5,7 +5,7 @@
 var pusher;
 var channels = {};
 
-function connect() {
+function connect(connectionAction) {
   pusher = new Pusher(
     'be327c8cfdbd733ab9e5',
     {
@@ -13,6 +13,7 @@ function connect() {
       authEndpoint: 'http://localhost:8000/pusher/auth'
     }
   );
+  connectionAction(pusher);
 }
 
 function subscribe(name) {

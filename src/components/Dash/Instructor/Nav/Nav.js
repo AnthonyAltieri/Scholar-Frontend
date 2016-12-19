@@ -14,6 +14,7 @@ const Nav = ({
   showOverlay,
   navigate,
   clearCourse,
+  logOut,
 }) => {
   let nav = null;
   const courseRegex = /^\/dash\/instructor\/course\/*/;
@@ -30,7 +31,7 @@ const Nav = ({
       clearCourse={clearCourse}
     />)
   } else if (homeRegex.test(pathname) || settingsRegex.test(pathname)) {
-    nav = <HomeNav navigate={navigate} />
+    nav = <HomeNav navigate={navigate} logOut={logOut} />
   }
 
   return (
