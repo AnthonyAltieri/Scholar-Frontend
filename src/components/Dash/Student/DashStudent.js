@@ -9,6 +9,7 @@ import * as OverlayActions from '../../../actions/Overlay';
 import * as DashStudentActions from '../../../actions/DashStudent';
 import * as CourseSessionActions from '../../../actions/CourseSession'
 import * as AssessmentActions from '../../../actions/Assess/Assess'
+import * as SocketActions from '../../../actions/Socket';
 import Content from './Content';
 import Socket from '../../../socket/Socket';
 import Events from '../../../socket/Events';
@@ -61,11 +62,12 @@ function setUpSockets(props) {
     receivedActiveAssessment,
     deactivateAssessment,
     reflectiveStartReview,
+    socketConnect,
+    pusher,
   } = props;
   const courseSessionChannel = `private-${courseSessionId}`;
-  if (!Socket.getPusher() ||
-      !Socket.getPusher().connection.connection) {
-    Socket.connect();
+  if (!pusher) {
+    Socket.connect(socketConnect);
   }
   Socket.subscribe(courseSessionChannel);
   Socket.bind(
@@ -140,7 +142,7 @@ function setUpSockets(props) {
       reflectiveStartReview(data.toReview);
     }
   );
-  Socket.mainTainPersistence();
+
 }
 
 async function handleAlertThreshold(
@@ -209,7 +211,8 @@ class DashStudent extends Component {
   }
 
   componentWillUnmount() {
-    Socket.disconnect();
+    Socket.disconnect() ;
+    this.context.store.dispatch(SocketActions.disconnect());
     Socket.clearPersistenceInterval();
     window.clearInterval(window.intervalGetAlerts);
   }
@@ -391,6 +394,7 @@ const mapStateToProps = (state) => {
     code: state.Course.abbreviation || '',
     // threshold: state.CourseSession.threshold,
     // alertPercentage: state.CourseSession.alertPercentage,
+    pusher: state.Socket.pusher,
     isOverlayVisible: !!state.Overlay.isVisible,
     isAlertOverlayVisible: !!state.DashStudent.isAlertOverlayVisible,
     courseSessionId: state.Course.activeCourseSessionId,
@@ -545,6 +549,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     closeAttendanceDialog: () => {
       dispatch(OverlayActions.hideOverlay());
       dispatch(OverlayActions.clearOverlayType());
+    },
+    socketConnect: (pusher) => {
+      dispatch(SocketActions.connect(pusher));
     },
   }
 };

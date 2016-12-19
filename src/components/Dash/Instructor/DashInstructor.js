@@ -11,6 +11,7 @@ import * as CourseSessionActions from '../../../actions/CourseSession'
 import * as ModeActions from '../../../actions/DashInstructor/Course/Mode'
 import * as OverlayActions from '../../../actions/Overlay';
 import * as CourseActions from '../../../actions/Course';
+import * as UserActions from '../../../actions/User';
 
 
 class DashInstructor extends Component {
@@ -30,6 +31,7 @@ class DashInstructor extends Component {
       showOverlay,
       navigate,
       clearCourse,
+      logOut,
     } = this.props;
     return (
       <div className="dash-instructor">
@@ -42,6 +44,7 @@ class DashInstructor extends Component {
           setMode={setMode}
           showOverlay={showOverlay}
           clearCourse={clearCourse}
+          logOut={logOut}
         />
         {children}
       </div>
@@ -81,6 +84,9 @@ const dispatchToProps = (dispatch) => ({
   },
   clearCourse: () => {
     dispatch(CourseActions.clearCourse());
+  },
+  logOut: () => {
+    dispatch(UserActions.logOut());
   },
 
 });

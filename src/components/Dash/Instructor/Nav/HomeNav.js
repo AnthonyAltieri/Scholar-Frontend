@@ -13,6 +13,7 @@ import NavBtn from './NavBtn';
 
 const HomeNav = ({
   navigate,
+  logOut,
 }) => {
   return (
     <div className="c">
@@ -20,25 +21,32 @@ const HomeNav = ({
       <NavBtn
         icon="exit_to_app"
         label="log out"
-        onClick={() => {
-          // TODO: implement log-out
+        onTouchTap={() => {
+          logOut();
+          navigate('/login');
         }}
       />
       <NavBtn
         icon="home"
         label="home"
-        onClick={() => {
+        onTouchTap={() => {
           navigate('/dash/instructor/home')
+        }}
+      />
+      <NavBtn
+        icon="school"
+        label="Grades"
+        onTouchTap={() => {
+          navigate('/dash/instructor/grades');
         }}
       />
       <NavBtn
         icon="settings"
         label="settings"
-        onClick={() => {
+        onTouchTap={() => {
           navigate('/dash/instructor/settings')
         }}
       />
-
     </div>
   )
 };
