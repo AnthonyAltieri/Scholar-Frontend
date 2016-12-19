@@ -212,7 +212,7 @@ class DashStudent extends Component {
 
   componentWillUnmount() {
     Socket.disconnect() ;
-    this.context.store.dispatch(SocketActions.disconnect());
+    this.props.socketDisconnect();
     Socket.clearPersistenceInterval();
     window.clearInterval(window.intervalGetAlerts);
   }
@@ -552,6 +552,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     socketConnect: (pusher) => {
       dispatch(SocketActions.connect(pusher));
+    },
+    socketDisconnect: () => {
+      dispatch(SocketActions.disconnect());
     },
   }
 };

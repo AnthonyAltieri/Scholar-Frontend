@@ -20,6 +20,7 @@ const Nav = ({
   const courseRegex = /^\/dash\/instructor\/course\/*/;
   const homeRegex = /^\/dash\/instructor\/home/;
   const settingsRegex = /^\/dash\/instructor\/settings/;
+  const gradesRegex = /^\/dash\/instructor\/grades/;
 
   if (courseRegex.test(pathname)) {
     nav = (<CourseNav
@@ -30,7 +31,10 @@ const Nav = ({
       isCourseSessionActive={isCourseSessionActive}
       clearCourse={clearCourse}
     />)
-  } else if (homeRegex.test(pathname) || settingsRegex.test(pathname)) {
+  } else if (homeRegex.test(pathname)
+      || settingsRegex.test(pathname)
+      || gradesRegex.test(pathname)
+    ) {
     nav = <HomeNav navigate={navigate} logOut={logOut} />
   }
 

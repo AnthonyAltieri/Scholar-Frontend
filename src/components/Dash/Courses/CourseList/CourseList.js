@@ -63,7 +63,6 @@ class CourseList extends Component {
             toastr.error("Error: Could not join the Course. Please Refresh and try again");
             return;
           }
-          console.log("Success! We will now enter the course session");
           receivedQuestions(courseSession.questions);
           enterCourse(
             courseId,

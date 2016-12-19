@@ -23,6 +23,7 @@ import InstructorHome from './Dash/Instructor/Home/Home';
 import DashInstructor from './Dash/Instructor/DashInstructor';
 import AddCourse from './Dash/Instructor/Home/Course/Add';
 import DashCourse from './Dash/Instructor/Course/DashCourse';
+import Grades from './Dash/Instructor/Grades/Grades';
 import InstructorSettings from './Dash/Instructor/InstructorSettings';
 import InstructorConfusion from './Dash/Instructor/Course/Confusion';
 import InstructorAsk from './Dash/Instructor/Course/Ask/Ask';
@@ -62,6 +63,7 @@ class Root extends Component {
                 <IndexRedirect to="/dash/instructor/home"/>
                 <Route path="home" components={InstructorHome} />
                 <Route path="home/addCourse" components={AddCourse} />
+                <Route path="grades" components={Grades} />
                 <Route path="course/:courseId" components={DashCourse} />
                 <Redirect from="course" to="home" />
                 <Route path="settings" components={InstructorSettings} />

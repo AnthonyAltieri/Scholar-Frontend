@@ -31,6 +31,8 @@ const CourseList = ({
   goToCourse,
   joinCourse,
   courses,
+  noAddCourse,
+  onCourseClick,
 }) => {
   console.log('CourseList courses',courses);
   return (
@@ -56,11 +58,16 @@ const CourseList = ({
             backgroundColor: Colors.secondary,
         }}
       />
-      <AddCourse
-        onClick={() => {
-            navigate('/dash/instructor/home/addCourse');
-        }}
-      />
+      {!!noAddCourse
+        ? (
+          <AddCourse
+            onClick={() => {
+                navigate('/dash/instructor/home/addCourse');
+            }}
+          />
+        )
+        : null
+      }
         {courses.map((c) => {
           const time = moment(c.timeStart).format('h:mm a') + ' - '
             + moment(c.timeEnd).format('h:mm a');
@@ -84,15 +91,19 @@ const CourseList = ({
                 time={time}
                 days={days}
                 onClick={() => {
-                  joinCourse(
-                    c.id,
-                    c.abbreviation,
-                    c.title,
-                    c.activeCourseSessionId || null,
-                    c.timeStart,
-                    c.timeEnd,
-                  );
-                  goToCourse(c.id)
+                  if (!!onCourseClick) {
+                    joinCourse(
+                      c.id,
+                      c.abbreviation,
+                      c.title,
+                      c.activeCourseSessionId || null,
+                      c.timeStart,
+                      c.timeEnd,
+                    );
+                    goToCourse(c.id)
+                  } else {
+                    onCourseClick(c);
+                  }
                 }}
               />
             )
