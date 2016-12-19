@@ -1,6 +1,7 @@
 /**
  * @author Anthony Altieri on 10/9/16.
  */
+import Attendance from './Dash/Instructor/Course/Attendance'
 
 const validateCourse = (course) => {
   if (!course.id) {
@@ -39,6 +40,7 @@ const Course = (state = {}, action) => {
       return {
         ...state,
         activeCourseSessionId: action.courseSessionId,
+        Attendance: Attendance(state.Attendance, action)
       }
     }
 
@@ -46,7 +48,7 @@ const Course = (state = {}, action) => {
       if (state.id !== action.id) return state;
       return {
         ...state,
-        activeCourseSessionId: null,
+        activeCourseSessionId: null
       }
     }
 
@@ -62,6 +64,15 @@ const Course = (state = {}, action) => {
 
     case 'CLEAR_COURSE': {
       return {}
+    }
+
+    case 'ATTENDANCE_CODE_ACTIVATED':
+    case 'ATTENDANCE_CODE_DEACTIVATED':
+    case 'STUDENT_JOINED_ATTENDANCE':{
+      return {
+        ...state,
+        Attendance : Attendance(state.Attendance, action)
+      }
     }
 
     default: {
