@@ -19,6 +19,7 @@ import Graph from './Alert/Graph';
 import Assess from './Assess/Assess';
 import QuestionBank from './QuestionBank/QuestionBank';
 import CourseSessionDialog from './CourseSessionDialog';
+import AttendanceDialog from './AttendanceDialog'
 import { getAlerts, INTERVAL_TIME } from '../../../../util/AlertGraph'
 
 
@@ -187,6 +188,17 @@ class DashCourse extends Component {
               .catch(() => {
                 toastr.error('Something went wrong please try again');
               });
+          }}
+          onCancelClick={() => { hideOverlay(); }}
+        />
+
+        <AttendanceDialog
+          isOpen={!!isOverlayVisible && overlayType === 'ATTENDANCE'}
+          onStartClick={() => {
+            console.log("Start click");
+          }}
+          onEndClick={() => {
+           console.log("End click")
           }}
           onCancelClick={() => { hideOverlay(); }}
         />

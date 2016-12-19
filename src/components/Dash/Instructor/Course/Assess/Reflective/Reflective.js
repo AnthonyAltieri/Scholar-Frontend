@@ -59,8 +59,8 @@ const Reflective = ({
             marginBottom: 6,
           }}
           disabled={!isCourseSessionActive
-            || otherAssessmentActive || !isActive
-            || !hasReviewStarted
+          || otherAssessmentActive || !isActive
+          || !hasReviewStarted
           }
           onTouchTap={onEndClick}
         />
@@ -88,6 +88,7 @@ const Reflective = ({
             marginLeft: 8,
           }}
         />
+
       </div>
     </div>
   );
