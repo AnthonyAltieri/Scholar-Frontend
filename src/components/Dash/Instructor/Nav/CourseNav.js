@@ -107,6 +107,13 @@ const CourseNav = ({
           setMode('QUESTION_BANK')
         }}
       />
+      <NavBtn
+        icon="attendance"
+        label="Attendance"
+        onClick={() => {
+          showOverlay('ATTENDANCE')
+        }}
+      />
     </div>
   );
 };
