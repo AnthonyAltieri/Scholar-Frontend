@@ -9,7 +9,6 @@ import * as OverlayActions from '../../../actions/Overlay';
 import * as DashStudentActions from '../../../actions/DashStudent';
 import * as CourseSessionActions from '../../../actions/CourseSession'
 import * as AssessmentActions from '../../../actions/Assess/Assess'
-import * as SocketActions from '../../../actions/Socket';
 import Content from './Content';
 import Socket from '../../../socket/Socket';
 import Events from '../../../socket/Events';
@@ -56,19 +55,17 @@ function setUpSockets(props) {
     addQuestion,
     addVote,
     removeVote,
-    removeQuestion,
+    dismissQuestion,
     addFlag,
     removeFlag,
     receivedActiveAssessment,
     deactivateAssessment,
     reflectiveStartReview,
     socketConnect,
-    pusher,
+    removeEndorse,
+    userId,
   } = props;
   const courseSessionChannel = `private-${courseSessionId}`;
-  if (!pusher) {
-    Socket.connect(socketConnect);
-  }
   Socket.subscribe(courseSessionChannel);
   Socket.bind(
     courseSessionChannel,
@@ -78,32 +75,32 @@ function setUpSockets(props) {
   Socket.bind(
     courseSessionChannel,
     Events.QUESTION_REMOVED,
-    (data) => { removeQuestion(data.id) }
+    (data) => { dismissQuestion(data.id) }
   );
   Socket.bind(
     courseSessionChannel,
-    Events.ADD_RESPONSE,
+    Events.RESPONSE_ADD,
     (data) => { addResponse(data.resposne) }
   );
   Socket.bind(
     courseSessionChannel,
-    Events.REMOVE_RESPONSE,
+    Events.RESPONSE_REMOVED,
     (data) => { removeResponse(data.id) }
   );
   Socket.bind(
     courseSessionChannel,
-    Events.ADD_VOTE,
+    Events.VOTE_ADD,
     (data) => {
       if (data.vote.userId === userId) return;
-      addVote(data.vote)
+      addVote(data.targetId, data.vote)
     }
   );
   Socket.bind(
     courseSessionChannel,
-    Events.REMOVE_VOTE,
+    Events.VOTE_REMOVE,
     (data) => {
-      if (data.vote.userId === userId) return;
-      removeVote(data.userId)
+      if (data.userId === userId) return;
+      removeVote(data.id, data.userId)
     }
   );
   Socket.bind(
@@ -142,7 +139,16 @@ function setUpSockets(props) {
       reflectiveStartReview(data.toReview);
     }
   );
-
+  Socket.bind(
+    courseSessionChannel,
+    Events.ADD_ENDORSE,
+    (data) => addEndorse(data.id),
+  );
+  Socket.bind(
+    courseSessionChannel,
+    Events.REMOVE_ENDORSE,
+    (data) => removeEndorse(data.id),
+  );
 }
 
 async function handleAlertThreshold(
@@ -207,6 +213,7 @@ class DashStudent extends Component {
       }
     }, INTERVAL_TIME);
 
+    console.log('DashStudent componentDidMount()');
     setUpSockets(this.props)
   }
 
@@ -394,7 +401,6 @@ const mapStateToProps = (state) => {
     code: state.Course.abbreviation || '',
     // threshold: state.CourseSession.threshold,
     // alertPercentage: state.CourseSession.alertPercentage,
-    pusher: state.Socket.pusher,
     isOverlayVisible: !!state.Overlay.isVisible,
     isAlertOverlayVisible: !!state.DashStudent.isAlertOverlayVisible,
     courseSessionId: state.Course.activeCourseSessionId,
@@ -460,10 +466,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           .addQuestion(id, content, userId, created, 0, [])
       );
     },
-    removeQuestion: (questionId) => {
-      dispatch(QuestionListActions.removeQuestion(questionId))
+    dismissQuestion: (questionId) => {
+      dispatch(QuestionListActions.dismissQuestion(questionId))
     },
-    addVote: (vote) => {
+    addVote: (targetId, vote) => {
       const {
         id,
         voteType,
@@ -472,11 +478,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       } = vote;
       dispatch(
         QuestionListActions
-          .addVote(id, voteType, userId, created,)
+          .addVote(targetId, voteType, userId, created,)
       )
     },
-    removeVote: (userId) => {
-      dispatch(QuestionListActions.removeVote(userId));
+    removeVote: (id, userId) => {
+      dispatch(QuestionListActions.removeVote(id, userId));
     },
     addFlag: (id) => {
       dispatch(QuestionListActions.addFlag(id))
@@ -550,11 +556,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch(OverlayActions.hideOverlay());
       dispatch(OverlayActions.clearOverlayType());
     },
-    socketConnect: (pusher) => {
-      dispatch(SocketActions.connect(pusher));
+    addEndorse: (id) => {
+      dispatch(QuestionListActions.addEndorse(id));
     },
-    socketDisconnect: () => {
-      dispatch(SocketActions.disconnect());
+    removeEndorse: (id) => {
+      dispatch(QuestionListActions.removeEndorse(id));
     },
   }
 };

@@ -662,6 +662,7 @@ $nav-top_height: 34px;
   }
 }
 
+
 .loading {
   position: absolute;
   top: 0;  bottom: 0;
@@ -1291,6 +1292,7 @@ $nav-btn-height: 40px;
   top: 0; right: 0; bottom: 0;
   left: $side-nav-width + 2;
   z-index: 100;
+  background-color: $color-white;
 
   .side-nav {
     min-height: 660px;
@@ -1729,7 +1731,6 @@ $nav-btn-height: 40px;
     line-height: 20px;
     text-align: center;
     position: relative;
-    right: 0.5px;
     margin: 0;
   }
   .content {
@@ -1833,13 +1834,15 @@ $nav-btn-height: 40px;
 
 .home-instructor {
   .course-list {
-    position: absolute;
-    top: 72px;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    // position: absolute;
+    // top: 72px;
+    // bottom: 0;
+    // left: 0;
+    // right: 0;
     padding: 20px;
-    @extend .r-left;
+    align-items: flex-start !important;
+    flex-wrap: wrap;
+    @extend .r;
   }
   .pages {
     position: absolute;
@@ -1861,7 +1864,7 @@ $nav-btn-height: 40px;
   .course {
     width: 140px;
     height: 140px;
-    margin: 0 8px;
+    margin: 8px 8px;
     z-index: 10;
     justify-content: space-between;
     cursor: pointer;

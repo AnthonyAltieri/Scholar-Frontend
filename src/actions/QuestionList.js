@@ -19,8 +19,8 @@ export const addQuestion = (
   votes,
 });
 
-export const removeQuestion = (id) => ({
-  type: 'REMOVE_QUESTION',
+export const dismissQuestion = (id) => ({
+  type: 'DISMISS_QUESTION',
   id,
 });
 
@@ -79,4 +79,14 @@ export const addFlag = () => ({
 
 export const removeFlag = () => ({
   type: 'REMOVE_FLAG',
+});
+
+export const addEndorse = (id) => ({
+  type: 'ADD_ENDORSE',
+  id,
+});
+
+export const removeEndorse = (id) => ({
+  type: 'REMOVE_ENDORSE',
+  id,
 });

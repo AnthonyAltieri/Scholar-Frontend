@@ -33,11 +33,15 @@ const CourseList = ({
   courses,
   noAddCourse,
   onCourseClick,
+  style,
 }) => {
   console.log('CourseList courses',courses);
   return (
-    <div className="course-list">
-      <p className="pages">pages <br/> 1/1</p>
+    <div
+      className="course-list"
+      style={style}
+    >
+      {/* <p className="pages">pages <br/> 1/1</p>
       <RaisedButton
         className="next-page"
         label="Next"
@@ -57,8 +61,8 @@ const CourseList = ({
         buttonStyle={{
             backgroundColor: Colors.secondary,
         }}
-      />
-      {!!noAddCourse
+      /> */}
+      {!noAddCourse
         ? (
           <AddCourse
             onClick={() => {
@@ -91,7 +95,7 @@ const CourseList = ({
                 time={time}
                 days={days}
                 onClick={() => {
-                  if (!!onCourseClick) {
+                  if (!onCourseClick) {
                     joinCourse(
                       c.id,
                       c.abbreviation,

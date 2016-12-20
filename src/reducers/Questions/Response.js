@@ -30,6 +30,18 @@ const Response = (state = {}, action) => {
       }
     }
 
+    case 'ADD_ENDORSE':
+    case 'REMOVE_ENDORSE': {
+      return {
+        ...state,
+        isEndorsed: state.id === action.id
+          ? action.type === 'ADD_ENDORSE'
+          : state.isEndorsed
+        ,
+        responses: state.responses.map(r => Response(r, action)),
+      }
+    }
+
     default: {
       return state;
     }

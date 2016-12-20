@@ -29,21 +29,25 @@ const QuestionList = (state = [], action) => {
     }
 
     case 'ADD_QUESTION': {
+      const questions = state.filter(q => q.id !== action.id);
       return [
-        ...state,
+        ...questions,
         Question(undefined, action),
       ];
     }
 
-    case 'QUESTION_REMOVE': {
-      return state.filter((q) => q.id !== action.id);
+
+    case 'DISMISS_QUESTION': {
+      return state.map(q => Question(q, action));
     }
 
     case 'RESPONSE_REMOVE': {
       return removeResponseById(state, action.id);
     }
 
-    case 'ADD_VOTE': 
+    case 'ADD_ENDORSE':
+    case 'REMOVE_ENDORSE':
+    case 'ADD_VOTE':
     case 'REMOVE_VOTE': {
       return state.map(q => Question(q, action));
     }

@@ -8,7 +8,8 @@ const routes = {
   CREATE: '/api/course/create',
   ADD_BANKED_ASSESSMENT: '/api/course/add/bankedAssessment',
   GET_BANKED_ASSESSMENTS: '/api/course/get/bankedAssessments',
-  ENROLL_STUDENT: '/api/course/enroll/student'
+  ENROLL_STUDENT: '/api/course/enroll/student',
+  GRADE_SUMMARY: '/api/course/grade/summary',
 };
 
 /**
@@ -91,3 +92,13 @@ export async function enrollStudentInCourse(
     return null;
   }
 }
+
+export function gradeSummary(
+  courseId,
+  courseTitle,
+) {
+  window.location = 'http://localhost:8000'
+    + routes.GRADE_SUMMARY
+    + `?courseId=${encodeURIComponent(courseId)}`
+    + `&courseTitle=${encodeURIComponent(courseTitle)}`;
+};

@@ -7,8 +7,12 @@ import React from 'react';
 const Filter = ({
   text,
   isActive,
+  onClick,
 }) => (
-  <p className={isActive ? 'filter active' : 'filter'}>
+  <p
+    className={isActive ? 'filter active' : 'filter'}
+    onClick={onClick}
+  >
     {text}
   </p>
 );

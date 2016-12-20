@@ -9,11 +9,13 @@ import { toastr } from 'react-redux-toastr';
 import QuestionResponse from './QuestionList/QuestionResponse';
 import * as AskActions from '../../../../../actions/Dash/Courses/Ask';
 import * as QuestionsActions from '../../../../../actions/Questions';
+import * as QuestionListActions from '../../../../../actions/QuestionList';
 import StatBlock from '../StatBlock';
 import Socket from '../../../../../socket/Socket';
 import Events from '../../../../../socket/Events';
 
-const filterQuestions = (filter, questions = []) => {
+const filterQuestions = (filter, allQuestions = []) => {
+  const questions = allQuestions.filter(q => !q.isDismissed);
   switch (filter) {
     case 'MOST_VOTED': {
       return questions.sort((a, b) => b.rank - a.rank);
@@ -70,33 +72,6 @@ const removeDismissed = (questions) => {
   return questions;
 };
 
-const handleSockets = (props) => {
-  const {
-    activeCourseSessionId,
-    questionRemove,
-    responseRemove,
-  } = props;
-  const courseSessionChannel = `private-${activeCourseSessionId}`;
-  Socket.subscribe(courseSessionChannel);
-  console.log('courseSessionChannel: ' + courseSessionChannel)
-  Socket.bind(
-    courseSessionChannel,
-    Events.QUESTION_REMOVED,
-    ({ id }) => {
-      console.log('[SOCKET EVENT] ' + Events.QUESTION_REMOVED);
-      questionRemove(id);
-    }
-  );
-  Socket.bind(
-    courseSessionChannel,
-    Events.RESPONSE_REMOVED,
-    ({ id }) => {
-      console.log('[SOCKET EVENT] ' + Events.RESPONSE_REMOVED);
-      responseRemove(id)
-    }
-  )
-};
-
 class Ask extends Component {
   componentDidMount() {
     const {
@@ -105,9 +80,6 @@ class Ask extends Component {
       receivedQuestions,
     } = this.props;
     if (isCourseSessionActive) {
-      const courseSessionChannel = `private-${activeCourseSessionId}`;
-      Socket.subscribe(courseSessionChannel);
-      handleSockets(this.props);
       fetchQuestions(activeCourseSessionId)
         .then((result) => {
           const { questions, error } = result;
@@ -132,6 +104,9 @@ class Ask extends Component {
       activeCourseSessionId,
       mostVotedQuestions,
       mostRecentQuestions,
+      addEndorse,
+      removeEndorse,
+      dismissQuestion,
     } = this.props;
     return (
       <div className="ask r-between">
@@ -155,13 +130,18 @@ class Ask extends Component {
                   <QuestionResponse
                     isQuestion
                     key={q.id}
-                    rank={getRank(q.votes)}
+                    rank={q.rank}
                     depthRestriction={2}
                     content={q.content}
                     created={q.created}
                     responses={q.responses}
+                    addEndorse={addEndorse}
+                    removeEndorse={removeEndorse}
+                    hasBeenEndorsed={q.isEndorsed}
                     id={q.id}
                     courseSessionId={activeCourseSessionId}
+                    dismissedQuestion={dismissQuestion}
+                    isInstructor
                   />
                 ))
                 : null
@@ -208,13 +188,18 @@ class Ask extends Component {
             {isCourseSessionActive
               ? mostRecentQuestions.map((q) => (
               <QuestionResponse
-                isQuestion
-                key={q.id}
-                created={q.created}
-                rank={getRank(q.votes)}
-                depthRestriction={2}
-                content={q.content}
-                responses={q.responses}
+                  isQuestion
+                  key={q.id}
+                  rank={q.rank}
+                  depthRestriction={2}
+                  content={q.content}
+                  created={q.created}
+                  responses={q.responses}
+                  hasBeenEndorsed={q.isEndorsed}
+                  id={q.id}
+                  courseSessionId={activeCourseSessionId}
+                  dismissedQuestion={dismissQuestion}
+                  isInstructor
               />
             ))
               : null
@@ -229,7 +214,7 @@ class Ask extends Component {
 const stateToProps = (state) => ({
   isCourseSessionActive: !!state.Course.activeCourseSessionId,
   activeCourseSessionId: state.Course.activeCourseSessionId,
-  questions: state.QuestionList,
+  questions: state.QuestionList.filter(q => !q.isDismissed),
   mostVotedQuestions: filterQuestions(
     'MOST_VOTED',
     state.QuestionList,
@@ -244,12 +229,19 @@ const dispatchToProps = (dispatch) => ({
   receivedQuestions: (questions) => {
     dispatch(AskActions.receivedQuestions(questions));
   },
-  questionRemove: (id) => {
-    dispatch(QuestionsActions.questionRemove(id))
+  dismissQuestion: (id) => {
+    dispatch(QuestionListActions.dismissQuestion(id))
   },
   responseRemove: (id) => {
     dispatch(QuestionsActions.responseRemove(id));
-  }
+  },
+  addEndorse: (id) => {
+    dispatch(QuestionListActions.addEndorse(id))
+  },
+  removeEndorse: (id) => {
+    dispatch(QuestionListActions.removeEndorse(id))
+  },
+
 });
 
 

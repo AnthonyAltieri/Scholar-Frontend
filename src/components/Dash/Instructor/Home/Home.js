@@ -11,6 +11,7 @@ import { getByUser as getCoursesByUser } from '../../../../api/Courses';
 import * as CoursesActions from '../../../../actions/Dash/Courses/Courses';
 import * as ModeActions from '../../../../actions/DashInstructor/Course/Mode';
 import * as CourseActions from '../../../../actions/Course';
+import * as HomeCoursesActions from '../../../../actions/DashInstructor/Home/Courses';
 import CourseListSection from './CourseList/Section';
 import CourseSessionListSection from './CourseSessionList/Section';
 import { setId as setAssessmentBankId } from '../../../../actions/AssessmentBank';
@@ -84,24 +85,26 @@ class Home extends Component {
       navigate,
       courses,
       goToCourse,
-      courseListFilter,
+      filter,
       joinCourse,
       courseSessionFilter,
+      changeFilter,
     } = this.props;
 
     return (
       <div className="home-instructor">
         <CourseListSection
           courses={courses}
-          filter={courseListFilter}
+          filter={filter}
           goToCourse={goToCourse}
           joinCourse={joinCourse}
           navigate={navigate}
+          changeFilter={changeFilter}
         />
-        <CourseSessionListSection
+        {/* <CourseSessionListSection
           courses={courses}
           filter={courseSessionFilter}
-        />
+        /> */}
       </div>
     );
 
@@ -110,6 +113,7 @@ class Home extends Component {
 const stateToProps = (state) => ({
   courses: state.Courses.all || [],
   userId: state.User.id,
+  filter: state.Dash.Instructor.Home.Courses.filter || 'ANY',
 });
 const dispatchToProps = (dispatch) => ({
   endLoading: () => {
@@ -146,7 +150,10 @@ const dispatchToProps = (dispatch) => ({
   },
   receivedBankId: (id) => {
     dispatch(setAssessmentBankId(id));
-  }
+  },
+  changeFilter: (filter) => {
+    dispatch(HomeCoursesActions.changeFilter(filter));
+  },
 });
 
 Home = connect(

@@ -37,8 +37,8 @@ const hasValidCredentials = (email = '', password = '', endLoading) => {
 };
 
 async function handleLogIn(
-  email,
-  password,
+  email = '',
+  password = '',
   logInSuccess,
   logInFail,
   endLoading,
@@ -144,11 +144,11 @@ class LogIn extends Component {
         onKeyPress={(e) => {
           if (e.key === 'Enter') {
             startLoading();
-            const lowerEmail = email.toLowerCase();
-            if (hasValidCredentials(email.toLowerCase(), password, endLoading)) {
+            const lowerEmail = email.value.toLowerCase();
+            if (hasValidCredentials(lowerEmail, password.value, endLoading)) {
               handleLogIn(
-                email.toLowerCase(),
-                password,
+                lowerEmail,
+                password.value,
                 logInSuccess,
                 logInFail,
                 endLoading,
@@ -181,25 +181,31 @@ class LogIn extends Component {
               <TextField
                 floatingLabelText="Email"
                 type="email"
-                onChange={(event) => {
-                  email = event.target.value;
+                id="email-input"
+                ref={() => {
+                  email = document.getElementById('email-input');
                 }}
               />
               <TextField
                 floatingLabelText="Password"
                 type="password"
-                onChange={(event) => {
-                  password = event.target.value;
+                id="password-input"
+                ref={() => {
+                  password = document.getElementById('password-input');
                 }}
               />
               <br />
               <ButtonRound
                 onClick={() => {
                   startLoading();
-                  if (hasValidCredentials(email, password, endLoading)) {
+                  if (hasValidCredentials(
+                    email.value,
+                    password.value,
+                    endLoading
+                  )) {
                     handleLogIn(
-                      email.toLowerCase(),
-                      password,
+                      email.value.toLowerCase(),
+                      password.value,
                       logInSuccess,
                       logInFail,
                       endLoading,

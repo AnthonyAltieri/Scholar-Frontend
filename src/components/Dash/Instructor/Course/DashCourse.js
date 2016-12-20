@@ -10,6 +10,8 @@ import * as CourseActions from '../../../../actions/Dash/Courses/Courses';
 import * as InstantActions from '../../../../actions/Assess/Instant';
 import * as AlertActions from '../../../../actions/Alert';
 import * as ReflectiveActions from '../../../../actions/Assess/Reflelctive';
+import * as SocketActions from '../../../../actions/Socket';
+import * as QuestionListActions from '../../../../actions/QuestionList';
 import { startCourseSession, endCourseSession } from '../../../../api/CourseSession';
 import Socket from '../../../../socket/Socket'
 import Events from '../../../../socket/Events';
@@ -53,6 +55,15 @@ function handleSockets(props) {
     instantAnswerReceived,
     reflectiveAssessmentReviewed,
     reflectiveAssessmentAnswered,
+    userId,
+    addVote,
+    removeVote,
+    addQuestion,
+    removeQuestion,
+    addResponse,
+    removeResponse,
+    addFlag,
+    removeFlag,
   } = props;
   const courseSessionChannel = `private-${courseSessionId}`;
   Socket.subscribe(courseSessionChannel);
@@ -80,13 +91,57 @@ function handleSockets(props) {
       reflectiveAssessmentAnswered();
     }
   );
+  Socket.bind(
+    courseSessionChannel,
+    Events.QUESTION_ASKED,
+    (data) => { addQuestion(data.question) }
+  );
+  Socket.bind(
+    courseSessionChannel,
+    Events.RESPONSE_ADD,
+    (data) => { addResponse(data.resposne) }
+  );
+  Socket.bind(
+    courseSessionChannel,
+    Events.RESPONSE_REMOVED,
+    (data) => { removeResponse(data.id) }
+  );
+  Socket.bind(
+    courseSessionChannel,
+    Events.VOTE_ADD,
+    (data) => {
+      if (data.vote.userId === userId) return;
+      addVote(
+        data.targetId,
+        data.vote,
+      )
+    }
+  );
+  Socket.bind(
+    courseSessionChannel,
+    Events.VOTE_REMOVE,
+    (data) => {
+      if (data.userId === userId) return;
+      removeVote(data.id, data.userId)
+    }
+  );
+  Socket.bind(
+    courseSessionChannel,
+    Events.ADD_FLAG,
+    (data) => { addFlag(data.id) }
+  );
+  Socket.bind(
+    courseSessionChannel,
+    Events.REMOVE_FLAG,
+    (data) => { removeFlag(data.id) }
+  );
   console.log('pusher', Socket.getPusher());
 }
 
 class DashCourse extends Component {
   async componentDidMount() {
     const { courseSessionId } = this.props;
-    if (this.props.isCourseSessionActive) {
+    if (this.props.isCourseSessionActive && !this.props.pusher) {
       handleSockets(this.props);
     }
     const { updateAlertGraph, alertGraph } = this.props;
@@ -101,7 +156,8 @@ class DashCourse extends Component {
       }
     }, INTERVAL_TIME);
   }
-   componentWillUnmount() {
+  componentWillUnmount() {
+    Socket.disconnect();
     window.clearInterval(window.intervalGetAlerts);
   }
 
@@ -246,6 +302,57 @@ const dispatchToProps = (dispatch, ownProps) => ({
   },
   reflectiveAssessmentAnswered: () => {
     dispatch(ReflectiveActions.answered());
+  },
+  addQuestion: (question) => {
+    const {
+      id,
+      content,
+      created,
+      userId,
+    } = question;
+    dispatch(
+      QuestionListActions
+        .addQuestion(id, content, userId, created, 0, [])
+    );
+  },
+  removeQuestion: (questionId) => {
+    dispatch(QuestionListActions.removeQuestion(questionId))
+  },
+  addVote: (targetId, vote) => {
+    const {
+      id,
+      voteType,
+      userId,
+      created,
+    } = vote;
+    dispatch(
+      QuestionListActions
+        .addVote(targetId, voteType, userId, created,)
+    )
+  },
+  removeVote: (id, userId) => {
+    dispatch(QuestionListActions.removeVote(id, userId));
+  },
+  addFlag: (id) => {
+    dispatch(QuestionListActions.addFlag(id))
+  },
+  removeFlag: (id) => {
+    dispatch(QuestionListActions.removeFlag(id))
+  },
+  addResponse: (response) => {
+    const {
+      id,
+      content,
+      created,
+      userId,
+    } = response;
+    dispatch(
+      QuestionListActions
+        .addResponse(id, content, created, userId,)
+    )
+  },
+  removeResponse: (id) => {
+    dispatch(QuestionListActions.removeResponse(id));
   },
 });
 

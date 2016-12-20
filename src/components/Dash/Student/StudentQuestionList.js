@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import * as QuestionListActions from '../../../actions/QuestionList';
 import QuestionResponse from '../Instructor/Course/Ask/QuestionList/QuestionResponse';
-// import { fetchQuesitons } from '../../../api/Questions';
+import { getCourseSession } from '../../../api/Question';
 import * as DashStudentActions from '../../../actions/DashStudent'
 import FilterBar from './FilterBar';
 import AssessmentBox from './AssessmentBox';
@@ -18,11 +18,12 @@ const getRank = (votes) => {
   return votes.filter(v => v.type === 'UP').length
 };
 
-const getVisibleQuestions = (filter, questions = [], userId) => {
-  console.log("getVisibleQuestions", 'filter', filter);
+const getVisibleQuestions = (filter = '', allQuestions = [], userId) => {
+  const questions = allQuestions.filter(q => !q.isDismissed);
+  if (filter.length === 0) filter = 'all';
   switch (filter) {
-    case '': {
-      return questions.filter((q) => q.userId === userId);
+    case 'all': {
+      return questions;
     }
 
     case 'mostVoted': {
@@ -37,7 +38,7 @@ const getVisibleQuestions = (filter, questions = [], userId) => {
         .sort((l, r) => l.votes.length - r.votes.length);
     }
 
-    case 'mostRecent': {
+    case 'leastRecent': {
       return questions
         .slice(0).sort((l, r) => {
           if (l.created < r.created) {
@@ -50,7 +51,7 @@ const getVisibleQuestions = (filter, questions = [], userId) => {
         });
     }
 
-    case 'leastRecent': {
+    case 'mostRecent': {
       return questions
         .slice(0).sort((l, r) => {
           if (l.created < r.created) {
@@ -71,13 +72,23 @@ const getVisibleQuestions = (filter, questions = [], userId) => {
 
 
 class StudentQuestionList extends Component {
-  componentDidMount() {
-    const { courseSessionId, retrievedQuestions } = this.props;
-    // fetchQuesitons(courseSessionId)
-    //   .then((questions) => {
-    //     retrievedQuestions(questions);
-    //   })
+  async componentDidMount() {
+    const { activeCourseSessionId, retrievedQuestions } = this.props;
+    try {
+      const payload = await getCourseSession(activeCourseSessionId);
+      if (!!payload.error) {
+        toastr.error('Somethin went wrong please try again');
+        return;
+      }
+      retrievedQuestions(payload.questions);
 
+
+    } catch (e) {
+      console.error(
+        '[ERROR] StudentQuestionList componentDidMount getCourseSession',
+        e
+      );
+    }
   }
 
   render() {
@@ -133,6 +144,7 @@ class StudentQuestionList extends Component {
             content={q.content}
             created={q.created}
             responses={q.responses}
+            rank={q.rank}
             id={q.id}
             hasBeenEndorsed={!!q.isEndorsed}
             isInstructor={userType === 'INSTRUCTOR'}
@@ -165,7 +177,7 @@ const mapStateToProps = (state, ownProps) => ({
 });
 const dispatchToProps = (dispatch) => ({
   retrievedQuestions: (questions) => {
-    dispatch(DashStudentActions.retrievedQuestions(questions));
+    dispatch(QuestionListActions.receivedQuestions(questions));
   },
   navigate: (url) => {
     dispatch(push(url))

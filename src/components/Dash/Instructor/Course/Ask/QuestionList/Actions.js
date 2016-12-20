@@ -22,15 +22,15 @@ const Clear = ({
     className="clear"
     iconStyle={{
           color: Colors.red,
-          width: 24,
-          height: 24,
-        }}
+    }}
     style={{
-          width: 24,
-          height: 24,
-          padding: 0,
-        }}
-    onClick={() => onCLick()}
+      width: 38,
+      height: 38,
+      padding: 0,
+      position: 'relative',
+      right: 4,
+    }}
+    onTouchTap={() => onClick()}
   >
     <FontIcon className="material-icons">
       clear
@@ -50,7 +50,7 @@ const Vote = ({
       position: 'relative',
       right: 6,
     }}
-    onClick={onVoteClick}
+    onTouchTap={onVoteClick}
     >
     <FontIcon className="material-icons">
       {!!hasVotedOn
@@ -75,7 +75,7 @@ const Endorse = ({
     iconStyle={{
       color: hasBeenEndorsed ? 'yellow' : 'black',
     }}
-    onClick={() => {
+    onTouchTap={() => {
       if (isInstructor) {
         onEndorseClick();
       }
@@ -117,14 +117,17 @@ const Actions = ({
   if (!!isInstructor) {
     return (
       <div className="buttons">
-        <Rank rank={rank} />
         <p className="time">{time}</p>
+        <Endorse
+          hasBeenEndorsed={hasBeenEndorsed}
+          onEndorseClick={onEndorseClick}
+          isInstructor={isInstructor}
+        />
         <Clear
-          id={id}
-          courseSessionId={courseSessionId}
           isQuestion={isQuestion}
           onClick={onClearClick}
         />
+        <Rank rank={rank} />
       </div>
     )
   }

@@ -21,10 +21,20 @@ let Question = (state = {}, action) => {
       }
     }
 
+    case 'DISMISS_QUESTION': {
+      return state.id === action.id
+        ? {
+          ...state,
+          isDismissed: true,
+        }
+        : state;
+    }
+
 
     case 'RECEIVED_QUESTIONS': {
       return {
         ...state,
+        rank: state.votes.length,
         responses: state.responses.map(r => Response(r, action)),
       };
 
@@ -38,10 +48,12 @@ let Question = (state = {}, action) => {
     case 'ADD_VOTE': {
       let votes = state.votes;
       let rank = state.rank;
+      console.log('old votes', votes);
       if (action.id === state.id) {
-        votes = Votes(undefined, action);
+        votes = Votes(votes, action);
         rank = votes.length;
       }
+      console.log('new votes', votes);
       return {
         ...state,
         votes,
@@ -49,6 +61,19 @@ let Question = (state = {}, action) => {
         responses: state.responses.map(r => Response(r, action))
       }
     }
+
+    case 'ADD_ENDORSE':
+    case 'REMOVE_ENDORSE': {
+      return {
+        ...state,
+        isEndorsed: state.id === action.id
+          ? action.type === 'ADD_ENDORSE'
+          : state.isEndorsed
+        ,
+        responses: state.responses.map(r => Response(r, action)),
+      }
+    }
+
 
     case 'ADD_FLAG': {
       return {

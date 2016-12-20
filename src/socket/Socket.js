@@ -5,7 +5,7 @@
 var pusher;
 var channels = {};
 
-function connect(connectionAction) {
+function connect() {
   pusher = new Pusher(
     'be327c8cfdbd733ab9e5',
     {
@@ -13,7 +13,6 @@ function connect(connectionAction) {
       authEndpoint: 'http://localhost:8000/pusher/auth'
     }
   );
-  connectionAction(pusher);
 }
 
 function subscribe(name) {
@@ -33,6 +32,14 @@ function bind(channelName, event, callback) {
   const channel = channels[channelName];
   if (!channel) {
     throw new Error(`Channel ${channelName} does not exist.`);
+  }
+  if (!console.group) {
+    console.log('[SOCKET] bind to ' + channelName + ' | ' + event);
+  } else {
+    console.group('[SOCKET]');
+    console.log('%c Channel Name', 'color: blue', channelName);
+    console.log('%c Event', 'color: green', event);
+    console.groupEnd();
   }
   channel.bind(event, (data) => {
     if (!data) {

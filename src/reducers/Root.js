@@ -19,7 +19,6 @@ import AssessmentBank from './AssessmentBank/AssessmentBank';
 import Graph  from './Graph/Graph'
 import Menu from './Menu';
 import Drawer from './Drawer';
-import Socket from './Socket';
 import {reducer as Toastr} from 'react-redux-toastr'
 import { routerReducer } from 'react-router-redux';
 
@@ -39,7 +38,6 @@ const Root = combineReducers({
   AssessmentBank,
   Graph,
   Menu,
-  Socket,
   Drawer,
   toastr: Toastr,
   routing: routerReducer,
