@@ -20,3 +20,11 @@ export const startReview = (toReview) => ({
   type: 'REFLECTIVE_ASSESSMENT_START_REVIEW',
   toReview,
 });
+
+export const answerReceived = () => ({
+  type: 'REFLECTIVE_ASSESSMENT_ANSWERED',
+});
+
+export const answerReviewed = () => ({
+  type: 'REFLECTIVE_ASSESSMENT_REVIEWED',
+});

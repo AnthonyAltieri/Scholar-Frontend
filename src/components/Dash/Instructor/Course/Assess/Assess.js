@@ -95,6 +95,8 @@ class Assess extends Component {
       setAssessmentViewMode,
       hasReviewStarted,
       startReflectiveReview,
+      reflectiveNumberAnswered,
+      reflectiveNumberReviewed,
     } = this.props;
 
 
@@ -128,7 +130,7 @@ class Assess extends Component {
                   <div>
                     <StatBlock
                       name="Answered"
-                      number={12}
+                      number={reflectiveNumberAnswered}
                       isMini
                     />
                   </div>
@@ -139,7 +141,7 @@ class Assess extends Component {
                 ? (
                     <StatBlock
                       name="Reviewed"
-                      number={0}
+                      number={reflectiveNumberReviewed}
                       isMini
                     />
                   )
@@ -204,6 +206,8 @@ const stateToProps = (state) => ({
     state.Assess.Instant.answers
   ),
   hasReviewStarted: !!state.Assess.Reflective.hasStartedReview,
+  reflectiveNumberAnswered: state.Assess.Reflective.numberAnswers,
+  reflectiveNumberReviewed: state.Assess.Reflective.numberReviews,
 });
 
 const dispatchToProps = (dispatch) => ({

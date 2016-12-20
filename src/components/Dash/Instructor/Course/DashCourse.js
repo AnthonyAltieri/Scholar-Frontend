@@ -171,7 +171,9 @@ class DashCourse extends Component {
       params,
       activateCourseSession,
       deactivateCourseSession,
-      alertGraph
+      alertGraph,
+      reflectiveNumberAnswered,
+      reflectiveNumberReviewed,
     } = this.props;
 
     const { courseId } = params;
@@ -272,6 +274,8 @@ const stateToProps = state => ({
   isCourseSessionActive: !!state.Course.activeCourseSessionId,
   courseSessionId: state.Course.activeCourseSessionId,
   alertGraph: state.Graph.Alert.graph,
+  reflectiveNumberAnswered: state.Assess.Reflective.numberAnswers,
+  reflectiveNumberReviewed: state.Assess.Reflective.numberReviews,
 });
 
 const dispatchToProps = (dispatch, ownProps) => ({
@@ -353,6 +357,12 @@ const dispatchToProps = (dispatch, ownProps) => ({
   },
   removeResponse: (id) => {
     dispatch(QuestionListActions.removeResponse(id));
+  },
+  reflectiveAnswerReceived: () => {
+    dispatch(ReflectiveActions.answerReceived());
+  },
+  reflectiveAnswerReviewed: () => {
+    dispatch(ReflectiveActions.answerReviewed());
   },
 });
 
