@@ -13,7 +13,7 @@ import * as ReflectiveActions from '../../../../actions/Assess/Reflelctive';
 import * as SocketActions from '../../../../actions/Socket';
 import * as QuestionListActions from '../../../../actions/QuestionList';
 import * as AttendanceActions from '../../../../actions/Attendance';
-import { getNumberInCourseSession } from '../../../../api/CourseSession';
+import { numberInCourseSessionGet } from '../../../../api/CourseSession';
 import { startCourseSession, endCourseSession } from '../../../../api/CourseSession';
 import Socket from '../../../../socket/Socket'
 import Events from '../../../../socket/Events';
@@ -153,18 +153,20 @@ class DashCourse extends Component {
     } = this.props;
     if (this.props.isCourseSessionActive) {
       handleSockets(this.props);
-      const numberInCourseSession = await getNumberInCourseSession(courseSessionId);
-      console.log('numberInCourseSession', numberInCourseSession);
-      studentJoinedCourseSession(numberInCourseSession);
+      const {
+        numberInCourseSession,
+        error,
+      } = await numberInCourseSessionGet(courseSessionId);
+      if (!error) {
+        studentJoinedCourseSession(numberInCourseSession);
+      }
     }
-    const { updateAlertGraph, alertGraph } = this.props;
+    const { updateAlertGraph, alertGraph, numberAttendees } = this.props;
     window.intervalGetAlerts =  window.setInterval( async () => {
       try {
-        let alerts = await getAlerts( courseSessionId );
-        let attendance = 40;
-        updateAlertGraph(alerts, attendance, alertGraph);
-      }
-      catch (e) {
+        let alerts = await getAlerts(courseSessionId);
+        updateAlertGraph(alerts, numberAttendees, alertGraph);
+      } catch (e) {
         console.error("[ERROR] in DashCourse Component > ComponentDidMount : " + e)
       }
     }, INTERVAL_TIME);
@@ -240,7 +242,7 @@ class DashCourse extends Component {
                   return;
                 }
                 hideOverlay();
-                activateCourseSession(courseSessionId, graph);
+                activateCourseSession(courseSessionId);
               })
               .catch((e) => {
                 console.error('[ERROR] handleCourseSessionStart', e);
@@ -289,6 +291,7 @@ const stateToProps = state => ({
   isCourseSessionActive: !!state.Course.activeCourseSessionId,
   courseSessionId: state.Course.activeCourseSessionId,
   alertGraph: state.Graph.Alert.graph,
+  numberAttendees: state.Course.Attendance.numberAttendees,
 });
 
 const dispatchToProps = (dispatch, ownProps) => ({

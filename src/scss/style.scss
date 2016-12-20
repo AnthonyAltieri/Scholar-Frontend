@@ -1285,8 +1285,30 @@ $nav-btn-height: 40px;
   }
 }
 
+.active-bar {
+  margin: 0 auto;
+  color: white;
+  h3 {
+    font-weight: 300;
+    font-size: 12px;
+    margin: 2px auto;
+  }
+  p {
+    font-size: 22px;
+    font-weight: bolder;
+    margin: 2px auto;
+  }
+  @extend .c-center;
+}
+.active-bar.active {
+  background-color: $color-green;
+}
+.active-bar.inactive {
+  background-color: $color-red;
+}
+
 .dash-instructor {
-  $side-nav-width: 124px;
+  $side-nav-width: 0px;
   min-height: 660px;
   position: absolute;
   top: 0; right: 0; bottom: 0;
@@ -1317,31 +1339,6 @@ $nav-btn-height: 40px;
       margin: 4px auto;
       font-weight: 800;
       color: $color-dark;
-    }
-
-    $action-bar-height: 22px;
-    .active-bar {
-      width: 100%;
-      height: $action-bar-height;
-      background-color: $color-green;
-      margin-top: 4px;
-      margin-bottom: 4px;
-      border-top: 1px solid $color-dark;
-      border-bottom: 1px solid $color-dark;
-      box-shadow: -2px 0 2px 2px rgba(0, 0, 0, 0.14), -2px 0 1px 0px rgba(0, 0, 0, 0.2), -2px 0 5px 2px rgba(0, 0, 0, 0.12);
-      .text {
-        width: 100%;
-        text-align: center;
-        font-size: 14px;
-        font-weight: 700;
-        color: $color-white;
-        margin: 0;
-        line-height: $action-bar-height;
-        @extend .no-text-sel;
-      }
-    }
-    .inactive {
-      background-color: $color-red !important;
     }
 
     $nav-btn-width: 38px;
@@ -1550,7 +1547,7 @@ $nav-btn-height: 40px;
 
   .mode-content {
     position: absolute;
-    top: 12px; left: 12px; right: 12px; bottom: 12px;
+    top: 68px; left: 4px; right: 4px; bottom: 6px;
   }
 
   .assess {
@@ -1683,11 +1680,27 @@ $nav-btn-height: 40px;
     @extend .card;
   }
 
+  .one-fourth-pane {
+    display: inline-block;
+    height: 24.83%;
+    width: 99%;
+    background-color: white;
+    @extend .card;
+  }
+
+  .three-fourth-pane {
+    display: inline-block;
+    height: 74.83%;
+    width: 99%;
+    background-color: white;
+    @extend .card;
+  }
+
 
 
   .full-pane {
     position: absolute;
-    top: 6px; right: 6px; left: 6px; bottom: 6px;
+    top: 68px; right: 6px; left: 6px; bottom: 6px;
     display: inline-block;
     background-color: white;
     @extend .card;

@@ -12,6 +12,11 @@ import * as ModeActions from '../../../actions/DashInstructor/Course/Mode'
 import * as OverlayActions from '../../../actions/Overlay';
 import * as CourseActions from '../../../actions/Course';
 import * as UserActions from '../../../actions/User';
+import * as DrawerActions from '../../../actions/Drawer';
+import FontIcon from 'material-ui/FontIcon';
+import Drawer from 'material-ui/Drawer';
+import MenuItem from 'material-ui/MenuItem';
+import AppBar from 'material-ui/AppBar';
 
 
 class DashInstructor extends Component {
@@ -32,10 +37,169 @@ class DashInstructor extends Component {
       navigate,
       clearCourse,
       logOut,
+      abbreviation,
+      isDrawerOpen,
+      openDrawer,
+      closeDrawer,
+      mode,
+      name,
     } = this.props;
+
+    const courseRegex = /^\/dash\/instructor\/course\/*/;
+    const homeRegex = /^\/dash\/instructor\/home/;
+    const settingsRegex = /^\/dash\/instructor\/settings/;
+    const gradesRegex = /^\/dash\/instructor\/grades/;
+    let menu = null;
+
+    if (courseRegex.test(pathname)) {
+      menu = (
+        <div>
+          <div
+            className={'active-bar ' + (isCourseSessionActive
+              ? 'active'
+              : 'inactive')
+            }
+          >
+            <h3>Course Session Is</h3>
+            <p>{isCourseSessionActive ? 'Active' : 'Inactive'}</p>
+          </div>
+
+          <MenuItem primaryText="Home"
+            rightIcon={
+              <FontIcon className="material-icons">
+                home
+              </FontIcon>
+            }
+            onTouchTap={() => {
+              navigate('/dash/instructor/home')
+              closeDrawer();
+              clearCourse();
+            }}
+          />
+          <MenuItem primaryText="Course Session"
+            rightIcon={
+              <FontIcon className="material-icons">
+                power_settings_new
+              </FontIcon>
+            }
+            onTouchTap={() => showOverlay('COURSE_SESSION')}
+          />
+          <MenuItem primaryText="Ask"
+            rightIcon={
+              <FontIcon className="material-icons">
+                chat
+              </FontIcon>
+            }
+            onTouchTap={() => {
+              if (mode === 'ASK') return;
+              setMode('ASK')
+              closeDrawer();
+            }}
+          />
+          <MenuItem
+            primaryText="Alert"
+            rightIcon={
+              <FontIcon className="material-icons">
+                priority_high
+              </FontIcon>
+            }
+            onTouchTap={() => {
+              if (mode === 'ALERT') return;
+              setMode('ALERT')
+              closeDrawer();
+            }}
+          />
+          <MenuItem
+            primaryText="Assess"
+            rightIcon={
+              <FontIcon className="material-icons">
+                school
+              </FontIcon>
+            }
+            onTouchTap={() => {
+              if (mode === 'ASSESS') return;
+              setMode('ASSESS')
+              closeDrawer();
+            }}
+          />
+          <MenuItem
+            primaryText="Assessment Bank"
+            rightIcon={
+              <FontIcon className="material-icons">
+                monetization_on
+              </FontIcon>
+            }
+            onTouchTap={() => {
+              if (mode === 'QUESTION_BANK') return;
+              setMode('QUESTION_BANK')
+              closeDrawer();
+            }}
+          />
+          <MenuItem
+            primaryText="Attendance"
+            rightIcon={
+              <FontIcon className="material-icons">
+                pan_tool
+              </FontIcon>
+            }
+            onTouchTap={() => showOverlay('ATTENDANCE')}
+          />
+        </div>
+      );
+    } else if (homeRegex.test(pathname)
+        || settingsRegex.test(pathname)
+        || gradesRegex.test(pathname)
+      ) {
+      menu = (
+        <div>
+          <div className="c-center">
+            <p>Hello {name}</p>
+          </div>
+          <MenuItem
+            primaryText="Log Out"
+            rightIcon={
+              <FontIcon className="material-icons">
+                exit_to_app
+              </FontIcon>
+            }
+            onTouchTap={() => {
+              logOut();
+              navigate('/login');
+            }}
+          />
+          <MenuItem
+            primaryText="Home"
+            rightIcon={
+              <FontIcon className="material-icons">
+                home
+              </FontIcon>
+            }
+            onTouchTap={() => {
+              navigate('/dash/instructor/home')
+              closeDrawer();
+            }}
+          />
+          <MenuItem
+            primaryText="Grades"
+            rightIcon={
+              <FontIcon className="material-icons">
+                school
+              </FontIcon>
+            }
+            onTouchTap={() => {
+              navigate('/dash/instructor/grades');
+              closeDrawer();
+            }}
+          />
+        </div>
+
+      );
+    }
+
+
     return (
       <div className="dash-instructor">
-        <Nav
+        {/* <Nav
           courseAbbreviation={courseAbbreviation}
           isCourseSessionActive={isCourseSessionActive}
           pathname={pathname}
@@ -45,7 +209,22 @@ class DashInstructor extends Component {
           showOverlay={showOverlay}
           clearCourse={clearCourse}
           logOut={logOut}
+        /> */}
+        <AppBar
+          title={`Scholar ${!!abbreviation ? ('- ' + abbreviation) : ''}`}
+          onLeftIconButtonTouchTap={() => openDrawer()}
         />
+        <Drawer
+          open={isDrawerOpen}
+          docked={false}
+          onRequestChange={(open, reason) => {
+            if (!open) {
+              closeDrawer();
+            }
+          }}
+        >
+          {menu}
+        </Drawer>
         {children}
       </div>
     );
@@ -53,14 +232,14 @@ class DashInstructor extends Component {
 }
 
 const stateToProps = (state) => ({
-  // promptEndSession: state.Dash.Instructor.promptEndSession,
-  // isSessionActive: state.CourseSession.isActive,
-  // isOverlayVisible: state.Overlay.isVisible,
-  // hasCourseSession: state.CourseSession.active,
+  name: state.User.name,
+  mode: state.Dash.Instructor.Course.Mode,
+  abbreviation: state.Course.abbreviation || null,
   courseId: !!state.User.inCourse ? state.User.inCourse.id : null,
   isCourseSessionActive: !!state.Course.activeCourseSessionId,
   courseAbbreviation: state.Course.abbreviation,
   pathname: state.routing.locationBeforeTransitions.pathname,
+  isDrawerOpen: !!state.Drawer.isOpen,
 });
 const dispatchToProps = (dispatch) => ({
   endLoading: () => {
@@ -87,6 +266,12 @@ const dispatchToProps = (dispatch) => ({
   },
   logOut: () => {
     dispatch(UserActions.logOut());
+  },
+  openDrawer: () => {
+    dispatch(DrawerActions.openDrawer());
+  },
+  closeDrawer: () => {
+    dispatch(DrawerActions.closeDrawer())
   },
 
 });

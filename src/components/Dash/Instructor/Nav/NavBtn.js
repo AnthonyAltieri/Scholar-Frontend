@@ -17,10 +17,12 @@ const NavBtn = (props) => {
         width: `${SIDE_NAV_WIDTH - 12}px`,
         marginLeft: "auto",
         marginRight: "auto",
+        fontSize: 12,
       }}
       label={label}
       labelPosition="before"
       {...props}
+      onTouchTap={props.onClick}
       labelStyle={{
         fontSize: "11px",
       }}

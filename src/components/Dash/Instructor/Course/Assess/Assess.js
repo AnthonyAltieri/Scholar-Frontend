@@ -107,7 +107,7 @@ class Assess extends Component {
             {...this.props}
           />
           <div
-            className="one-thirds-pane"
+            className="one-fourth-pane"
             style={{
               marginTop: '1%',
             }}
@@ -167,7 +167,6 @@ class Assess extends Component {
               marginTop: '1%',
             }}
           >
-            Instant Assessment Graph
             <div id="instantGraph"> 
               <InstantAssessmentGraph /> 
             </div>

@@ -123,7 +123,7 @@ const dispatchToProps = (dispatch) => ({
     dispatch(CoursesActions.receivedCourses(courses));
   },
   goToCourse: (courseId) => {
-    dispatch(ModeActions.setMode('MAIN'));
+    dispatch(ModeActions.setMode('ASK'));
     dispatch(push(`/dash/instructor/course/${courseId}`))
   },
   navigate: (url) => {

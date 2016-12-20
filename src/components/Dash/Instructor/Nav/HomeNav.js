@@ -40,13 +40,13 @@ const HomeNav = ({
           navigate('/dash/instructor/grades');
         }}
       />
-      <NavBtn
+      {/* <NavBtn
         icon="settings"
         label="settings"
         onTouchTap={() => {
           navigate('/dash/instructor/settings')
         }}
-      />
+      /> */}
     </div>
   )
 };

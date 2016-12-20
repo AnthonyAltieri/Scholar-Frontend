@@ -58,13 +58,13 @@ const CourseNav = ({
           clearCourse();
         }}
       />
-      <NavBtn
+      {/* <NavBtn
         icon="settings"
         label="settings"
         onClick={() => {
           setMode('SETTINGS')
         }}
-      />
+      /> */}
       <NavBtn
         icon="power_settings_new"
         label="session"
@@ -108,7 +108,7 @@ const CourseNav = ({
         }}
       />
       <NavBtn
-        icon="attendance"
+        icon="pan_tool"
         label="Attendance"
         onClick={() => {
           showOverlay('ATTENDANCE')

@@ -170,7 +170,7 @@ const AssessmentViewer = ({
   }
 
   return (
-    <div className="left-pane fullwidth two-thirds-pane">
+    <div className="left-pane fullwidth three-fourth-pane">
       <div className="r-center">
         <div
           style={{
