@@ -13,7 +13,8 @@ const routes = {
   STUDENT_JOIN: PREFIX + '/join/student',
   GET_ACTIVE_ASSESSMENT: PREFIX + '/get/activeAssessment',
   CREATE_ATTENDANCE_CODE: PREFIX + '/attendance/create/code',
-  CLOSE_ATTENDANCE: PREFIX + '/attendance/end'
+  CLOSE_ATTENDANCE: PREFIX + '/attendance/end',
+  STUDENT_JOIN_ATTENDANCE: PREFIX + '/attendance/join'
 };
 
 export async function createAttendanceCode( courseSessionId ) {
@@ -83,6 +84,24 @@ export async function getActiveAssessment(courseSessionId) {
     );
   } catch (e) {
     console.error('[ERROR] CourseSession api getActiveAssessment', e);
+    return null;
+  }
+}
+
+export async function joinAttendance(courseSessionId, code, userId) {
+  try {
+    console.log(courseSessionId);
+    console.log(code);
+    console.log(userId);
+    return await post(
+      routes.STUDENT_JOIN_ATTENDANCE, {
+        courseSessionId,
+        code,
+        userId
+      });
+  } catch (e) {
+    console.error('[ERROR] CourseSession api > joinAttendance '+ e);
+    console.log(JSON.stringify(e, null, 2));
     return null;
   }
 }

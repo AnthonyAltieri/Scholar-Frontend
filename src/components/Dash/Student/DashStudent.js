@@ -35,6 +35,8 @@ import * as AlertActions from '../../../actions/Alert'
 import * as MenuActions from '../../../actions/Menu'
 import * as ReflectiveActions from '../../../actions/Assess/Reflelctive';
 import { createAlert } from '../../../api/Alert'
+import { joinAttendance } from '../../../api/CourseSession'
+import { toastr } from 'react-redux-toastr';
 
 const fabAskStyle = {
   position: "absolute",
@@ -269,7 +271,35 @@ class DashStudent extends Component {
             isOpen={isAlertOverlayVisible}
           />
           <AttendanceDialog
-            onSubmitClick={async () => {
+            onSubmitClick={async (attendanceCode) => {
+              const payload = await joinAttendance(courseSessionId, attendanceCode, userId);
+              if(!!payload){
+                const { attendance, studentAlreadyInAttendance, isAttendanceClosed, invalidCode } = payload;
+
+                if(!!attendance) {
+                  console.log("ATTENDANCE SUCCESS");
+                  hideOverlay();
+                  toastr.success("You have been added to this attendance list!");
+                }
+                else {
+                  console.error("[ERROR] While Joining courseSession Attendance : ");
+                  if(!!studentAlreadyInAttendance) {
+                    toastr.info("You are already in this attendance list!");
+                    hideOverlay();
+                  }
+                  if(!!isAttendanceClosed) {
+                    toastr.error("Please wait for your professor to open the attendance.")
+                  }
+                  if(!!invalidCode) {
+                    toastr.error("This is an invalid attendance code. Please try again")
+                  }
+                }
+              }
+              else {
+                console.error("[ERROR] While Joining courseSession Attendance : Unknown ");
+                toastr.error("An error occurred :( Please refresh the page and try again");
+              }
+
             }}
             onCancelClick={() => closeAttendanceDialog()}
             isOpen={isOverlayVisible && overlayType === 'ATTENDANCE'}

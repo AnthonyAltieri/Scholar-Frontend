@@ -21,7 +21,13 @@ const validateCourse = (course) => {
   }
 };
 
-const Course = (state = {}, action) => {
+const initialState = {
+  Attendance: Attendance(undefined, {type: 'FAKE_ACTION'})
+};
+
+const Course = (state = initialState, action) => {
+  console.log("COURSE REDUCER HIT WITH ACTION");
+  console.log(JSON.stringify(action.type));
   switch (action.type) {
     case 'RECEIVED_COURSES': {
       try {
@@ -59,6 +65,7 @@ const Course = (state = {}, action) => {
         activeCourseSessionId: action.activeCourseSessionId,
         timeStart: action.timeStart,
         timeEnd: action.timeEnd,
+        Attendance: Attendance(state.Attendance, action)
       }
     }
 

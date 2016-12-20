@@ -8,14 +8,16 @@ import { createAttendanceCode, closeAttendance } from '../../../../api/CourseSes
 import * as AttendanceActions from '../../../../actions/Attendance';
 import Socket from '../../../../socket/Socket';
 import Events from '../../../../socket/Events';
+import {toastr} from 'react-redux-toastr'
+import * as SocketActions from '../../../../actions/Socket'
 const INACTIVE_CODE_TEXT = "INACTIVE";
 
 function setUpSockets(props) {
-  const { courseSessionId, handleStudentJoinedAttendance } = props;
+  const { courseSessionId, handleStudentJoinedAttendance, socketConnect } = props;
   const courseSessionChannel = `private-${courseSessionId}`;
   if (!Socket.getPusher() ||
     !Socket.getPusher().connection.connection) {
-    Socket.connect();
+    Socket.connect(socketConnect);
   }
   Socket.subscribe(courseSessionChannel);
 
@@ -49,6 +51,7 @@ class AttendanceDialog extends Component {
     } = this.props;
 
     let { code } = this.props;
+    let isAttendanceOpen = false;
 
     if(!code){
       code = INACTIVE_CODE_TEXT;
@@ -74,10 +77,17 @@ class AttendanceDialog extends Component {
       handleCodeDeactivated();
     };
 
+    const handleCancelClicked = () => {
+      if(!!isAttendanceOpen) {
+        toastr.warning("The Attendance is still open and students can continue to join.")
+      }
+      onCancelClick();
+
+    };
+
     let stage;
     let stageHeading = " : STAGE 1";
 
-    let isAttendanceOpen = false;
     //if code is not invalid and therefore attendance is open
     if(!!code && code!==INACTIVE_CODE_TEXT){
       stageHeading = " : STAGE 2";
@@ -130,7 +140,7 @@ class AttendanceDialog extends Component {
           />,
           <FlatButton
             label="Exit"
-            onTouchTap={onCancelClick}
+            onTouchTap={handleCancelClicked}
           />,
 
         ]}
@@ -179,7 +189,10 @@ const stateToProps = state => ({
 const dispatchToProps = (dispatch, ownProps) => ({
   handleCodeActivated: (code) =>  {dispatch(AttendanceActions.activateCode(code))},
   handleCodeDeactivated: () => {dispatch(AttendanceActions.deactivateCode())},
-  handleStudentJoinedAttendance: (attendance) => {dispatch(AttendanceActions.studentJoined(attendance))}
+  handleStudentJoinedAttendance: (attendance) => {dispatch(AttendanceActions.studentJoined(attendance))},
+  socketConnect: (pusher) => {
+    dispatch(SocketActions.connect(pusher));
+  },
 });
 
 AttendanceDialog = connect(

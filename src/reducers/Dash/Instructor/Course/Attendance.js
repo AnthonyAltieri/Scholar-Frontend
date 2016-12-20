@@ -8,10 +8,14 @@ const initialState = {
 }
 
 const Attendance = (state = initialState, action) => {
+  console.log("Attendance Reducer Hit");
+  console.log(action.type);
+  console.log(JSON.stringify(state, null, 2));
   switch (action.type) {
 
-    //When course activated reset attendance stats
+    // When course activated reset attendance stats
     case 'ACTIVATE_COURSE': {
+      console.log("Fire em up: ACTIVATE COURSE");
       return initialState
     }
 
@@ -34,6 +38,10 @@ const Attendance = (state = initialState, action) => {
         ...state,
         numberAttendees: action.attendance
       }
+    }
+
+    default : {
+      return state;
     }
   }
 };
