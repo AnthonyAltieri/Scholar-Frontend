@@ -12,6 +12,7 @@ const CourseSessionDialog = ({
   onStartClick,
   onEndClick,
   onCancelClick,
+  isCourseSessionActive,
 }) => (
   <Dialog
     title="Control Course Session"
@@ -27,12 +28,18 @@ const CourseSessionDialog = ({
       <FlatButton
         label="End"
         onTouchTap={onEndClick}
-        style={{ color: Colors.red }}
+        style={{
+          color: !isCourseSessionActive ? '#aaaaaa' : Colors.red,
+        }}
+        disabled={!isCourseSessionActive}
       />,
       <FlatButton
         label="Start"
         onTouchTap={onStartClick}
-        style={{ color: Colors.green }}
+        style={{
+          color: !!isCourseSessionActive ? '#aaaaaa' : Colors.green,
+        }}
+        disabled={!!isCourseSessionActive}
       />,
     ]}
   >

@@ -221,7 +221,6 @@ class DashStudent extends Component {
 
   componentWillUnmount() {
     Socket.disconnect() ;
-    this.props.socketDisconnect();
     Socket.clearPersistenceInterval();
     window.clearInterval(window.intervalGetAlerts);
   }

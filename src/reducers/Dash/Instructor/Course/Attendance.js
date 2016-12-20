@@ -5,6 +5,7 @@
 const initialState = {
   code: null,
   numberAttendees: 0,
+  numberInCourseSession: 0,
 };
 
 const Attendance = (state = initialState, action) => {
@@ -34,6 +35,13 @@ const Attendance = (state = initialState, action) => {
       return {
         ...state,
         numberAttendees: action.attendance
+      }
+    }
+
+    case 'STUDENT_JOINED_COURSESESSION': {
+      return {
+        ...state,
+        numberInCourseSession: action.numberInCourseSession,
       }
     }
 

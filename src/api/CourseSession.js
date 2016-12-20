@@ -14,7 +14,8 @@ const routes = {
   GET_ACTIVE_ASSESSMENT: PREFIX + '/get/activeAssessment',
   CREATE_ATTENDANCE_CODE: PREFIX + '/attendance/create/code',
   CLOSE_ATTENDANCE: PREFIX + '/attendance/end',
-  STUDENT_JOIN_ATTENDANCE: PREFIX + '/attendance/join'
+  STUDENT_JOIN_ATTENDANCE: PREFIX + '/attendance/join',
+  NUMBER_IN_COURSESESSION_GET: PREFIX + '/numberInCourseSession/get',
 };
 
 export async function createAttendanceCode( courseSessionId ) {
@@ -102,6 +103,21 @@ export async function joinAttendance(courseSessionId, code, userId) {
   } catch (e) {
     console.error('[ERROR] CourseSession api > joinAttendance '+ e);
     console.log(JSON.stringify(e, null, 2));
+    return null;
+  }
+}
+
+export async function numberInCourseSessionGet(courseSessionId) {
+  try {
+    return await post(
+      routes.NUMBER_IN_COURSESESSION_GET,
+      { courseSessionId },
+    );
+  } catch (e) {
+    console.error(
+      '[ERROR] CourseSession Api numberInCourseSessionGet',
+      e
+    );
     return null;
   }
 }

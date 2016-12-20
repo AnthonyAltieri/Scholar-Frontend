@@ -107,6 +107,7 @@ class Ask extends Component {
       addEndorse,
       removeEndorse,
       dismissQuestion,
+      numberInCourseSession,
     } = this.props;
     return (
       <div className="ask r-between">
@@ -158,7 +159,7 @@ class Ask extends Component {
               <h2 className="header">STATS</h2>
             </div>
             <div
-              className="r-around"
+              className="r-center"
               style={{
                 height: '75%',
               }}
@@ -171,6 +172,11 @@ class Ask extends Component {
               <StatBlock
                 name="Responses"
                 number={calculateNumberResponses(questions)}
+                isMini
+              />
+              <StatBlock
+                name="Present"
+                number={numberInCourseSession}
                 isMini
               />
             </div>
@@ -223,6 +229,7 @@ const stateToProps = (state) => ({
     'MOST_RECENT',
     state.QuestionList,
   ),
+  numberInCourseSession: state.Course.Attendance.numberInCourseSession || 0,
 });
 
 const dispatchToProps = (dispatch) => ({

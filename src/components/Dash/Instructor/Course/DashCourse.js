@@ -12,6 +12,8 @@ import * as AlertActions from '../../../../actions/Alert';
 import * as ReflectiveActions from '../../../../actions/Assess/Reflelctive';
 import * as SocketActions from '../../../../actions/Socket';
 import * as QuestionListActions from '../../../../actions/QuestionList';
+import * as AttendanceActions from '../../../../actions/Attendance';
+import { getNumberInCourseSession } from '../../../../api/CourseSession';
 import { startCourseSession, endCourseSession } from '../../../../api/CourseSession';
 import Socket from '../../../../socket/Socket'
 import Events from '../../../../socket/Events';
@@ -135,14 +137,25 @@ function handleSockets(props) {
     Events.REMOVE_FLAG,
     (data) => { removeFlag(data.id) }
   );
+  Socket.bind(
+    courseSessionChannel,
+    Events.STUDENT_JOINED_COURSESESSION,
+    (data) => studentJoinedCourseSession(data.numberInCourseSession),
+  );
   console.log('pusher', Socket.getPusher());
 }
 
 class DashCourse extends Component {
   async componentDidMount() {
-    const { courseSessionId } = this.props;
-    if (this.props.isCourseSessionActive && !this.props.pusher) {
+    const {
+      courseSessionId,
+      studentJoinedCourseSession,
+    } = this.props;
+    if (this.props.isCourseSessionActive) {
       handleSockets(this.props);
+      const numberInCourseSession = await getNumberInCourseSession(courseSessionId);
+      console.log('numberInCourseSession', numberInCourseSession);
+      studentJoinedCourseSession(numberInCourseSession);
     }
     const { updateAlertGraph, alertGraph } = this.props;
     window.intervalGetAlerts =  window.setInterval( async () => {
@@ -172,8 +185,7 @@ class DashCourse extends Component {
       activateCourseSession,
       deactivateCourseSession,
       alertGraph,
-      reflectiveNumberAnswered,
-      reflectiveNumberReviewed,
+      isCourseSessionActive,
     } = this.props;
 
     const { courseId } = params;
@@ -219,6 +231,7 @@ class DashCourse extends Component {
       <div>
         <CourseSessionDialog
           isOpen={!!isOverlayVisible && overlayType === 'COURSE_SESSION'}
+          isCourseSessionActive={isCourseSessionActive}
           onStartClick={() => {
             handleCourseSessionStart(courseId, userId)
               .then(({ error, courseSessionId }) => {
@@ -229,7 +242,9 @@ class DashCourse extends Component {
                 hideOverlay();
                 activateCourseSession(courseSessionId, graph);
               })
-              .catch(() => {
+              .catch((e) => {
+                console.error('[ERROR] handleCourseSessionStart', e);
+
                 toastr.error('Something went wrong please try again');
               });
           }}
@@ -274,8 +289,6 @@ const stateToProps = state => ({
   isCourseSessionActive: !!state.Course.activeCourseSessionId,
   courseSessionId: state.Course.activeCourseSessionId,
   alertGraph: state.Graph.Alert.graph,
-  reflectiveNumberAnswered: state.Assess.Reflective.numberAnswers,
-  reflectiveNumberReviewed: state.Assess.Reflective.numberReviews,
 });
 
 const dispatchToProps = (dispatch, ownProps) => ({
@@ -363,6 +376,9 @@ const dispatchToProps = (dispatch, ownProps) => ({
   },
   reflectiveAnswerReviewed: () => {
     dispatch(ReflectiveActions.answerReviewed());
+  },
+  studentJoinedCourseSession: () => {
+    dispatch(AttendanceActions.studentJoinedCourseSession());
   },
 });
 
