@@ -37,9 +37,9 @@ const AttendanceDialog = ({
         <TextField
           floatingLabelText="Code"
           id="attendance-code"
-          ref={() => {
-            code = document.getElementById('attendance-code');
-          }}
+          onChange={(event) => {
+            code = event.target.value;
+        }}
         />
       </div>
     </Dialog>
