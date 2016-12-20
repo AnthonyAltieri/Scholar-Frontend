@@ -15,19 +15,23 @@ class Alert extends Component {
   }
 
   render() {
+    const {numberAttendees, activeAlerts} = this.props;
+
     return (
       <div>
         <div id="lineChart">
           <Graph />
         </div>
-        <Stats />
+        <Stats attendance={numberAttendees} numberAlerts={activeAlerts}/>
       </div>
     );
   }
 }
 
 const stateToProps = (state) => ({
-  alertGraph: state.Graph.Alert.graph
+  alertGraph: state.Graph.Alert.graph,
+  numberAttendees : state.Course.Attendance.numberAttendees,
+  activeAlerts : state.Graph.Alert.activeAlerts
 });
 
 const dispatchToProps = (dispatch) => ({

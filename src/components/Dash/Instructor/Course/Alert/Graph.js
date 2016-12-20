@@ -60,7 +60,8 @@ var AlertGraph = React.createClass({
 
 const stateToProps = (state) => ({
   data: state.Graph.Alert.graph,
-  activeAlerts : state.Graph.Alert.activeAlerts
+  activeAlerts : state.Graph.Alert.activeAlerts,
+  attendance : state.Course.Attendance.numberAttendees
 });
 
 const dispatchToProps = (dispatch) => ({

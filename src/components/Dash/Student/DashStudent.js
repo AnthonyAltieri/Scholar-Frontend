@@ -36,6 +36,7 @@ import * as ReflectiveActions from '../../../actions/Assess/Reflelctive';
 import { createAlert } from '../../../api/Alert'
 import { joinAttendance } from '../../../api/CourseSession'
 import { toastr } from 'react-redux-toastr';
+import * as AttendanceActions from '../../../actions/Attendance'
 
 const fabAskStyle = {
   position: "absolute",
@@ -195,7 +196,8 @@ class DashStudent extends Component {
       courseSessionId,
       setAlertThreshold,
       setAlertPercentage,
-      updateAlertGraph
+      updateAlertGraph,
+      attendance
     } = this.props;
     endLoading();
     // handleAlertThreshold(
@@ -207,7 +209,6 @@ class DashStudent extends Component {
     window.intervalGetAlerts =  window.setInterval( async () => {
       try {
         let alerts = await getAlerts(courseSessionId);
-        let attendance = 40;
         updateAlertGraph(alerts, attendance);
       }
       catch (e) {
@@ -257,8 +258,30 @@ class DashStudent extends Component {
       overlayType,
       openAttendanceDialog,
       closeAttendanceDialog,
+      studentJoinedAttendance
     }  = this.props;
     console.log('overlayType', overlayType);
+
+    const adjustedAlertPercentage = () => {
+      console.log("ADJUSTED ALERT PERCENTAGE");
+
+      console.log(activeAlerts/attendance);
+      if(activeAlerts===0 && attendance===0){
+        console.log("THIS FIRST");
+        console.log(0);
+        return 0;
+      }
+      else if (!isFinite(activeAlerts/attendance)){
+        console.log("THIS SECOND");
+        console.log(0);
+        return 0;
+      }
+      else {
+        console.log("THIS LASt");
+        console.log(((activeAlerts/attendance)*100));
+        return ((activeAlerts/attendance)*100);
+      }
+    };
         return (
           <div className="dash-student">
           <ToCourseDialog
@@ -287,6 +310,8 @@ class DashStudent extends Component {
                   console.log("ATTENDANCE SUCCESS");
                   hideOverlay();
                   toastr.success("You have been added to this attendance list!");
+                  studentJoinedAttendance(attendance);
+
                 }
                 else {
                   console.error("[ERROR] While Joining courseSession Attendance : ");
@@ -414,8 +439,8 @@ class DashStudent extends Component {
           {mode !== 'ASSESSMENT'
             ? (
               <AlertGraph
-                percentage={(activeAlerts/attendance)*100}
-                isPastThreshold={(((activeAlerts/attendance)*100) >= threshold) ? 1 : 0}
+                percentage={adjustedAlertPercentage()}
+                isPastThreshold={(adjustedAlertPercentage() >= threshold) ? 1 : 0}
               />
             )
             : null
@@ -437,11 +462,11 @@ const mapStateToProps = (state) => {
     courseId: state.Course.id,
     userId: state.User.id,
     activeAlerts: state.Graph.Alert.activeAlerts,
-    attendance: state.Graph.Alert.attendance,
     threshold: state.Graph.Alert.threshold,
     isDrawerOpen: !!state.Drawer.isOpen,
     isInAttendance: !!state.Drawer.isInAttendance,
     overlayType: state.Overlay.type,
+    attendance: state.Course.Attendance.numberAttendees
   }
 };
 
@@ -592,6 +617,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     removeEndorse: (id) => {
       dispatch(QuestionListActions.removeEndorse(id));
     },
+    studentJoinedAttendance : (attendance) => {
+      dispatch(AttendanceActions.studentJoined(attendance));
+    }
   }
 };
 

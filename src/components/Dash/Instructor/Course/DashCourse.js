@@ -140,7 +140,7 @@ function handleSockets(props) {
 
 class DashCourse extends Component {
   async componentDidMount() {
-    const { courseSessionId } = this.props;
+    const { courseSessionId, numberAttendees } = this.props;
     if (this.props.isCourseSessionActive && !this.props.pusher) {
       handleSockets(this.props);
     }
@@ -148,8 +148,7 @@ class DashCourse extends Component {
     window.intervalGetAlerts =  window.setInterval( async () => {
       try {
         let alerts = await getAlerts( courseSessionId );
-        let attendance = 40;
-        updateAlertGraph(alerts, attendance, alertGraph);
+        updateAlertGraph(alerts, numberAttendees, alertGraph);
       }
       catch (e) {
         console.error("[ERROR] in DashCourse Component > ComponentDidMount : " + e)
@@ -225,7 +224,7 @@ class DashCourse extends Component {
                   return;
                 }
                 hideOverlay();
-                activateCourseSession(courseSessionId, graph);
+                activateCourseSession(courseSessionId);
               })
               .catch(() => {
                 toastr.error('Something went wrong please try again');
@@ -272,6 +271,7 @@ const stateToProps = state => ({
   isCourseSessionActive: !!state.Course.activeCourseSessionId,
   courseSessionId: state.Course.activeCourseSessionId,
   alertGraph: state.Graph.Alert.graph,
+  numberAttendees: state.Course.Attendance.numberAttendees
 });
 
 const dispatchToProps = (dispatch, ownProps) => ({

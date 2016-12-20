@@ -5,18 +5,23 @@ const DEFAULT_THRESHOLD = 30;
 const initialState = {
   threshold: DEFAULT_THRESHOLD,
   graph: null,
-  activeAlerts: 0
+  activeAlerts: 0,
+  attendance: 0
 };
+
 
 const Alert = (state = initialState, action) => {
   switch (action.type) {
-
-    case 'JOIN_COURSE':
+    //
+    // case 'JOIN_COURSE': {
+    //
+    // }
     case 'ACTIVATE_COURSE': {
       return {
         ...state,
         graph : initInstructorAlertGraph(DEFAULT_THRESHOLD),
-        activeAlerts: 0
+        activeAlerts: 0,
+        attendance: 0
       }
     }
 
@@ -46,11 +51,13 @@ const Alert = (state = initialState, action) => {
     case 'RECEIVED_ACTIVE_ALERTS': {
       return {
         ...state,
-        activeAlerts : (!!action.activeAlerts) ? action.activeAlerts : state.activeAlerts,
+        activeAlerts : (action.activeAlerts===0 || !!action.activeAlerts)
+          ? action.activeAlerts : state.activeAlerts,
         graph : (!!state.graph) ?
           updateInstructorAlertGraph(
             action.graph,
-            (!!action.activeAlerts) ? action.activeAlerts : state.activeAlerts,
+            (action.activeAlerts===0 || !!action.activeAlerts)
+              ? action.activeAlerts : state.activeAlerts,
             (!!action.attendance) ? action.attendance : state.attendance,
             DEFAULT_THRESHOLD
           )
@@ -61,9 +68,14 @@ const Alert = (state = initialState, action) => {
     }
 
     case 'UPDATE_ACTIVE_ALERTS_STUDENT': {
-    return {
+      console.log("mark");
+    console.log(JSON.stringify(action, null, 2));
+      console.log((action.activeAlerts===0 || !!action.activeAlerts)
+        ? action.activeAlerts : state.activeAlerts);
+      return {
         ...state,
-        activeAlerts : (!!action.activeAlerts) ? action.activeAlerts : state.activeAlerts,
+        activeAlerts : (action.activeAlerts===0 || !!action.activeAlerts)
+          ? action.activeAlerts : state.activeAlerts,
         attendance : (!!action.attendance) ? action.attendance : state.attendance
       }
     }
