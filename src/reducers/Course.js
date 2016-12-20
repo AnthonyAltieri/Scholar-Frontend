@@ -26,8 +26,6 @@ const initialState = {
 };
 
 const Course = (state = initialState, action) => {
-  console.log("COURSE REDUCER HIT WITH ACTION");
-  console.log(JSON.stringify(action.type));
   switch (action.type) {
     case 'RECEIVED_COURSES': {
       try {

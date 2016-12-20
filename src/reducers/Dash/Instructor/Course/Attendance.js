@@ -5,12 +5,9 @@
 const initialState = {
   code: null,
   numberAttendees: 0,
-}
+};
 
 const Attendance = (state = initialState, action) => {
-  console.log("Attendance Reducer Hit");
-  console.log(action.type);
-  console.log(JSON.stringify(state, null, 2));
   switch (action.type) {
 
     // When course activated reset attendance stats
