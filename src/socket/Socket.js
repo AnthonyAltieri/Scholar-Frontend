@@ -10,7 +10,7 @@ function connect() {
     'be327c8cfdbd733ab9e5',
     {
       authTransport: 'jsonp',
-      authEndpoint: 'http://localhost:8000/pusher/auth'
+      authEndpoint: 'http://localhost:7000/pusher/auth'
     }
   );
 }
