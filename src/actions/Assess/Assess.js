@@ -6,7 +6,7 @@ export const activate = (assessmentType, activeAssessmentId) => ({
 
 export const deactivate = () => ({
   type: 'ASSESS_DEACTIVATE_ASSESSMENT',
-})
+});
 
 export const receivedActiveAssessment = (
   id,
