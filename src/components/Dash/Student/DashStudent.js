@@ -88,7 +88,8 @@ function setUpSockets(props) {
     addEndorse,
     removeEndorse,
     userId,
-    studentJoinedAttendance
+    studentJoinedAttendance,
+    goToCourses,
   } = props;
   const courseSessionChannel = `private-${courseSessionId}`;
   Socket.subscribe(courseSessionChannel);
@@ -183,6 +184,11 @@ function setUpSockets(props) {
       studentJoinedAttendance(data.attendance);
     }
   );
+  Socket.bind(
+    courseSessionChannel,
+    Events.END_COURSESESSION,
+    (data) => goToCourses(userId)
+  )
 }
 
 async function handleAlertThreshold(
