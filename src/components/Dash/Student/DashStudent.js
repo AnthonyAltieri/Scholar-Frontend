@@ -200,7 +200,7 @@ async function handleAlertThreshold(
 
 class DashStudent extends Component {
   async componentWillMount(){
-    const { studentJoinedAttendance, courseSessionId } = this.props
+    const { studentJoinedAttendance, courseSessionId } = this.props;
     const payload =  await getNumberInAttendance(courseSessionId);
     const error = payload.error;
     let numberInAttendance = payload.attendance;

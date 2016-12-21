@@ -11,6 +11,8 @@ import { setDashMode } from '../../../actions/DashStudent';
 import ButtonRound from '../../../components/buttons/ButtonRound';
 import RaisedButton from 'material-ui/RaisedButton';
 import { create } from '../../../api/Question';
+import { checkSimilarity } from '../../../api/Questions';
+
 
 let AskQuestion = ({
   dispatch,
@@ -18,6 +20,7 @@ let AskQuestion = ({
   userId,
   courseId,
   courseSessionId,
+  questionList
 }) => {
   let input;
   let enteredQuestion = '';
@@ -40,6 +43,16 @@ let AskQuestion = ({
               return;
             }
             try {
+
+              const similarityIndex =await checkSimilarity(content, questionList);
+              if(!!similarityIndex && similarityIndex > -1){
+                toastr.info("Found a similar Question with content : " + questionList[similarityIndex].content);
+                dispatch(clearEnteredQuestion());
+                dispatch(setDashMode('QUESTIONS'));
+                //TODO: Add vote on this question Index
+                return;
+              }
+
               const payload = await create(
                 userId,
                 content,
@@ -86,6 +99,7 @@ const stateToProps = (state) => ({
   courseId: state.Course.id,
   courseSessionId: state.Course.activeCourseSessionId,
   question: state.Dash.Student.enteredQuestion || '',
+  questionList: state.QuestionList
 });
 
 AskQuestion = connect(
