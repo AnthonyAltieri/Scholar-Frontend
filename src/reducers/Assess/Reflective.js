@@ -63,8 +63,8 @@ const Reflective = (state = initialState, action) => {
       return {
         ...state,
         toReview: [
-          ...toReview.slice(0, action.reviewIndex),
-          ...toReview.slice(action.reviewIndex + 1),
+          ...state.toReview.slice(0, action.reviewIndex),
+          ...state.toReview.slice(action.reviewIndex + 1),
         ],
       }
     }
