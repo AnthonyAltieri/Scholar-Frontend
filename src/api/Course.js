@@ -97,7 +97,7 @@ export function gradeSummary(
   courseId,
   courseTitle,
 ) {
-  window.location = 'http://localhost:8000'
+  window.location = 'http://localhost:7000'
     + routes.GRADE_SUMMARY
     + `?courseId=${encodeURIComponent(courseId)}`
     + `&courseTitle=${encodeURIComponent(courseTitle)}`;
