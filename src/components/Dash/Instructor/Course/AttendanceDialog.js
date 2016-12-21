@@ -12,32 +12,9 @@ import {toastr} from 'react-redux-toastr'
 import * as SocketActions from '../../../../actions/Socket'
 const INACTIVE_CODE_TEXT = "INACTIVE";
 
-function setUpSockets(props) {
-  const { courseSessionId, handleStudentJoinedAttendance, socketConnect } = props;
-  const courseSessionChannel = `private-${courseSessionId}`;
-  if (!Socket.getPusher() ||
-    !Socket.getPusher().connection.connection) {
-    Socket.connect(socketConnect);
-  }
-  Socket.subscribe(courseSessionChannel);
-
-  Socket.bind(
-    courseSessionChannel,
-    Events.STUDENT_JOINED_ATTENDANCE,
-    (data) => {
-      console.log("Student Joined Attendance");
-      console.log(JSON.stringify(data, null, 2));
-      handleStudentJoinedAttendance(data.attendance);
-    }
-  );
-  Socket.mainTainPersistence();
-}
 
 class AttendanceDialog extends Component {
 
-  componentDidMount() {
-    setUpSockets(this.props);
-  }
   render() {
     const {
       isOpen,
@@ -189,7 +166,6 @@ const stateToProps = state => ({
 const dispatchToProps = (dispatch, ownProps) => ({
   handleCodeActivated: (code) =>  {dispatch(AttendanceActions.activateCode(code))},
   handleCodeDeactivated: () => {dispatch(AttendanceActions.deactivateCode())},
-  handleStudentJoinedAttendance: (attendance) => {dispatch(AttendanceActions.studentJoined(attendance))},
   socketConnect: (pusher) => {
     dispatch(SocketActions.connect(pusher));
   },

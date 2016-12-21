@@ -13,7 +13,7 @@ import * as ReflectiveActions from '../../../../actions/Assess/Reflelctive';
 import * as SocketActions from '../../../../actions/Socket';
 import * as QuestionListActions from '../../../../actions/QuestionList';
 import * as AttendanceActions from '../../../../actions/Attendance';
-import { numberInCourseSessionGet } from '../../../../api/CourseSession';
+import { numberInCourseSessionGet, getNumberInAttendance } from '../../../../api/CourseSession';
 import { startCourseSession, endCourseSession } from '../../../../api/CourseSession';
 import Socket from '../../../../socket/Socket'
 import Events from '../../../../socket/Events';
@@ -66,7 +66,8 @@ function handleSockets(props) {
     removeResponse,
     addFlag,
     removeFlag,
-    studentJoinedCourseSession,
+    handleStudentJoinedAttendance,
+    studentJoinedCourseSession
   } = props;
   const courseSessionChannel = `private-${courseSessionId}`;
   Socket.subscribe(courseSessionChannel);
@@ -143,6 +144,13 @@ function handleSockets(props) {
     Events.STUDENT_JOINED_COURSESESSION,
     (data) => studentJoinedCourseSession(data.numberInCourseSession),
   );
+  Socket.bind(
+    courseSessionChannel,
+    Events.STUDENT_JOINED_ATTENDANCE,
+    (data) => {
+      handleStudentJoinedAttendance(data.attendance);
+    }
+  );
   console.log('pusher', Socket.getPusher());
 }
 
@@ -151,15 +159,24 @@ class DashCourse extends Component {
     const {
       courseSessionId,
       studentJoinedCourseSession,
+      handleStudentJoinedAttendance
     } = this.props;
     if (this.props.isCourseSessionActive) {
       handleSockets(this.props);
-      const {
+      let {
         numberInCourseSession,
         error,
       } = await numberInCourseSessionGet(courseSessionId);
       if (!error) {
         studentJoinedCourseSession(numberInCourseSession);
+      }
+
+
+      const payload =  await getNumberInAttendance(courseSessionId);
+      error = payload.error;
+      let numberInAttendance = payload.attendance;
+      if (!error) {
+        handleStudentJoinedAttendance(numberInAttendance);
       }
     }
     const { updateAlertGraph, alertGraph, numberAttendees } = this.props;
@@ -385,6 +402,7 @@ const dispatchToProps = (dispatch, ownProps) => ({
   studentJoinedCourseSession: (number) => {
     dispatch(AttendanceActions.studentJoinedCourseSession(number));
   },
+  handleStudentJoinedAttendance: (attendance) => {dispatch(AttendanceActions.studentJoined(attendance))},
 });
 
 DashCourse = connect(

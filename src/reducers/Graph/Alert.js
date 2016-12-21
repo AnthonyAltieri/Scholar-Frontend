@@ -67,8 +67,6 @@ const Alert = (state = initialState, action) => {
     }
 
     case 'UPDATE_ACTIVE_ALERTS_STUDENT': {
-      console.log("mark");
-    console.log(JSON.stringify(action, null, 2));
       console.log((action.activeAlerts===0 || !!action.activeAlerts)
         ? action.activeAlerts : state.activeAlerts);
       return {

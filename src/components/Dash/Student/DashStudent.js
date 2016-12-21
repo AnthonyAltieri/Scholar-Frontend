@@ -34,7 +34,7 @@ import * as AlertActions from '../../../actions/Alert'
 import * as MenuActions from '../../../actions/Menu'
 import * as ReflectiveActions from '../../../actions/Assess/Reflelctive';
 import { createAlert } from '../../../api/Alert'
-import { joinAttendance } from '../../../api/CourseSession'
+import { joinAttendance, getNumberInAttendance } from '../../../api/CourseSession'
 import { toastr } from 'react-redux-toastr';
 import * as AttendanceActions from '../../../actions/Attendance'
 
@@ -68,6 +68,7 @@ function setUpSockets(props) {
     addEndorse,
     removeEndorse,
     userId,
+    studentJoinedAttendance
   } = props;
   const courseSessionChannel = `private-${courseSessionId}`;
   Socket.subscribe(courseSessionChannel);
@@ -153,6 +154,15 @@ function setUpSockets(props) {
     Events.REMOVE_ENDORSE,
     (data) => removeEndorse(data.id),
   );
+  Socket.bind(
+    courseSessionChannel,
+    Events.STUDENT_JOINED_ATTENDANCE,
+    (data) => {
+      console.log("Student Joined Attendance");
+      console.log(JSON.stringify(data, null, 2));
+      studentJoinedAttendance(data.attendance);
+    }
+  );
 }
 
 async function handleAlertThreshold(
@@ -190,6 +200,15 @@ async function handleAlertThreshold(
 
 
 class DashStudent extends Component {
+  async componentWillMount(){
+    const { studentJoinedAttendance, courseSessionId } = this.props;
+    const payload =  await getNumberInAttendance(courseSessionId);
+    const error = payload.error;
+    let numberInAttendance = payload.attendance;
+    if (!error) {
+      studentJoinedAttendance(numberInAttendance);
+    }
+  }
   async componentDidMount() {
     const {
       endLoading,
@@ -278,6 +297,8 @@ class DashStudent extends Component {
       }
       else {
         console.log("THIS LASt");
+        console.log("ALERTS : " + activeAlerts);
+        console.log("ATTENDANCE : " + attendance);
         console.log(((activeAlerts/attendance)*100));
         return ((activeAlerts/attendance)*100);
       }
@@ -310,8 +331,6 @@ class DashStudent extends Component {
                   console.log("ATTENDANCE SUCCESS");
                   hideOverlay();
                   toastr.success("You have been added to this attendance list!");
-                  studentJoinedAttendance(attendance);
-
                 }
                 else {
                   console.error("[ERROR] While Joining courseSession Attendance : ");
