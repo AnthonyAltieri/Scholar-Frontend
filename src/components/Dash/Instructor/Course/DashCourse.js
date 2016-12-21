@@ -402,7 +402,9 @@ const dispatchToProps = (dispatch, ownProps) => ({
   studentJoinedCourseSession: (number) => {
     dispatch(AttendanceActions.studentJoinedCourseSession(number));
   },
-  handleStudentJoinedAttendance: (attendance) => {dispatch(AttendanceActions.studentJoined(attendance))},
+  handleStudentJoinedAttendance: (attendance) => {
+    dispatch(AttendanceActions.studentJoined(attendance))
+  },
 });
 
 DashCourse = connect(
