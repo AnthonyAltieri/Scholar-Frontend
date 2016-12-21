@@ -33,3 +33,7 @@ export const recievedAnswersWithReviews = (answers) => ({
   type: 'ASSESSMENT_REFLECTIVE_RECEIVED_ANSWERS_WITH_REVIEWS',
   answers,
 });
+
+export const reflectiveAssessmentReviewed = () => ({
+  type: 'REFLECTIVE_ASSESSMENT_REVIEWED'
+});

@@ -130,7 +130,8 @@ const AssessmentViewer = ({
               toastr.error('Something went wrong please try again');
               return;
             }
-            activateReflective();
+            const {reflectiveAssessmentId} = payload;
+            activateReflective(reflectiveAssessmentId);
           } catch (e) {
             console.error('[ERROR] onStartClick', e);
           }

@@ -214,7 +214,10 @@ class Assess extends Component {
                       toastr.error('Something went wrong please try again');
                       return;
                     }
-                    activateReflective();
+
+                    console.log("Gonna use this for assessment " + payload.reflectiveAssessmentId);
+                    console.log(JSON.stringify(payload, null, 2));
+                    activateReflective(payload.reflectiveAssessmentId);
                   } catch (e) {
                     console.error('[ERROR] onUseForReflectiveClick', e);
                   }
