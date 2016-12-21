@@ -413,7 +413,7 @@ class DashStudent extends Component {
               <FloatingActionButton
                 style={fabAlertStyle}
                 backgroundColor={Colors.red}
-                onClick={() => {
+                onTouchTap={() => {
                   //TODO: Send data to server
                   const payload = createAlert(courseSessionId, courseId, userId);
                   const { error, alert } = payload;
@@ -438,7 +438,7 @@ class DashStudent extends Component {
           <FloatingActionButton
             style={fabAskStyle}
             secondary
-            onClick={() => {
+            onTouchTap={() => {
               if (mode === 'ASK' || mode === 'ASSESSMENT') {
                 setModeToQuestions();
               } else {

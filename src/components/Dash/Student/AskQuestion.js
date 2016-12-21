@@ -36,7 +36,7 @@ let AskQuestion = ({
           style={{
             marginTop: 4,
           }}
-          onClick={async function() {
+          onTouchType={async function() {
             const content = input.value;
             if (!content.trim()) {
               toastr.info('A question has to have some content');
