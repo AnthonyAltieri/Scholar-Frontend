@@ -219,7 +219,7 @@ const ReflectiveReview = ({
                     courseId,
                     userId,
                     'CORRECT',
-                    answerId,
+                    r.id,
                   )
                 if (!!payload.error) {
                   toastr.error('Something went wrong please try again');
@@ -239,7 +239,7 @@ const ReflectiveReview = ({
                     courseId,
                     userId,
                     'CORRECT',
-                    answerId,
+                    r.id,
                   )
                 if (!!payload.error) {
                   toastr.error('Something went wrong please try again');
