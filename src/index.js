@@ -11,6 +11,7 @@ import './scss/style.scss';
 
 const store = configureStore();
 //module.hot.accept();
+//// test
 
 
 ReactDOM.render(

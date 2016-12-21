@@ -37,7 +37,7 @@ const configureStore = () => {
     applyMiddleware(routerMiddleware(browserHistory))
   );
 
-  if (process.env.NODE_ENV !== 'production')
+  if (process.env.NODE_ENV !== 'production' && false)
     store.dispatch = addLoggingToDispatch(store);
 
   store.subscribe(throttle(() => {

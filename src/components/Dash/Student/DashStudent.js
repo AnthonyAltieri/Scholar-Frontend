@@ -141,7 +141,7 @@ function setUpSockets(props) {
     courseSessionChannel,
     Events.REFLECTIVE_ASSESSMENT_START_REVIEW,
     (data) => {
-      reflectiveStartReview(data.toReview);
+      reflectiveStartReview(data.toReview.filter(a => a.userId !== userId));
     }
   );
   Socket.bind(

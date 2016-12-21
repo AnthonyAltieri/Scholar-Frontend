@@ -8,8 +8,6 @@ var babelPresets = {presets: ['react', 'es2015', 'stage-2']};
 module.exports = {
   entry: [
     'babel-polyfill',
-    //'webpack-dev-server/client?http://localhost:3000',
-    //'webpack/hot/only-dev-server',
     './src/index'
   ],
   output: {
@@ -17,13 +15,8 @@ module.exports = {
     publicPath: '/static/',
     filename: 'app.bundle.js',
   },
-  devtool: 'eval-source-map',
   plugins: [
-    new webpack.optimize.UglifyJsPlugin({
-      comments: false,
-    }),
-    //new webpack.HotModuleReplacementPlugin(),
-    new DashboardPlugin(),
+    //new DashboardPlugin(),
   ],
   module: {
     loaders: [

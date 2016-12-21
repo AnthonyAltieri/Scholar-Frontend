@@ -5,6 +5,7 @@ const initialState = {
   numberReviews: 0,
   hasStartedReview: false,
   toReview: [],
+  answersWithReviews: [],
 }
 
 const Reflective = (state = initialState, action) => {
@@ -19,6 +20,7 @@ const Reflective = (state = initialState, action) => {
           hasAnswered: false,
           hasStartedReview: false,
           toReview: [],
+          answersWithReviews: [],
         }
         : state;
     }
@@ -97,6 +99,12 @@ const Reflective = (state = initialState, action) => {
     }
 
 
+    case 'ASSESSMENT_REFLECTIVE_RECEIVED_ANSWERS_WITH_REVIEWS': {
+      return {
+        ...state,
+        answersWithReviews: action.answers,
+      }
+    }
 
 
     default: {

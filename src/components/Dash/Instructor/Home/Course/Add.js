@@ -23,6 +23,7 @@ const subjectMenuItems = [
     value: 'COMPUTER_SCIENCE',
     primaryText: 'Computer Science',
   },
+	/*
   {
     value: 'ENGLISH',
     primaryText: 'English',
@@ -55,6 +56,7 @@ const subjectMenuItems = [
     value: 'ENGINEERING',
     primaryText: 'Engineering',
   },
+	*/
 ];
 
 const termsMenuItems = [

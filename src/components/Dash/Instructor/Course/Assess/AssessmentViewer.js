@@ -157,6 +157,7 @@ const AssessmentViewer = ({
               toastr.error('Something went wrong please try again');
               return;
             }
+            recievedAnswersWithReviews(payload.answers);
             deactivate();
           } catch (e) {
             console.error('[ERROR] onEndClick', e);
