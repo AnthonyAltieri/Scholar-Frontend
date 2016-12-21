@@ -8,8 +8,8 @@ var babelPresets = {presets: ['react', 'es2015', 'stage-2']};
 module.exports = {
   entry: [
     'babel-polyfill',
-    'webpack-dev-server/client?http://localhost:3000',
-    'webpack/hot/only-dev-server',
+    //'webpack-dev-server/client?http://localhost:3000',
+    //'webpack/hot/only-dev-server',
     './src/index'
   ],
   output: {
@@ -22,7 +22,7 @@ module.exports = {
     new webpack.optimize.UglifyJsPlugin({
       comments: false,
     }),
-    new webpack.HotModuleReplacementPlugin(),
+    //new webpack.HotModuleReplacementPlugin(),
     new DashboardPlugin(),
   ],
   module: {
