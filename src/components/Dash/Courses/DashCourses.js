@@ -73,7 +73,7 @@ async function handleStudentAddCourse(
 }
 
 class DashCourses extends Component {
-  componentDidMount() {
+  async componentDidMount() {
     const {
       userId,
       navigate,
@@ -93,9 +93,20 @@ class DashCourses extends Component {
     }
     setVisibilityFilter(filter);
 
-    handleGetCourses(userId, receivedCourses);
+    window.getCoursesInterval = window.setInterval(() => {
+      try {
+        handleGetCourses(userId, receivedCourses);
+      } catch (e) {
+        console.error('[ERROR] handleGetCourses', e);
+      }
+    }, 1000);
     endLoading();
   }
+
+  componentWillUnmount() {
+    clearInterval(window.getCoursesInterval);
+  }
+
 
   render() {
     const {
