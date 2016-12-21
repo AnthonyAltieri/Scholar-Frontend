@@ -526,7 +526,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         try {
           handleGetCourses(
             ownProps.userId,
-            dispatch(CoursesActions.receivedCourses(courses))
+            (courses) => dispatch(
+              CoursesActions.receivedCourses(courses)
+            )
           );
         } catch (e) {
           console.error('[ERROR] handleGetCourses', e);
