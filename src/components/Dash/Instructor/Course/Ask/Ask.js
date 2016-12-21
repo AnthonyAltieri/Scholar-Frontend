@@ -201,6 +201,8 @@ class Ask extends Component {
                   content={q.content}
                   created={q.created}
                   responses={q.responses}
+                  addEndorse={addEndorse}
+                  removeEndorse={removeEndorse}
                   hasBeenEndorsed={q.isEndorsed}
                   id={q.id}
                   courseSessionId={activeCourseSessionId}
