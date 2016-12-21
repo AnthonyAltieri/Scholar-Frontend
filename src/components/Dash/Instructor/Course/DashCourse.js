@@ -66,6 +66,7 @@ function handleSockets(props) {
     removeResponse,
     addFlag,
     removeFlag,
+    studentJoinedCourseSession,
   } = props;
   const courseSessionChannel = `private-${courseSessionId}`;
   Socket.subscribe(courseSessionChannel);
@@ -243,6 +244,7 @@ class DashCourse extends Component {
                 }
                 hideOverlay();
                 activateCourseSession(courseSessionId);
+                handleSockets(this.props);
               })
               .catch((e) => {
                 console.error('[ERROR] handleCourseSessionStart', e);
@@ -380,8 +382,8 @@ const dispatchToProps = (dispatch, ownProps) => ({
   reflectiveAnswerReviewed: () => {
     dispatch(ReflectiveActions.answerReviewed());
   },
-  studentJoinedCourseSession: () => {
-    dispatch(AttendanceActions.studentJoinedCourseSession());
+  studentJoinedCourseSession: (number) => {
+    dispatch(AttendanceActions.studentJoinedCourseSession(number));
   },
 });
 

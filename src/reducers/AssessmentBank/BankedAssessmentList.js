@@ -21,6 +21,8 @@ const BankedAssessmentList = (state = [], action) => {
       return state.map(ba => filterByTag(ba, action.tag))
     }
 
+    case 'ASSESSMENT_BANK_MOVE_TO_BANK':
+    case 'ASSESSMENT_BANK_MOVE_TO_QUEUE':
     case 'ASSESSMENT_BANK_REMOVE_TAG':
     case 'ASSESSMENT_BANK_ADD_TAG':
     case 'ASSESSMENT_BANK_SAVE_EDIT':

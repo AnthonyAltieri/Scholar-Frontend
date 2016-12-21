@@ -45,7 +45,7 @@ const Option = ({
             iconStyle={{
               color: Colors.red,
             }}
-            onClick={() => {
+            onTouchTap={() => {
               onClearClick(index)
             }}
           >

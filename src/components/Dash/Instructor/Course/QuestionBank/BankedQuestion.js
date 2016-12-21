@@ -44,11 +44,19 @@ const BankedQuestion = ({
   editQuestionClear,
   editOptionClear,
   onSaveClick,
+  onRemoveClick,
   addTagMode,
   enterAddTagMode,
   cancelAddTagMode,
   onTagSaveClick,
   onTagRemoveClick,
+  inQueue,
+  onToBankClick,
+  onToQueueClick,
+  isAssessmentActive,
+  onUseForReflectiveClick,
+  onUseForInstantClick,
+  inAssess,
 }) => {
   const isQuestionEdited = !!questionEdit;
   const isOptionsEdited = optionEditModes.filter(o => !!o).length > 0;
@@ -94,7 +102,7 @@ const BankedQuestion = ({
           <RaisedButton
             label="save"
             primary
-            onClick={() => {
+            onTouchTap={() => {
               onTagSaveClick(enteredTag.value, tags, id);
             }}
            />
@@ -139,7 +147,10 @@ const BankedQuestion = ({
           <p className="strip-label">Options</p>
           <DropdownArrow
             isOpen={isOptionsVisible}
-            onClick={onOptionsDropdownClick}
+            onClick={() => {
+              onOptionsDropdownClick()
+              console.log('onOptionsDropdownClick');
+            }}
           />
         </div>
         {!!isOptionsEdited
@@ -171,7 +182,7 @@ const BankedQuestion = ({
             editRef={(n) => {
               optionNodes = [
                 ...optionNodes,
-                n,
+                { node: n, index: o.index },
               ];
             }}
           />
@@ -182,12 +193,13 @@ const BankedQuestion = ({
       <div className="bq-actions">
         <RedRaisedButton
           label="Remove"
+          onTouchTap={() => onRemoveClick(id)}
         />
         <RaisedButton
           label="Cancel Edits"
           // labelStyle={{ color: Colors.red }}
           secondary
-          onClick={() => {
+          onTouchTap={() => {
             editOptionClear();
             editQuestionClear();
           }}
@@ -195,20 +207,26 @@ const BankedQuestion = ({
         <RaisedButton
           label="Save"
           primary
-          onClick={() => {
+          style={{
+            marginTop: 2,
+            marginBottom: 6,
+          }}
+          onTouchTap={() => {
             console.log('click')
             console.log('questionEditMode', questionEditMode);
             if (!isOptionsEdited && !questionEditMode) return;
             const questionToSave = !!questionEditMode
               ? questionEditNode.value
               : question;
-            const optionsToSave = !!isOptionsEdited
-              ? (optionsEdited.reduce((a, c, i) => (
-                !!optionEditModes[i]
-                  ? [...a, c]
-                  : [...a, options[i]]
-              ), []))
-              : options;
+            let optionsToSave = options.slice(0);
+            optionNodes.forEach((on) => {
+              optionsToSave = [
+                ...optionsToSave.slice(0, on.index),
+                on.node.value,
+                ...optionsToSave.slice(on.index + 1)
+              ]
+            })
+            console.log('optionsToSave', optionsToSave);
             onSaveClick(
               questionToSave,
               optionsToSave,
@@ -216,6 +234,52 @@ const BankedQuestion = ({
             )
           }}
         />
+        {!!inQueue
+          ? (
+            <RaisedButton
+              label="To Bank"
+              onTouchTap={onToBankClick}
+            />
+          )
+          : (
+            <RaisedButton
+              label="To Queue"
+              onTouchTap={onToQueueClick}
+            />
+          )
+        }
+        {!!inAssess
+          ? (
+            <RaisedButton
+              label="Use For Reflective"
+              disabled={!!isAssessmentActive}
+              style={{
+                marginTop: 2,
+                marginBottom: 6,
+              }}
+              onTouchTap={() => {
+                onUseForReflectiveClick(question);
+              }}
+            />
+          )
+          : null
+        }
+        {!!inAssess
+          ? (
+            <RaisedButton
+              label="Use For Instant"
+              disabled={!!isAssessmentActive}
+              style={{
+                marginTop: 2,
+                marginBottom: 6,
+              }}
+              onTouchTap={() => {
+                onUseForInstantClick(question, options);
+              }}
+            />
+          )
+          : null
+        }
       </div>
     </li>
   );

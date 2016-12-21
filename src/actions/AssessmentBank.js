@@ -148,3 +148,13 @@ export const cancelAddTagMode = (id) => ({
   type: 'ASSESSMENT_BANK_CANCEL_ADD_TAG_MODE',
   id,
 });
+
+export const moveToBank = (id) => ({
+  type: 'ASSESSMENT_BANK_MOVE_TO_BANK',
+  id,
+});
+
+export const moveToQueue = (id) => ({
+  type: 'ASSESSMENT_BANK_MOVE_TO_QUEUE',
+  id,
+});

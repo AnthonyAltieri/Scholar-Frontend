@@ -65,6 +65,7 @@ function setUpSockets(props) {
     deactivateAssessment,
     reflectiveStartReview,
     socketConnect,
+    addEndorse,
     removeEndorse,
     userId,
   } = props;

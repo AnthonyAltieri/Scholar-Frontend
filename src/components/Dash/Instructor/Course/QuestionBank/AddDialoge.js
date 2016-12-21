@@ -121,7 +121,7 @@ const AddDialoge = ({
             <Option
               key={`${o.index}-${o.content}`}
               editContentId={`${o.index}-option`}
-              ref={(n) => {
+              editRef={(n) => {
                 optionNodes = [
                   ...optionNodes,
                   document.getElementById(`${o.index}-option`),

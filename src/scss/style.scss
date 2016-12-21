@@ -1022,7 +1022,7 @@ $nav-btn-height: 40px;
   overflow-x: hidden;
   top: 0;
   bottom: 0;
-  padding: 124px 0 4px 0;
+  padding: 180px 0 4px 0;
   position: absolute;
   @extend .c, .card;
 }
@@ -1036,7 +1036,7 @@ $nav-btn-height: 40px;
 
 .question-bank {
   .bank-section {
-    width: 72px;
+    width: 120px;
     text-align: center;
     margin: 4px 0;
     border-radius: 14px;
@@ -1162,9 +1162,9 @@ $nav-btn-height: 40px;
 }
 .floating-heading {
   position: fixed;
-  top: 0;
+  top: 68px;
   right: 4px;
-  left: 128px;
+  left: 4px;
   z-index: 10;
 
   .partition-half {
@@ -1232,6 +1232,7 @@ $nav-btn-height: 40px;
     .bq-actions {
       padding: 4px 0;
       width: 94% !important;
+      flex-wrap: wrap;
       @extend .r-between;
     }
     .cancel {

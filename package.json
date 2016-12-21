@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack-dashboard -c -- node server.js"
+    "start": "webpack-dashboard -c -- node server.js",
+    "build-prod": "webpack -p --define process.env.NODE_ENV='\"production\"' --progress --colors"
   },
   "author": "",
   "license": "ISC",

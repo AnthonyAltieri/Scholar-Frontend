@@ -83,6 +83,8 @@ class QuestionBank extends Component {
       saveTag,
       removeTag,
       remove,
+      moveToBank,
+      moveToQueue,
     } = this.props;
 
     return (
@@ -93,9 +95,6 @@ class QuestionBank extends Component {
           }
           onSaveClick={async function(question, options, tags) {
             const created = new Date();
-            console.log('question', question);
-            console.log('options', options);
-            console.log('tags', tags);
             try {
               const payload = await BankedAssessmentApi
                 .create(
@@ -175,7 +174,7 @@ class QuestionBank extends Component {
           >
             <div className="half-sliding-strip left">
               <BankedQuestionList
-                bankedAssessments={visible}
+                bankedAssessments={visible.filter(ba => !ba.inQueue)}
                 onQuestionClick={(questionEditMode, baId) => {
                   if (!questionEditMode) {
                     editQuestionMode(baId);
@@ -268,11 +267,162 @@ class QuestionBank extends Component {
                     toastr.error('Something went wrong please try again');
                   }
                 }}
+                onToBankClick={async (id) => {
+                  try {
+                    const payload = await BankedAssessmentApi.moveToBank(id)
+                    if (!!payload.error) {
+                      toastr.error('Something went wrong please try again');
+                      return;
+                    }
+                    moveToBank(id);
+                  } catch (e) {
+                    console.error('[ERROR] onToBankClick', e);
+                    toastr.error('Something went wrong please try again');
+                  }
+                }}
+                onToQueueClick={async (id) => {
+                  try {
+                    const payload = await BankedAssessmentApi.moveToQueue(id)
+                    if (!!payload.error) {
+                      toastr.error('Something went wrong please try again');
+                      return;
+                    }
+                    moveToQueue(id);
+                  } catch (e) {
+                    console.error('[ERROR] onToBankQueue', e);
+                    toastr.error('Something went wrong please try again');
+                  }
+
+                }}
+
               />
             </div>
             <div
               className="half-sliding-strip right"
             >
+              <BankedQuestionList
+                bankedAssessments={visible.filter(ba => !!ba.inQueue)}
+                onQuestionClick={(questionEditMode, baId) => {
+                  if (!questionEditMode) {
+                    editQuestionMode(baId);
+                    return;
+                  }
+                }}
+                onOptionsDropdownClick={(isOptionsVisible, baId) => {
+                  if (!!isOptionsVisible) {
+                    hideOptions(baId);
+                    return;
+                  }
+                  showOptions(baId);
+                }}
+                onOptionClick={(isOptionInEditMode, index, baId) => {
+                  if (!isOptionInEditMode) {
+                    editOptionMode(index, baId)
+                    return;
+                  }
+                }}
+                onOptionClearClick={(index, baId) => {
+                  BankedAssessment.clearOption(index, baId);
+                  removeOption(index, baId)
+                }}
+                editOptionClear={editOptionClear}
+                editQuestionClear={editQuestionClear}
+                enterAddTagMode={enterAddTagMode}
+                cancelAddTagMode={cancelAddTagMode}
+                onTagSaveClick={async function(content, tags, baId) {
+                  try {
+                    const payload = await BankedAssessmentApi
+                      .editTags([...tags, content], baId);
+                    const { error } = payload;
+                    if (!!error) {
+                      toastr.error('Something went wrong please try again');
+                      return;
+                    }
+                    saveTag(baId, content)
+                  } catch(e) {
+                    console.error('[ERROR] onTagSaveClick', e);
+                    toastr.error('Something went wrong please try again');
+                  }
+                }}
+                onTagRemoveClick={async function(index, tags, baId) {
+                  try {
+                    const payload = await BankedAssessmentApi
+                      .editTags(
+                        [
+                          ...tags.slice(0, index),
+                          ...tags.slice(index + 1),
+                        ],
+                        baId
+                      );
+                    const { error } = payload;
+                    if (!!error) {
+                      toastr.error('Something went wrong please try again');
+                      return;
+                    }
+                    removeTag(baId, index);
+                  } catch (e) {
+                    console.error('[ERROR] onTagRemoveClick', e);
+                    toastr.error('Something went wrong please try again');
+                  }
+                }}
+                onRemoveClick={async function(baId) {
+                  try {
+                    const payload = await BankedAssessmentApi.remove(baId);
+                    if (!!payload.error) {
+                      toastr.error('Something went wrong please try again');
+                      return;
+                    }
+                    remove(baId);
+
+                  } catch (e) {
+                    console.error('[ERROR] onRemoveClick', e);
+                    toastr.error('Something went wrong please try again');
+                  }
+                }}
+                onSaveClick={async function(question, options, baId) {
+                  try {
+                    const payload = await BankedAssessmentApi
+                      .editById(baId, question, options);
+                    const { error } = payload;
+                    if (!!error) {
+                      toastr.error('Something went wrong please try again');
+                      return;
+                    }
+                    saveEdit(baId, payload.question, payload.options);
+                  } catch (e) {
+                    console.error('[ERROR] onSaveClick', e);
+                    toastr.error('Something went wrong please try again');
+                  }
+                }}
+                onToBankClick={async (id) => {
+                  try {
+                    const payload = await BankedAssessmentApi.moveToBank(id)
+                    if (!!payload.error) {
+                      toastr.error('Something went wrong please try again');
+                      return;
+                    }
+                    moveToBank(id);
+                  } catch (e) {
+                    console.error('[ERROR] onToBankClick', e);
+                    toastr.error('Something went wrong please try again');
+                  }
+                }}
+                onToQueueClick={async (id) => {
+                  try {
+                    const payload = await BankedAssessmentApi.moveToQueue(id)
+                    if (!!payload.error) {
+                      toastr.error('Something went wrong please try again');
+                      return;
+                    }
+                    moveToQueue(id);
+                  } catch (e) {
+                    console.error('[ERROR] onToBankQueue', e);
+                    toastr.error('Something went wrong please try again');
+                  }
+
+                }}
+
+              />
             </div>
           </div>
         </div>
@@ -372,6 +522,12 @@ const dispatchToProps = (dispatch) => ({
   },
   remove: (id) => {
     dispatch(AssessmentBankActions.remove(id));
+  },
+  moveToBank: (id) => {
+    dispatch(AssessmentBankActions.moveToBank(id));
+  },
+  moveToQueue: (id) => {
+    dispatch(AssessmentBankActions.moveToQueue(id));
   },
 });
 

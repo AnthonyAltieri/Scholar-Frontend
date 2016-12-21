@@ -8,31 +8,6 @@ import NavBtn from './NavBtn';
 const IMG_PATH = '../../../../img';
 // require('../../../../img')
 
-const ActiveBar = ({
-  isCourseSessionActive,
-  showOverlay,
-}) => {
-    return (
-      <div className="c-center">
-        <p
-          style={{
-            margin: "4px auto",
-            textAlign: "center",
-          }}
-        >
-          Course Session
-        </p>
-        <div
-          className={'active-bar' + (isCourseSessionActive? '' : ' inactive')}
-        >
-          <p className="text">
-            {isCourseSessionActive? 'ACTIVE' : 'INACTIVE'}
-          </p>
-        </div>
-
-      </div>
-    );
-};
 
 const CourseNav = ({
   navigate,

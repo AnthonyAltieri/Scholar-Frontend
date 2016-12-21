@@ -6,6 +6,8 @@ import { toastr } from 'react-redux-toastr';
 import StatBlock from '../StatBlock';
 import * as InstantActions from '../../../../../actions/Assess/Instant'
 //import * as ReflectiveActions from '../../../../../actions/Assess/Reflective'
+import * as BankedAssessmentApi from '../../../../../api/BankedAssessment';
+import * as AssessmentBankActions from '../../../../../actions/AssessmentBank';
 import * as AssessActions from '../../../../../actions/Assess/Assess'
 import * as InstantApi from '../../../../../api/Assessment/Instant';
 import * as ReflectiveApi from '../../../../../api/Assessment/Reflective';
@@ -13,6 +15,7 @@ import * as CourseSessionApi from '../../../../../api/CourseSession';
 import * as ReflectiveActions from '../../../../../actions/Assess/Reflelctive';
 import AssessmentViewer from './AssessmentViewer';
 import InstantAssessmentGraph from './Instant/Graph'
+import BankedQuestionList from '../QuestionBank/BankedQuestionList';
 
 class Assess extends Component {
   async componentDidMount() {
@@ -97,7 +100,38 @@ class Assess extends Component {
       startReflectiveReview,
       reflectiveNumberAnswered,
       reflectiveNumberReviewed,
+      visible,
+      bankId,
+      removeOption,
+      editOptionMode,
+      editQuestionMode,
+      hideOptions,
+      showOptions,
+      showOverlay,
+      hideOverlay,
+      isOverlayVisible,
+      overlayType,
+      clearAddDialoge,
+      addOptionAddDialoge,
+      addOptions,
+      removeOptionAddDialoge,
+      addTags,
+      addTagAddDialoge,
+      removeTagAddDialoge,
+      addToAssessmentBank,
+      editOptionClear,
+      editQuestionClear,
+      enterAddTagMode,
+      cancelAddTagMode,
+      saveEdit,
+      saveTag,
+      removeTag,
+      remove,
+      moveToBank,
+      moveToQueue,
+      numberInstantAssessmentAnswers,
     } = this.props;
+    const isAssessmentActive = !!activeAssessmentType;
 
 
     return (
@@ -130,7 +164,10 @@ class Assess extends Component {
                   <div>
                     <StatBlock
                       name="Answered"
-                      number={reflectiveNumberAnswered}
+                      number={!!isInstantActive
+                        ? numberInstantAssessmentAnswers
+                        : reflectiveNumberAnswered
+                      }
                       isMini
                     />
                   </div>
@@ -157,9 +194,172 @@ class Assess extends Component {
             className="half-pane"
             style={{
               marginBottom: '1%',
+              overflowY: 'auto',
             }}
           >
-            Assessment Bank
+              <BankedQuestionList
+                inAssess
+                isAssessmentActive={isAssessmentActive}
+                onUseForReflectiveClick={async (question) => {
+                  try {
+                    const payload = await ReflectiveApi
+                      .create(
+                        courseId,
+                        courseSessionId,
+                        userId,
+                        question,
+                      );
+                    if (!!payload.error) {
+                      toastr.error('Something went wrong please try again');
+                      return;
+                    }
+                    activateReflective();
+                  } catch (e) {
+                    console.error('[ERROR] onUseForReflectiveClick', e);
+                  }
+                }}
+                onUseForInstantClick={async (question, options) => {
+                  try {
+                    const payload = await InstantApi.create(
+                      courseId,
+                      courseSessionId,
+                      userId,
+                      question,
+                      options,
+                      correctOption,
+                    );
+                    if (!!payload.error) {
+                      toastr.error('Something went wrong please try again');
+                      return;
+                    }
+                    activateInstant(payload.instantAssessmentId);
+                  } catch (e) {
+                    console.error('[ERROR] onStartClick', e);
+                    toastr.error('Something went wrong please try again');
+                  }
+                }}
+                bankedAssessments={visible.filter(ba => !!ba.inQueue)}
+                onQuestionClick={(questionEditMode, baId) => {
+                  if (!questionEditMode) {
+                    editQuestionMode(baId);
+                    return;
+                  }
+                }}
+                onOptionsDropdownClick={(isOptionsVisible, baId) => {
+                  console.log("isOptionsVisible", isOptionsVisible);
+                  if (!!isOptionsVisible) {
+                    hideOptions(baId);
+                    return;
+                  }
+                  showOptions(baId);
+                }}
+                onOptionClick={(isOptionInEditMode, index, baId) => {
+                  if (!isOptionInEditMode) {
+                    editOptionMode(index, baId)
+                    return;
+                  }
+                }}
+                onOptionClearClick={(index, baId) => {
+                  BankedAssessment.clearOption(index, baId);
+                  removeOption(index, baId)
+                }}
+                editOptionClear={editOptionClear}
+                editQuestionClear={editQuestionClear}
+                enterAddTagMode={enterAddTagMode}
+                cancelAddTagMode={cancelAddTagMode}
+                onTagSaveClick={async function(content, tags, baId) {
+                  try {
+                    const payload = await BankedAssessmentApi
+                      .editTags([...tags, content], baId);
+                    const { error } = payload;
+                    if (!!error) {
+                      toastr.error('Something went wrong please try again');
+                      return;
+                    }
+                    saveTag(baId, content)
+                  } catch(e) {
+                    console.error('[ERROR] onTagSaveClick', e);
+                    toastr.error('Something went wrong please try again');
+                  }
+                }}
+                onTagRemoveClick={async function(index, tags, baId) {
+                  try {
+                    const payload = await BankedAssessmentApi
+                      .editTags(
+                        [
+                          ...tags.slice(0, index),
+                          ...tags.slice(index + 1),
+                        ],
+                        baId
+                      );
+                    const { error } = payload;
+                    if (!!error) {
+                      toastr.error('Something went wrong please try again');
+                      return;
+                    }
+                    removeTag(baId, index);
+                  } catch (e) {
+                    console.error('[ERROR] onTagRemoveClick', e);
+                    toastr.error('Something went wrong please try again');
+                  }
+                }}
+                onRemoveClick={async function(baId) {
+                  try {
+                    const payload = await BankedAssessmentApi.remove(baId);
+                    if (!!payload.error) {
+                      toastr.error('Something went wrong please try again');
+                      return;
+                    }
+                    remove(baId);
+
+                  } catch (e) {
+                    console.error('[ERROR] onRemoveClick', e);
+                    toastr.error('Something went wrong please try again');
+                  }
+                }}
+                onSaveClick={async function(question, options, baId) {
+                  try {
+                    const payload = await BankedAssessmentApi
+                      .editById(baId, question, options);
+                    const { error } = payload;
+                    if (!!error) {
+                      toastr.error('Something went wrong please try again');
+                      return;
+                    }
+                    saveEdit(baId, payload.question, payload.options);
+                  } catch (e) {
+                    console.error('[ERROR] onSaveClick', e);
+                    toastr.error('Something went wrong please try again');
+                  }
+                }}
+                onToBankClick={async (id) => {
+                  try {
+                    const payload = await BankedAssessmentApi.moveToBank(id)
+                    if (!!payload.error) {
+                      toastr.error('Something went wrong please try again');
+                      return;
+                    }
+                    moveToBank(id);
+                  } catch (e) {
+                    console.error('[ERROR] onToBankClick', e);
+                    toastr.error('Something went wrong please try again');
+                  }
+                }}
+                onToQueueClick={async (id) => {
+                  try {
+                    const payload = await BankedAssessmentApi.moveToQueue(id)
+                    if (!!payload.error) {
+                      toastr.error('Something went wrong please try again');
+                      return;
+                    }
+                    moveToQueue(id);
+                  } catch (e) {
+                    console.error('[ERROR] onToBankQueue', e);
+                    toastr.error('Something went wrong please try again');
+                  }
+
+                }}
+              />
           </div>
           <div
             className="half-pane"
@@ -192,6 +392,14 @@ function getInstantAssessmentAnswers(answers = []) {
 const stateToProps = (state) => ({
   userId: state.User.id,
   courseId: state.Course.id,
+  bankId: state.AssessmentBank.id,
+  addOptions: !!state.AssessmentBank.add
+    ? state.AssessmentBank.add.options
+    : [],
+  addTags: !!state.AssessmentBank.add
+    ? state.AssessmentBank.add.tags
+    : [],
+  visible: state.AssessmentBank.visible,
   courseSessionId: state.Course.activeCourseSessionId,
   isCourseSessionActive: !!state.Course.activeCourseSessionId,
   activeAssessmentType: state.Assess.activeType,
@@ -204,6 +412,7 @@ const stateToProps = (state) => ({
   instantAssessmentAnswers: getInstantAssessmentAnswers(
     state.Assess.Instant.answers
   ),
+  numberInstantAssessmentAnswers: state.Assess.Instant.answers.length || 0,
   hasReviewStarted: !!state.Assess.Reflective.hasStartedReview,
   reflectiveNumberAnswered: state.Assess.Reflective.numberAnswers,
   reflectiveNumberReviewed: state.Assess.Reflective.numberReviews,
@@ -266,6 +475,80 @@ const dispatchToProps = (dispatch) => ({
   },
   startReflectiveReview: () => {
     dispatch(ReflectiveActions.startReview([]));
+  },
+  removeOption: (index, id) => {
+    dispatch(AssessmentBankActions.removeOption(id, index))
+  },
+  editOptionMode: (index, id) => {
+    dispatch(AssessmentBankActions.editOptionMode(id, index))
+  },
+  editQuestionMode: (id) => {
+    dispatch(AssessmentBankActions.editQuestionMode(id))
+  },
+  hideOptions: (id) => {
+    dispatch(AssessmentBankActions.hideOptions(id))
+  },
+  showOptions: (id) => {
+    dispatch(AssessmentBankActions.showOptions(id))
+  },
+  receivedBankedAssessments: (bankedAssessments) => {
+    dispatch(AssessmentBankActions.retrieved(bankedAssessments));
+  },
+  clearAddDialoge: () => {
+    dispatch(AssessmentBankActions.addClear());
+  },
+  addOptionAddDialoge: () => {
+    dispatch(AssessmentBankActions.addAnotherOption());
+  },
+  removeOptionAddDialoge: (options) => {
+    dispatch(AssessmentBankActions.addRemoveOption(options));
+  },
+  addTagAddDialoge: (tag) => {
+    dispatch(AssessmentBankActions.addAnotherTag(tag))
+  },
+  removeTagAddDialoge: (tags) => {
+    dispatch(AssessmentBankActions.addRemoveTag(tags));
+  },
+  addToAssessmentBank: (id, tags, question, options, created) => {
+    dispatch(AssessmentBankActions
+      .add(
+          id,
+          tags,
+          question,
+          options,
+          created
+        )
+    )
+  },
+  editOptionClear: (id) => {
+    dispatch(AssessmentBankActions.editOptionClear(id));
+  },
+  editQuestionClear: (id) => {
+    dispatch(AssessmentBankActions.editQuestionClear(id))
+  },
+  saveEdit: (id, question, options) => {
+    dispatch(AssessmentBankActions.saveEdit(id, question, options));
+  },
+  enterAddTagMode: (id) => {
+    dispatch(AssessmentBankActions.enterAddTagMode(id));
+  },
+  cancelAddTagMode: (id) => {
+    dispatch(AssessmentBankActions.cancelAddTagMode(id));
+  },
+  saveTag: (id, tag) => {
+    dispatch(AssessmentBankActions.addTag(id, tag));
+  },
+  removeTag: (id, index) => {
+    dispatch(AssessmentBankActions.removeTag(id, index));
+  },
+  remove: (id) => {
+    dispatch(AssessmentBankActions.remove(id));
+  },
+  moveToBank: (id) => {
+    dispatch(AssessmentBankActions.moveToBank(id));
+  },
+  moveToQueue: (id) => {
+    dispatch(AssessmentBankActions.moveToQueue(id));
   },
 });
 

@@ -3,8 +3,8 @@
  */
 
 const SERVER_PREFIX = process.NODE_ENV === 'production'
-  ? 'https://scholarapp.xyz'
-  : 'http://localhost:8000';
+  ? 'http://scholarapp.xyz'
+  : 'http://localhost:7000';
 
 export const send = (type, url, params = {}, withCredentials = true) => {
   return new Promise((resolve, reject) => {

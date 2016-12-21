@@ -101,7 +101,7 @@ const BankedAssessment = (state = {}, action) => {
         questionEdit: null,
         optionsEdited: state.options.map(o => null),
         editQuestionMode: false,
-        optionsEditModes: state.options.map(o => false),
+        optionEditModes: state.options.map(o => false),
       }
     }
 
@@ -111,9 +111,9 @@ const BankedAssessment = (state = {}, action) => {
         question: action.question,
         options: action.options,
         questionEdit: null,
-        optionsEdited: state.options.map(o => false),
+        optionsEdited: action.options.map(o => null),
         editQuestionMode: false,
-        optionsEditModes: state.options.map(o => false),
+        optionEditModes: action.options.map(o => false),
       }
     }
     case 'ASSESSMENT_BANK_EDIT_QUESTION_MODE': {
@@ -200,6 +200,24 @@ const BankedAssessment = (state = {}, action) => {
             ...state.tags.slice(0, action.index),
             ...state.tags.slice(action.index + 1),
           ]
+        }
+        : state;
+    }
+
+    case 'ASSESSMENT_BANK_MOVE_TO_BANK': {
+      return state.id === action.id
+        ? {
+          ...state,
+          inQueue: false,
+        }
+        : state;
+    }
+
+    case 'ASSESSMENT_BANK_MOVE_TO_QUEUE': {
+      return state.id === action.id
+        ? {
+          ...state,
+          inQueue: true,
         }
         : state;
     }

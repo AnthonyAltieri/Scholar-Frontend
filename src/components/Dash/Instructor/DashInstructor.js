@@ -211,7 +211,7 @@ class DashInstructor extends Component {
           logOut={logOut}
         /> */}
         <AppBar
-          title={`Scholar ${!!abbreviation ? ('- ' + abbreviation) : ''}`}
+          title={`Scholar ${!!abbreviation ? ('> ' + abbreviation) : ''}`}
           onLeftIconButtonTouchTap={() => openDrawer()}
         />
         <Drawer

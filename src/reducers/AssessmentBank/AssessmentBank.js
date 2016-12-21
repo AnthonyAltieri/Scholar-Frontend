@@ -40,6 +40,8 @@ const initialState = {
   courseId: null,
   all: BankedAssessmentList(undefined, {}),
   visible: BankedAssessmentList(undefined, {}),
+  bank: BankedAssessmentList(undefined, {}),
+  queue: BankedAssessmentList(undefined, {}),
   filter: 'ALL',
 };
 
@@ -63,6 +65,15 @@ const AssessmentBank = (state = initialState, action) => {
           options: [],
           tags: [],
         }
+      }
+    }
+
+    case 'ASSESSMENT_BANK_MOVE_TO_BANK':
+    case 'ASSESSMENT_BANK_MOVE_TO_QUEUE': {
+      return {
+        ...state,
+        all: BankedAssessmentList(state.all, action),
+        visible: BankedAssessmentList(state.visible, action),
       }
     }
 

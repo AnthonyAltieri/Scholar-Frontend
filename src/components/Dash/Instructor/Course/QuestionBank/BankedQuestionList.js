@@ -12,6 +12,7 @@ const BankedQuestionList = ({
   onOptionsDropdownClick,
   onOptionClick,
   onOptionClearClick,
+  onRemoveClick,
   editOptionClear,
   editQuestionClear,
   enterAddTagMode,
@@ -19,6 +20,12 @@ const BankedQuestionList = ({
   onSaveClick,
   onTagSaveClick,
   onTagRemoveClick,
+  onToBankClick,
+  onToQueueClick,
+  isAssessmentActive,
+  onUseForReflectiveClick,
+  onUseForInstantClick,
+  inAssess,
 }) => (
   <ul className="banked-question-list">
     {bankedAssessments.map((bq) => (
@@ -27,11 +34,16 @@ const BankedQuestionList = ({
           id={bq.id}
           question={bq.question}
           options={bq.options || []}
+          inAssess={!!inAssess}
           tags={bq.tags}
+          inQueue={bq.inQueue}
           questionEdit={bq.questionEdit}
           optionsEdited={bq.optionsEdited || []}
           isOptionsVisible={bq.isOptionsVisible || false}
           questionEditMode={bq.editQuestionMode || false}
+          isAssessmentActive={isAssessmentActive}
+          onUseForReflectiveClick={onUseForReflectiveClick}
+          onUseForInstantClick={onUseForInstantClick}
           optionEditModes={bq.optionEditModes ||
             (!!bq.options ? bq.options.map(o => false) : [])
           }
@@ -39,6 +51,7 @@ const BankedQuestionList = ({
             onQuestionClick(bq.questionEditMode, bq.id);
           }}
           onOptionsDropdownClick={() => {
+            console.log('level 2')
             onOptionsDropdownClick(bq.isOptionsVisible, bq.id);
           }}
           onOptionClick={(index) => {
@@ -52,6 +65,7 @@ const BankedQuestionList = ({
             onOptionClearClick(index, bq.id)
           }}
           onSaveClick={onSaveClick}
+          onRemoveClick={onRemoveClick}
           editOptionClear={() => editOptionClear(bq.id)}
           editQuestionClear={() => editQuestionClear(bq.id)}
           addTagMode={bq.addTagMode}
@@ -59,6 +73,8 @@ const BankedQuestionList = ({
           cancelAddTagMode={cancelAddTagMode}
           onTagSaveClick={onTagSaveClick}
           onTagRemoveClick={onTagRemoveClick}
+          onToBankClick={() => onToBankClick(bq.id)}
+          onToQueueClick={() => onToQueueClick(bq.id)}
         />
       ))
     }

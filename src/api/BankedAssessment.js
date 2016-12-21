@@ -6,7 +6,9 @@ const routes = {
   GET_BY_BANKID: '/api/bankedAssessment/get/bankId',
   CLEAR_OPTION: '/api/bankedAssessment/clear/option',
   EDIT_TAGS: '/api/bankedAssessment/edit/tags/id',
-  REMOVE: '/api/bankedAssessment/remove/id'
+  REMOVE: '/api/bankedAssessment/remove/id',
+  MOVE_TO_BANK: '/api/bankedAssessment/moveTo/bank',
+  MOVE_TO_QUEUE: '/api/bankedAssessment/moveTo/queue',
 };
 
 export async function create(
@@ -95,6 +97,24 @@ export async function remove(bankedAssessmentId) {
     return await post(routes.REMOVE, { bankedAssessmentId });
   } catch (e) {
     console.error('[ERROR] BankedAssessment Api remove', e);
+    return { error: true };
+  }
+}
+
+export async function moveToBank(id) {
+  try {
+    return await post(routes.MOVE_TO_BANK, { id });
+  } catch (e) {
+    console.error('[ERROR] BankedAssessment Api moveToBank', e);
+    return { error: true };
+  }
+}
+
+export async function moveToQueue(id) {
+  try {
+    return await post(routes.MOVE_TO_QUEUE, { id });
+  } catch (e) {
+    console.error('[ERROR] BankedAssessment Api moveToQueue', e);
     return { error: true };
   }
 }
