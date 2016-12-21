@@ -331,7 +331,7 @@ class DashStudent extends Component {
               // TODO: account for student leaving
               hideOverlay();
               closeDrawer();
-              goToCourses();
+              goToCourses(userId);
             }}
             onNoClick={() => {
               hideOverlay();
@@ -518,14 +518,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     receivedCourses: (courses) => {
 
     },
-    goToCourses: () => {
+    goToCourses: (userId) => {
       dispatch(push('/dash/courses'))
       dispatch(DashStudentActions.setDashMode('QUESTIONS'))
       window.clearInterval(window.intervalGetAlerts);
       window.getCoursesInterval = window.setInterval(() => {
         try {
           handleGetCourses(
-            ownProps.userId,
+            userId,
             (courses) => dispatch(
               CoursesActions.receivedCourses(courses)
             )
