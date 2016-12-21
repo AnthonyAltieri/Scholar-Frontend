@@ -109,7 +109,7 @@ const AssessmentBox = ({
           fullWidth
           style={{
           }}
-          onClick={() => {
+          onTouchTap={() => {
             activateAssessmentMode();
           }}
         />
