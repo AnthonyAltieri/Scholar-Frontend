@@ -134,6 +134,13 @@ class Assess extends Component {
     } = this.props;
     const isAssessmentActive = !!activeAssessmentType;
 
+    let answers = 0;
+    if (isInstantActive) {
+      answers = numberInstantAssessmentAnswers;
+    }
+    if (isReflectiveActive) {
+      answers = reflectiveNumberAnswered;
+    };
 
     return (
       <div className="assess r-between">
@@ -165,10 +172,7 @@ class Assess extends Component {
                   <div>
                     <StatBlock
                       name="Answered"
-                      number={!!isInstantActive
-                        ? numberInstantAssessmentAnswers
-                        : reflectiveNumberAnswered
-                      }
+                      number={answers}
                       isMini
                     />
                   </div>
@@ -403,7 +407,7 @@ class Assess extends Component {
                           fontWeight: 700,
                         }}
                       >
-                      {r.reviews.filter(r => r.type === 'CORRECT').length}
+                      {r.reviews.filter(r => r.type === 'AGREE').length}
                       </p>
                     </div>
                     <div className="c-center">
@@ -415,7 +419,7 @@ class Assess extends Component {
                           fontWeight: 700,
                         }}
                       >
-                      {r.reviews.filter(r => r.type !== 'CORRECT').length}
+                      {r.reviews.filter(r => r.type !== 'DISAGREE').length}
                       </p>
                     </div>
                   </div>

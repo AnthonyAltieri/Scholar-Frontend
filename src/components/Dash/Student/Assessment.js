@@ -218,7 +218,7 @@ const ReflectiveReview = ({
                     courseSessionId,
                     courseId,
                     userId,
-                    'CORRECT',
+                    'AGREE',
                     r.id,
                   )
                 if (!!payload.error) {
@@ -238,7 +238,7 @@ const ReflectiveReview = ({
                     courseSessionId,
                     courseId,
                     userId,
-                    'CORRECT',
+                    'DISAGREE',
                     r.id,
                   )
                 if (!!payload.error) {
