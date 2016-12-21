@@ -130,6 +130,7 @@ class Assess extends Component {
       moveToBank,
       moveToQueue,
       numberInstantAssessmentAnswers,
+      answersWithReviews,
     } = this.props;
     const isAssessmentActive = !!activeAssessmentType;
 
@@ -367,9 +368,57 @@ class Assess extends Component {
               marginTop: '1%',
             }}
           >
-            <div id="instantGraph"> 
-              <InstantAssessmentGraph /> 
-            </div>
+            {mode === 'INSTANT'
+            ? (
+              <div id="instantGraph"> 
+                <InstantAssessmentGraph /> 
+              </div>
+            )
+            : (
+              <ul
+                style={{
+                  padding: 8,
+                  overflowY: 'auto',
+                }}
+              >
+                {answersWithReviews.map((r) => (
+                  <div className="r-between">
+                    <p
+                      className="reflective-answer-content"
+                      style={{
+                        padding: '0 9px',
+                      }}
+                    >
+                      {r.content}
+                    </p>
+                    <div className="c-center">
+                      <p style={{ margin: 3 }}>Agree</p>
+                      <p
+                        style={{
+                          fontSize: 32,
+                          margin: 0,
+                          fontWeight: 700,
+                        }}
+                      >
+                      {r.reviews.filter(r => r.type === 'AGREE').length}
+                      </p>
+                    </div>
+                    <div className="c-center">
+                      <p style={{ margin: 3 }}>Disagree</p>
+                      <p
+                        style={{
+                          fontSize: 32,
+                          margin: 0,
+                          fontWeight: 700,
+                        }}
+                      >
+                      {r.reviews.filter(r => r.type === 'DISAGREE').length}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
       </div>
@@ -416,6 +465,7 @@ const stateToProps = (state) => ({
   hasReviewStarted: !!state.Assess.Reflective.hasStartedReview,
   reflectiveNumberAnswered: state.Assess.Reflective.numberAnswers,
   reflectiveNumberReviewed: state.Assess.Reflective.numberReviews,
+  answersWithReviews: state.Assess.Reflective.answersWithReviews || [],
 });
 
 const dispatchToProps = (dispatch) => ({

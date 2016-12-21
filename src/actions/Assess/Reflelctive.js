@@ -28,3 +28,8 @@ export const answerReceived = () => ({
 export const answerReviewed = () => ({
   type: 'REFLECTIVE_ASSESSMENT_REVIEWED',
 });
+
+export const recievedAnswersWithReviews = (answers) => ({
+  type: 'ASSESSMENT_REFLECTIVE_RECEIVED_ANSWERS_WITH_REVIEWS',
+  answers,
+});

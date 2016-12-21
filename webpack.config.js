@@ -19,9 +19,6 @@ module.exports = {
   },
   devtool: 'eval-source-map',
   plugins: [
-    new webpack.optimize.UglifyJsPlugin({
-      comments: false,
-    }),
     new webpack.HotModuleReplacementPlugin(),
     new DashboardPlugin(),
   ],
