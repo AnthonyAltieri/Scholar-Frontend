@@ -515,7 +515,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch(setDashMode('QUESTIONS'))
     },
     receivedCourses: (courses) => {
-      dispatch(CoursesActions.receivedCourses(courses))
+
     },
     goToCourses: () => {
       dispatch(push('/dash/courses'))
@@ -523,7 +523,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       window.clearInterval(window.intervalGetAlerts);
       window.getCoursesInterval = window.setInterval(() => {
         try {
-          handleGetCourses(ownProps.userId, ownProps.receivedCourses);
+          handleGetCourses(
+            ownProps.userId,
+            dispatch(CoursesActions.receivedCourses(courses))
+          );
         } catch (e) {
           console.error('[ERROR] handleGetCourses', e);
         }
