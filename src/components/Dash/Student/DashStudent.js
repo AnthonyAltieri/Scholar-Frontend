@@ -9,6 +9,7 @@ import * as OverlayActions from '../../../actions/Overlay';
 import * as DashStudentActions from '../../../actions/DashStudent';
 import * as CourseSessionActions from '../../../actions/CourseSession'
 import * as AssessmentActions from '../../../actions/Assess/Assess'
+import * as CoursesActions from '../../../actions/Dash/Courses/Courses'
 import Content from './Content';
 import Socket from '../../../socket/Socket';
 import Events from '../../../socket/Events';
@@ -37,6 +38,7 @@ import { createAlert } from '../../../api/Alert'
 import { joinAttendance, getNumberInAttendance } from '../../../api/CourseSession'
 import { toastr } from 'react-redux-toastr';
 import * as AttendanceActions from '../../../actions/Attendance'
+import { getByUser as getCoursesByUser } from '../../../api/Courses';
 
 const fabAskStyle = {
   position: "absolute",
@@ -51,6 +53,24 @@ const fabAlertStyle = {
   right: "24px",
   zIndex: "10",
 };
+
+async function handleGetCourses(
+  userId,
+  receivedCourses
+) {
+  try {
+    const { error, courses } = await getCoursesByUser(userId);
+    if (!!error) {
+      console.error('[ERROR] : ', error);
+      toastr.error('Something went wrong please refresh the page');
+      return;
+    }
+    receivedCourses(courses);
+  } catch (e) {
+    console.error('[ERROR] : ', e);
+    toastr.error('Something went wrong please refresh the page');
+  }
+}
 
 function setUpSockets(props) {
   const {
@@ -296,7 +316,7 @@ class DashStudent extends Component {
               // TODO: account for student leaving
               hideOverlay();
               closeDrawer();
-              goToCourses();
+              goToCourses(userId);
             }}
             onNoClick={() => {
               hideOverlay();
@@ -480,10 +500,25 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onBackQuestionsClick: () => {
       dispatch(setDashMode('QUESTIONS'))
     },
-    goToCourses: () => {
+    receivedCourses: (courses) => {
+
+    },
+    goToCourses: (userId) => {
       dispatch(push('/dash/courses'))
       dispatch(DashStudentActions.setDashMode('QUESTIONS'))
       window.clearInterval(window.intervalGetAlerts);
+      window.getCoursesInterval = window.setInterval(() => {
+        try {
+          handleGetCourses(
+            userId,
+            (courses) => dispatch(
+              CoursesActions.receivedCourses(courses)
+            )
+          );
+        } catch (e) {
+          console.error('[ERROR] handleGetCourses', e);
+        }
+      }, 1000);
     },
     hidePrompt: () => {
       dispatch(OverlayActions.hideOverlay());

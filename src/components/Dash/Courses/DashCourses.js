@@ -93,13 +93,6 @@ class DashCourses extends Component {
     }
     setVisibilityFilter(filter);
 
-    window.getCoursesInterval = window.setInterval(() => {
-      try {
-        handleGetCourses(userId, receivedCourses);
-      } catch (e) {
-        console.error('[ERROR] handleGetCourses', e);
-      }
-    }, 1000);
     endLoading();
   }
 
@@ -120,7 +113,19 @@ class DashCourses extends Component {
       overlayType,
       onLogoutClick,
       addCourseSuccess,
+      receivedCourses,
     } = this.props;
+
+    if (!window.getCoursesInterval) {
+      window.getCoursesInterval = window.setInterval(() => {
+        try {
+          handleGetCourses(userId, receivedCourses);
+        } catch (e) {
+          console.error('[ERROR] handleGetCourses', e);
+        }
+      }, 1000);
+    }
+
     return (
       <div className="dash-courses fullscreen">
         <AddCourseDialog
