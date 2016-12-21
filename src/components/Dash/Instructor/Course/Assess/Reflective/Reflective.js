@@ -22,9 +22,6 @@ const Reflective = ({
       stage = 'Answering'
     }
   }
-  console.log('@@@@@@@@@@ hasReviewStarted', hasReviewStarted);
-  console.log('@@@@@@@@@@ otherAssessmentActive', otherAssessmentActive);
-  console.log('@@@@@@@@@@ !isActive', !isActive);
 
   return (
     <div
