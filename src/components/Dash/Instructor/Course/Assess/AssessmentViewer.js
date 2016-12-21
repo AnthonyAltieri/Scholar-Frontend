@@ -32,6 +32,7 @@ const AssessmentViewer = ({
   assessmentId,
   hasReviewStarted,
   startReflectiveReview,
+  recievedAnswersWithReviews,
 }) => {
   let instantQuestion;
   let optionNodes = [];

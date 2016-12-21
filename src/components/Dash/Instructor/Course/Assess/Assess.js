@@ -600,6 +600,10 @@ const dispatchToProps = (dispatch) => ({
   moveToQueue: (id) => {
     dispatch(AssessmentBankActions.moveToQueue(id));
   },
+  recievedAnswersWithReviews: (answersWithReviews) => {
+    dispatch(ReflectiveActions
+        .recievedAnswersWithReviews(answersWithReviews))
+  },
 });
 
 Assess = connect(
