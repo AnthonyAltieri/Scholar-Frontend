@@ -214,7 +214,10 @@ class Assess extends Component {
                       toastr.error('Something went wrong please try again');
                       return;
                     }
-                    activateReflective();
+
+                    console.log("Gonna use this for assessment " + payload.reflectiveAssessmentId);
+                    console.log(JSON.stringify(payload, null, 2));
+                    activateReflective(payload.reflectiveAssessmentId);
                   } catch (e) {
                     console.error('[ERROR] onUseForReflectiveClick', e);
                   }
@@ -400,7 +403,7 @@ class Assess extends Component {
                           fontWeight: 700,
                         }}
                       >
-                      {r.reviews.filter(r => r.type === 'AGREE').length}
+                      {r.reviews.filter(r => r.type === 'CORRECT').length}
                       </p>
                     </div>
                     <div className="c-center">
@@ -412,7 +415,7 @@ class Assess extends Component {
                           fontWeight: 700,
                         }}
                       >
-                      {r.reviews.filter(r => r.type === 'DISAGREE').length}
+                      {r.reviews.filter(r => r.type !== 'CORRECT').length}
                       </p>
                     </div>
                   </div>
