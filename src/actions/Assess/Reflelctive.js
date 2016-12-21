@@ -11,6 +11,10 @@ export const review = (reviewIndex) => ({
   reviewIndex,
 })
 
+export const studentSubmittedAnswer = () => ({
+  type: 'REFLECTIVE_STUDENT_SUBMITTED_ANSWER',
+})
+
 export const receivedAnswersToReview = (toReview) => ({
   type: 'ASSESSMENT_REFLECTIVE_RECEIVED_ANSWERS_TO_REVIEW',
   toReview,

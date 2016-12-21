@@ -419,7 +419,7 @@ class Assess extends Component {
                           fontWeight: 700,
                         }}
                       >
-                      {r.reviews.filter(r => r.type !== 'DISAGREE').length}
+                      {r.reviews.filter(r => r.type === 'DISAGREE').length}
                       </p>
                     </div>
                   </div>

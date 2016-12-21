@@ -106,6 +106,13 @@ const Reflective = (state = initialState, action) => {
       }
     }
 
+    case 'REFLECTIVE_STUDENT_SUBMITTED_ANSWER': {
+      return {
+        ...state,
+        numberAnswers: (state.numberAnswers + 1),
+      }
+    }
+
 
     default: {
       return state;

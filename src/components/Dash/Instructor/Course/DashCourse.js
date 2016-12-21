@@ -344,7 +344,7 @@ const dispatchToProps = (dispatch, ownProps) => ({
     dispatch(ReflectiveActions.reflectiveAssessmentReviewed());
   },
   reflectiveAssessmentAnswered: () => {
-    dispatch(ReflectiveActions.answered());
+    dispatch(ReflectiveActions.studentSubmittedAnswer());
   },
   addQuestion: (question) => {
     const {
