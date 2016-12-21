@@ -24,7 +24,7 @@ import Assess from './Assess/Assess';
 import QuestionBank from './QuestionBank/QuestionBank';
 import CourseSessionDialog from './CourseSessionDialog';
 import AttendanceDialog from './AttendanceDialog'
-import { getAlerts, INTERVAL_TIME } from '../../../../util/AlertGraph'
+import { getAlerts, INTERVAL_TIME, initInstructorAlertGraph } from '../../../../util/AlertGraph'
 
 
 async function handleCourseSessionStart(
@@ -178,16 +178,20 @@ class DashCourse extends Component {
       if (!error) {
         handleStudentJoinedAttendance(numberInAttendance);
       }
+      const { updateAlertGraph, alertGraph, numberAttendees } = this.props;
+      window.intervalGetAlerts =  window.setInterval( async () => {
+        try {
+          let alerts = await getAlerts(courseSessionId);
+          updateAlertGraph(alerts, numberInCourseSession, alertGraph);
+        } catch (e) {
+          console.error("[ERROR] in DashCourse Component > ComponentDidMount : " + e)
+        }
+      }, INTERVAL_TIME);
+
     }
-    const { updateAlertGraph, alertGraph, numberAttendees } = this.props;
-    window.intervalGetAlerts =  window.setInterval( async () => {
-      try {
-        let alerts = await getAlerts(courseSessionId);
-        updateAlertGraph(alerts, numberAttendees, alertGraph);
-      } catch (e) {
-        console.error("[ERROR] in DashCourse Component > ComponentDidMount : " + e)
-      }
-    }, INTERVAL_TIME);
+
+
+
   }
   componentWillUnmount() {
     Socket.disconnect();
@@ -309,7 +313,7 @@ const stateToProps = state => ({
   userId: state.User.id,
   isCourseSessionActive: !!state.Course.activeCourseSessionId,
   courseSessionId: state.Course.activeCourseSessionId,
-  alertGraph: state.Graph.Alert.graph,
+  alertGraph: !!state.Graph.Alert.graph ? state.Graph.Alert.graph : initInstructorAlertGraph(),
   numberAttendees: state.Course.Attendance.numberAttendees,
 });
 

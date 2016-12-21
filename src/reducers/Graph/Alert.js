@@ -12,10 +12,8 @@ const initialState = {
 
 const Alert = (state = initialState, action) => {
   switch (action.type) {
-    //
-    // case 'JOIN_COURSE': {
-    //
-    // }
+
+    case 'JOIN_COURSE':
     case 'ACTIVATE_COURSE': {
       return {
         ...state,

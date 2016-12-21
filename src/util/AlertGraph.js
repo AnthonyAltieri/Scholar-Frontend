@@ -5,8 +5,8 @@ import { getActiveAlerts } from '../api/Alert'
 /*
 Constants for the alert Graph initialization
  */
- export const INTERVAL_TIME = 1000;//1 request per second
-//export const INTERVAL_TIME = 10000000000;
+export const INTERVAL_TIME = 1000;//1 request per second
+// export const INTERVAL_TIME = 10000000000;
 const TOTAL_MINUTES = 10;//the amount we want to show the instructor
 const TOTAL_TIME = TOTAL_MINUTES * 60000;//convert from minutes to milliseconds
 export const NUM_DATAPOINTS = TOTAL_TIME / INTERVAL_TIME;
@@ -14,7 +14,7 @@ const STEP_SIZE = Number((TOTAL_MINUTES / NUM_DATAPOINTS));
 const COLOR_BLUE = '#7777ff';
 const COLOR_GREEN = '#42AFAC';
 const COLOR_RED = '#FC539C';
-const DEFAULT_THRESHOLD = 50;
+const DEFAULT_THRESHOLD = 30;
 
 export function initInstructorAlertGraph(currentThreshold = DEFAULT_THRESHOLD) {
   let confusionValues =  [];

@@ -89,7 +89,8 @@ function setUpSockets(props) {
     addEndorse,
     removeEndorse,
     userId,
-    studentJoinedAttendance
+    studentJoinedAttendance,
+    goToCourses,
   } = props;
   const courseSessionChannel = `private-${courseSessionId}`;
   Socket.subscribe(courseSessionChannel);
@@ -184,6 +185,11 @@ function setUpSockets(props) {
       studentJoinedAttendance(data.attendance);
     }
   );
+  Socket.bind(
+    courseSessionChannel,
+    Events.END_COURSESESSION,
+    (data) => goToCourses(userId)
+  )
 }
 
 async function handleAlertThreshold(
@@ -247,10 +253,11 @@ class DashStudent extends Component {
     //   setAlertThreshold,
     //   setAlertPercentage
     // );
+
     window.intervalGetAlerts =  window.setInterval( async () => {
       try {
         let alerts = await getAlerts(courseSessionId);
-        updateAlertGraph(alerts, attendance);
+        updateAlertGraph(alerts, 5);
       }
       catch (e) {
         console.error("[ERROR] in DashCourse Component > ComponentDidMount : " + e)
@@ -304,24 +311,9 @@ class DashStudent extends Component {
 
     const adjustedAlertPercentage = () => {
       console.log("ADJUSTED ALERT PERCENTAGE");
-
-      console.log(activeAlerts/attendance);
-      if(activeAlerts===0 && attendance===0){
-        console.log("THIS FIRST");
-        console.log(0);
-        return 0;
-      }
-      else if (!isFinite(activeAlerts/attendance)){
-        console.log("THIS SECOND");
-        console.log(0);
-        return 0;
-      }
-      else {
-        console.log("THIS LASt");
-        console.log("ALERTS : " + activeAlerts);
-        console.log("ATTENDANCE : " + attendance);
-        console.log(((activeAlerts/attendance)*100));
-        return ((activeAlerts/attendance)*100);
+      {
+        //TODO: FIX THIS LATER
+        return ((activeAlerts/5)*100);
       }
     };
         return (
