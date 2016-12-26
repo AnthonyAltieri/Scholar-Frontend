@@ -5,6 +5,7 @@
 import React from 'react';
 import Filter from '../../Section/Filter';
 import CourseList from './CourseList';
+import RaisedButton from 'material-ui/RaisedButton';
 
 function filterCourses(filter, courses) {
   switch (filter) {
@@ -33,11 +34,24 @@ const Section = ({
   joinCourse,
   filter,
   changeFilter,
+  showAddCodeDialog,
 }) => {
   return (
     <div className="full-pane card">
       <div className="header">
-        <h1 className="heading">Course List</h1>
+        <h1
+          className="heading"
+          style={{
+            marginRight: 18,
+          }}
+        >
+          Course List
+        </h1>
+        <RaisedButton
+          label="view add codes"
+          secondary
+          onTouchTap={() => showAddCodeDialog()}
+        />
       </div>
       <div className="r">
         <p className="filters-text">Filters:</p>

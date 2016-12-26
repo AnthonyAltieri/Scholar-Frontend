@@ -12,6 +12,7 @@ import Loading from './Loading';
 import Admin from './Admin';
 import Overlay from './Overlay';
 import DashStudent from './DashStudent';
+import Socket from './Socket';
 import Dash from './Dash/Dash';
 import Course from './Course';
 import Assess from './Assess/Assess';
@@ -31,6 +32,7 @@ const Root = combineReducers({
   Overlay,
   DashStudent,
   Dash,
+  Socket,
   QuestionList,
   StudentQuestionList,
   SignupInstructor,

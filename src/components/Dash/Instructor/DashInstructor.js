@@ -50,8 +50,10 @@ class DashInstructor extends Component {
     const settingsRegex = /^\/dash\/instructor\/settings/;
     const gradesRegex = /^\/dash\/instructor\/grades/;
     let menu = null;
+    let title = null;
 
     if (courseRegex.test(pathname)) {
+      title = abbreviation;
       menu = (
         <div>
           <div
@@ -150,6 +152,14 @@ class DashInstructor extends Component {
         || settingsRegex.test(pathname)
         || gradesRegex.test(pathname)
       ) {
+      title = 'Home';
+      if (homeRegex.test(pathname)) {
+        title = 'Home';
+      } else if (gradesRegex.test(pathname)) {
+        title = 'Grades';
+      } else {
+        title = 'Settings';
+      }
       menu = (
         <div>
           <div className="c-center">
@@ -196,7 +206,6 @@ class DashInstructor extends Component {
       );
     }
 
-
     return (
       <div className="dash-instructor">
         {/* <Nav
@@ -211,7 +220,7 @@ class DashInstructor extends Component {
           logOut={logOut}
         /> */}
         <AppBar
-          title={`Scholar ${!!abbreviation ? ('> ' + abbreviation) : ''}`}
+          title={title}
           onLeftIconButtonTouchTap={() => openDrawer()}
         />
         <Drawer

@@ -1,41 +1,12 @@
 const initialState = {
-  channels: {},
-}
+  connectionStatus: 'DISCONNECTED',
+};
 
 const Socket = (state = initialState, action) => {
   switch (action.type) {
-    case 'SOCKET_CONNECT': {
+    case 'SET_SOCKET_CONNECTION_STATUS': {
       return {
-        ...state,
-        pusher: action.pusher,
-      }
-    }
-
-    case 'SOCKET_DISCONNECT': {
-      return {
-        ...state,
-        pusher: null,
-        channels: {},
-      }
-    }
-
-    case 'ADD_CHANNEL': {
-      return {
-        ...state,
-        channels: {
-          ...channels,
-          [action.name]: action.value,
-        }
-      }
-    }
-
-    case 'REMOVE_CHANNEL': {
-      return {
-        ...state,
-        channels: {
-          ...channels,
-          [action.name]: null,
-        }
+        connectionStatus: action.connectionStatus,
       }
     }
 
@@ -43,6 +14,6 @@ const Socket = (state = initialState, action) => {
       return state;
     }
   }
-}
+};
 
 export default Socket;

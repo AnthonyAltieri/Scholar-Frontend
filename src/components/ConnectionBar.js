@@ -1,0 +1,102 @@
+
+import React, { Component } from 'react';
+import Socket from '../socket/Socket';
+import Events from '../socket/Events';
+
+function reconnectDisconnectedSockets(
+  isCourseSessionActive,
+  courseSessionId,
+  eventsConnected,
+  requiredEvents,
+) {
+  // Get the array of events
+  const events = Object
+    .keys(requiredEvents)
+    .map(k => requiredEvents[k]);
+  if (isCourseSessionActive) {
+    // Calculate which events are connected
+    const notConnected = events.reduce((a, c) => {
+      if (!eventsConnected.filter(e => e === c.name)[0]) {
+        return [...a, c]
+      }
+      return a;
+    }, []);
+    Socket.bindAllEvents(notConnected, `private-${courseSessionId}`);
+  }
+}
+
+
+const secondsToMili = seconds => seconds * 1000;
+const INTERVAL_TIME = secondsToMili(5);
+
+class ConnectionBar extends Component {
+  componentDidMount() {
+    const {
+      isCourseSessionActive,
+      courseSessionId,
+      requiredEvents,
+      connectionStatus,
+      setConnectionStatus,
+    } = this.props;
+    window.socketConnectionInterval = window.setInterval(() => {
+      try {
+        // Determine new connection status
+        let newConnectionStatus = Socket
+          .determineConnectionStatus(
+            `private-${courseSessionId}`,
+            requiredEvents
+          );
+        if (process.NODE_ENV !== 'production') {
+          console.group('[SOCKET] - Status');
+          console.log('%c Old Connection Status', 'color: red',connectionStatus);
+          console.log('%c New Connection Status', 'color: blue', newConnectionStatus);
+          console.groupEnd();
+        }
+        // If that is not the same as it used to be, change it
+        if (newConnectionStatus !== connectionStatus) {
+          setConnectionStatus(newConnectionStatus);
+        }
+        if (newConnectionStatus === 'DISCONNECTED'
+          || newConnectionStatus === 'PARTIAL') {
+          reconnectDisconnectedSockets(
+            isCourseSessionActive,
+            courseSessionId,
+            Socket.getEventNamesConnected(`private-${courseSessionId}`),
+            requiredEvents,
+          )
+        }
+      } catch (e) {
+        console.error('[ERROR] socketConnectionInterval', e);
+      }
+    }, INTERVAL_TIME);
+  }
+
+  componentWillUnmount() {
+    if (!!window.socketConnectionInterval) {
+      window.clearInterval(window.socketConnectionInterval);
+    }
+  }
+
+  render() {
+    const {
+      connectionStatus,
+    } = this.props;
+    let statusText = 'disconnected';
+    if (connectionStatus === 'DISCONNECTED') {
+      statusText = 'disconnected';
+    } else if (connectionStatus === 'PARTIAL') {
+      statusText = 'partial';
+    } else if (connectionStatus === 'CONNECTED') {
+      statusText = 'connected';
+    } else {
+      throw new Error(`Invalid Socket status ${connectionStatus}`);
+    }
+    return (
+      <div className={`connection-bar ${statusText}`}>
+        <p>{statusText}</p>
+      </div>
+    );
+  }
+}
+
+export default ConnectionBar;

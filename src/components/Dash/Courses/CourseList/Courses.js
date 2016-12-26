@@ -7,7 +7,6 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 import { push } from 'react-router-redux';
 import Course from './Course';
-import Socket from '../../../../socket/Socket';
 import * as CourseActions from '../../../../actions/Course'
 import * as api from '../../../../api/Course';
 
