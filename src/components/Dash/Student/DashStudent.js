@@ -388,8 +388,6 @@ class DashStudent extends Component {
 
     const adjustedAlertPercentage = (numberInCourseSession) => {
       {
-        //TODO: FIX THIS LATER
-        console.log("Adjusting alert percentage and num in cs  :" + numberInCourseSession);
         return ((activeAlerts/numberInCourseSession)*100);
       }
     };
