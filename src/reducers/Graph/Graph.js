@@ -6,6 +6,7 @@ const initialState = {
 
 const Graph = (state = initialState, action) => {
   switch (action.type) {
+    case 'STUDENT_JOINED_COURSESESSION':
     case 'JOIN_COURSE':
     case 'ACTIVATE_COURSE':
     case 'SET_ALERT_THRESHOLD':

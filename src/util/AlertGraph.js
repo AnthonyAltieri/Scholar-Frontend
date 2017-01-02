@@ -5,8 +5,8 @@ import { getActiveAlerts } from '../api/Alert'
 /*
 Constants for the alert Graph initialization
  */
-// export const INTERVAL_TIME = 1000;//1 request per second
-export const INTERVAL_TIME = 10000000000;
+export const INTERVAL_TIME = 5000;//1 request per second
+// export const INTERVAL_TIME = 10000000000;
 const TOTAL_MINUTES = 10;//the amount we want to show the instructor
 const TOTAL_TIME = TOTAL_MINUTES * 60000;//convert from minutes to milliseconds
 export const NUM_DATAPOINTS = TOTAL_TIME / INTERVAL_TIME;
@@ -87,11 +87,6 @@ try {
 
   //slide the window forward by shifting values left one datapoint on the x axis
   for (i; i < graph.length; i++) {
-    // returnGraph[i].values = graph[i].values.slice(1, (graph[i].values.length));
-    //
-    // returnGraph[i].values.forEach((val) => {
-    //   val.x = Number(( val.x - STEP_SIZE ).toFixed(2));
-    // });
     for(let j = 0; j< returnGraph[i].values.length - 1 ; j++){
       returnGraph[i].values[j].y = returnGraph[i].values[j+1].y;
     }
@@ -112,17 +107,6 @@ try {
   returnGraph[0].values[returnGraph[0].values.length-1].y = mostRecentConfusionPercentage;
   returnGraph[1].values[returnGraph[1].values.length-1].y = currentThreshold;
 
-  // returnGraph[0].values.push({
-  //   x: 0,
-  //   y: mostRecentConfusionPercentage,
-  //   series: 0
-  // });
-  //
-  // returnGraph[1].values.push({
-  //   x: 0,
-  //   y: currentThreshold,
-  //   series: 1
-  // });
 }
 catch (e) {
   console.error("[ERROR] in AlertGraph Util > updateAlertGraph() : " + e);
