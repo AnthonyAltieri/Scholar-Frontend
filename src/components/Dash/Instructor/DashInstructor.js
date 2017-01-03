@@ -87,6 +87,18 @@ class DashInstructor extends Component {
             }
             onTouchTap={() => showOverlay('COURSE_SESSION')}
           />
+          <MenuItem primaryText="Main"
+            rightIcon={
+              <FontIcon className="material-icons">
+                dashboard
+              </FontIcon>
+            }
+            onTouchTap={() => {
+              if (mode === 'MAIN') return;
+              setMode('MAIN');
+              closeDrawer();
+            }}
+          />
           <MenuItem primaryText="Ask"
             rightIcon={
               <FontIcon className="material-icons">

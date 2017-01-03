@@ -1666,6 +1666,34 @@ $connection-bar-height: 18px;
     }
     @extend .mode-content;
   }
+  .main {
+    .filter-bar {
+      @extend .r, .fullwidth;
+    }
+    .filter {
+      width: auto !important;
+      min-width: 52px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 15px !important;
+      border-bottom: 2px solid transparent;
+    }
+    .filter.active {
+      border-bottom: 2px solid $color-bright;
+      font-weight: 400;
+    }
+    .filter-label {
+      font-weight: 300;
+    }
+    .no-questions {
+      margin-top: 82px;
+      font-size: 32px;
+      color: $color-gray;
+      text-align: center;
+    }
+
+    @extend .mode-content;
+  }
   .left-pane {
     display: inline-block;
     height: 100%;
