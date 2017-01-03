@@ -27,7 +27,7 @@ function reconnectDisconnectedSockets(
 
 
 const secondsToMili = seconds => seconds * 1000;
-const INTERVAL_TIME = secondsToMili(60);
+const INTERVAL_TIME = secondsToMili(2.5);
 
 class ConnectionBar extends Component {
   componentDidMount() {
