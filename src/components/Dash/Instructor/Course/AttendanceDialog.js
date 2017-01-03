@@ -4,6 +4,7 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import Colors from '../../../../util/Colors';
 import AttendanceCodeBox from './AttendanceCodeBox'
+import StatBlock from './StatBlock'
 import { createAttendanceCode, closeAttendance } from '../../../../api/CourseSession';
 import * as AttendanceActions from '../../../../actions/Attendance';
 import {toastr} from 'react-redux-toastr'
@@ -21,7 +22,8 @@ class AttendanceDialog extends Component {
       numberAttendees,
       courseSessionId,
       handleCodeActivated,
-      handleCodeDeactivated
+      handleCodeDeactivated,
+      numberInCourseSession
     } = this.props;
 
     let { code } = this.props;
@@ -129,11 +131,39 @@ class AttendanceDialog extends Component {
           </div>
         <div className="r-center">
           <p>
+            Present :
+          </p>
+          <p>
+            <AttendanceCodeBox code={numberInCourseSession}/>
+          </p>
+        </div>
+        <div className="r-center">
+          <p>
             Attendance :
           </p>
           <p>
             <AttendanceCodeBox code={numberAttendees}/>
           </p>
+        </div>
+
+        <div
+          className="stats r-around"
+          style={{
+            display: "flex"
+          }}
+        >
+          <StatBlock
+            name="code"
+            number={code || "INACTIVE"}
+          />
+          <StatBlock
+            name="Attendance"
+            number={numberAttendees}
+          />
+          <StatBlock
+            name="Present"
+            number={numberInCourseSession}
+          />
         </div>
 
       </Dialog>
@@ -148,6 +178,7 @@ class AttendanceDialog extends Component {
 const stateToProps = state => ({
   code : (state.Course.Attendance)?state.Course.Attendance.code : INACTIVE_CODE_TEXT,
   numberAttendees : (state.Course.Attendance)? state.Course.Attendance.numberAttendees : 0,
+  numberInCourseSession: (state.Course.Attendance) ? state.Course.Attendance.numberInCourseSession : 0,
   courseSessionId : state.Course.activeCourseSessionId
 });
 
