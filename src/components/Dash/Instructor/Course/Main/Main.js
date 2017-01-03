@@ -11,6 +11,7 @@ import * as AskActions from '../../../../../actions/Dash/Courses/Ask';
 import * as QuestionsActions from '../../../../../actions/Questions'
 import * as QuestionListActions from '../../../../../actions/QuestionList';
 import Questions from './Questions';
+import Stats from './Stats';
 
 const getVisibleQuestions = (filter = 'MOST_RECENT', allQuestions = []) => {
   const questions = allQuestions.filter(q => !q.isDismissed);
@@ -77,7 +78,7 @@ class Main extends Component {
             className="half-pane card"
             style={{ marginTop: '1%' }}
           >
-            stats
+            <Stats {...this.props} />
           </div>
         </div>
         <div className="right-pane c card fullheight">
@@ -93,6 +94,12 @@ const stateToProps = (state) => ({
     state.Dash.Instructor.Course.Main.filter,
     state.QuestionList,
   ),
+  numberQuestions: getVisibleQuestions(
+    state.Dash.Instructor.Course.Main.filter,
+    state.QuestionList
+  ).length,
+  numberPresent: state.Course.Attendance.numberInCourseSession,
+  numberActiveAlerts: state.Graph.Alert.activeAlerts,
   isCourseSessionActive: !!state.Course.activeCourseSessionId,
   activeCourseSessionId: state.Course.activeCourseSessionId,
   filter: state.Dash.Instructor.Course.Main.filter,

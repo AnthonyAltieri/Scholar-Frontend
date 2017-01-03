@@ -18,7 +18,7 @@ class Alert extends Component {
     const {numberInCourseSession, activeAlerts} = this.props;
 
     return (
-      <div className="c">
+      <div className="c mode-content">
         <div className="two-thirds-pane card">
           <Graph />
         </div>
@@ -34,14 +34,12 @@ class Alert extends Component {
           >
 
             <StatBlock
-              name="ActiveAlerts"
+              name="Active Alerts"
               number={activeAlerts}
-              isMini
             />
             <StatBlock
               name="Present"
               number={numberInCourseSession}
-              isMini
             />
           </div>
         </div>

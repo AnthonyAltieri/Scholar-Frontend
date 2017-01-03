@@ -168,17 +168,14 @@ class Ask extends Component {
               <StatBlock
                 name="Questions"
                 number={questions.length}
-                isMini
               />
               <StatBlock
                 name="Responses"
                 number={calculateNumberResponses(questions)}
-                isMini
               />
               <StatBlock
                 name="Present"
                 number={numberInCourseSession}
-                isMini
               />
             </div>
           </div>

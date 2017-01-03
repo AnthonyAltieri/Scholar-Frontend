@@ -11,7 +11,9 @@ const StatBlock = ({
 }) => {
   return (
     <div className={`stat ${!!isMini ? 'mini' : ''}`}>
-      <h3 className="name">{name}</h3>
+      <div className="name-container c-center">
+        <h3 className="name">{name}</h3>
+      </div>
       <p className="number">{number}</p>
     </div>
   );
