@@ -6,10 +6,8 @@ import Colors from '../../../../util/Colors';
 import AttendanceCodeBox from './AttendanceCodeBox'
 import { createAttendanceCode, closeAttendance } from '../../../../api/CourseSession';
 import * as AttendanceActions from '../../../../actions/Attendance';
-import Socket from '../../../../socket/Socket';
 import Events from '../../../../socket/Events';
 import {toastr} from 'react-redux-toastr'
-import * as SocketActions from '../../../../actions/Socket'
 const INACTIVE_CODE_TEXT = "INACTIVE";
 
 
@@ -150,8 +148,6 @@ class AttendanceDialog extends Component {
   }
 
   componentWillUnmount() {
-    Socket.disconnect();
-    Socket.clearPersistenceInterval();
   }
 }
 
@@ -164,11 +160,8 @@ const stateToProps = state => ({
 });
 
 const dispatchToProps = (dispatch, ownProps) => ({
-  handleCodeActivated: (code) =>  {dispatch(AttendanceActions.activateCode(code))},
-  handleCodeDeactivated: () => {dispatch(AttendanceActions.deactivateCode())},
-  socketConnect: (pusher) => {
-    dispatch(SocketActions.connect(pusher));
-  },
+  handleCodeActivated: (code) =>  dispatch(AttendanceActions.activateCode(code)),
+  handleCodeDeactivated: () => dispatch(AttendanceActions.deactivateCode()),
 });
 
 AttendanceDialog = connect(

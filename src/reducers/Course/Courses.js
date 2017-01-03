@@ -26,10 +26,16 @@ const getVisibleCourses = (courses = [], filter) => {
 
 const initialState = {
   filter: 'active',
+  all: [],
+  visible: [],
 };
 
 const Courses = (state = initialState, action) => {
   switch (action.type) {
+
+    case 'LOG_OUT': {
+      return initialState;
+    }
 
     case 'RECEIVED_COURSES': {
       const courses = CourseList(state.courses, action);

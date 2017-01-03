@@ -13,6 +13,7 @@ import * as OverlayActions from '../../../actions/Overlay';
 import * as CourseActions from '../../../actions/Course';
 import * as UserActions from '../../../actions/User';
 import * as DrawerActions from '../../../actions/Drawer';
+import Colors from '../../../util/Colors';
 import FontIcon from 'material-ui/FontIcon';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
@@ -222,6 +223,43 @@ class DashInstructor extends Component {
         <AppBar
           title={title}
           onLeftIconButtonTouchTap={() => openDrawer()}
+          iconElementRight={
+            (title === 'Home' || title === 'Grades' || title === 'Settings')
+              ? null
+              : (
+                <div
+                  className="r"
+                  style={{
+                    background: 'white',
+                    padding: 12,
+                    borderRadius: 2,
+                  }}
+                >
+                  <p
+                    className="no-text-sel"
+                    style={{
+                      margin: '0 4px 0 0',
+                      color: isCourseSessionActive
+                        ? Colors.green
+                        : Colors.red,
+                    }}
+                  >
+                    Course Session
+                    {isCourseSessionActive ? ' Active' : ' Inactive'}
+                  </p>
+                  <FontIcon
+                    className="material-icons"
+                    style={{
+                      color: isCourseSessionActive
+                        ? Colors.green
+                        : Colors.red,
+                    }}
+                  >
+                    brightness_1
+                  </FontIcon>
+                </div>
+              )
+            }
         />
         <Drawer
           open={isDrawerOpen}

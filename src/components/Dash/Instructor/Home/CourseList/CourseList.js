@@ -34,6 +34,8 @@ const CourseList = ({
   noAddCourse,
   onCourseClick,
   style,
+  chooseCourse,
+  selectedCourse,
 }) => {
   console.log('CourseList courses',courses);
   return (
@@ -94,20 +96,25 @@ const CourseList = ({
                 abbreviation={c.abbreviation}
                 time={time}
                 days={days}
+                isSelectedCourse={c.id === selectedCourse}
                 onClick={() => {
-                  if (!onCourseClick) {
-                    joinCourse(
-                      c.id,
-                      c.abbreviation,
-                      c.title,
-                      c.activeCourseSessionId || null,
-                      c.timeStart,
-                      c.timeEnd,
-                    );
-                    goToCourse(c.id)
-                  } else {
-                    onCourseClick(c);
+                  if (typeof onCourseClick !== 'undefined') {
+                    onCourseClick(c)
+                    return;
                   }
+                  {/*if (!onCourseClick) {*/}
+                    {/*joinCourse(*/}
+                      {/*c.id,*/}
+                      {/*c.abbreviation,*/}
+                      {/*c.title,*/}
+                      {/*c.activeCourseSessionId || null,*/}
+                      {/*c.timeStart,*/}
+                      {/*c.timeEnd,*/}
+                    {/*);*/}
+                    {/*goToCourse(c.id)*/}
+                  {/*} else {*/}
+                    {/*onCourseClick(c);*/}
+                  {/*}*/}
                 }}
               />
             )

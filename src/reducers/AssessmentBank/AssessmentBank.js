@@ -43,10 +43,31 @@ const initialState = {
   bank: BankedAssessmentList(undefined, {}),
   queue: BankedAssessmentList(undefined, {}),
   filter: 'ALL',
+  bankTag: '',
+  queueTag: '',
 };
 
 const AssessmentBank = (state = initialState, action) => {
   switch (action.type) {
+
+    case 'LOG_OUT': {
+      return initialState;
+    }
+
+    case 'ASSESSMENT_BANK_SET_BANK_TAG': {
+      return {
+        ...state,
+        bankTag: action.bankTag,
+      }
+    }
+
+    case 'ASSESSMENT_BANK_SET_QUEUE_TAG': {
+      return {
+        ...state,
+        queueTag: action.queueTag,
+      }
+    }
+
     case 'ASSESSMENT_BANK_SET_ID': {
       return {
         ...state,
@@ -79,7 +100,7 @@ const AssessmentBank = (state = initialState, action) => {
 
     case 'ASSESSMENT_BANK_ADD': {
       const all = BankedAssessmentList(
-        getValid(state.courseId, state.all),
+        state.all,
         action
       );
       return {

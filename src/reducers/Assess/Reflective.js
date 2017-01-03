@@ -10,6 +10,11 @@ const initialState = {
 
 const Reflective = (state = initialState, action) => {
   switch (action.type) {
+
+    case 'LOG_OUT': {
+      return initialState;
+    }
+
     case 'ASSESS_ACTIVATE_ASSESSMENT': {
       return action.assessmentType === 'REFLECTIVE'
         ? {

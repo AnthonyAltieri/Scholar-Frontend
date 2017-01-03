@@ -40,6 +40,7 @@ const Reflective = ({
       <textarea
         className="reflective-question"
         placeholder="Enter a question..."
+        id="questiontext-reflective"
         ref={questionRef}
       />
       <div

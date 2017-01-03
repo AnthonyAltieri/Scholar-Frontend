@@ -194,6 +194,7 @@ const BankedQuestion = ({
         <RedRaisedButton
           label="Remove"
           onTouchTap={() => onRemoveClick(id)}
+          style={{ margin: '8px 0' }}
         />
         <RaisedButton
           label="Cancel Edits"
@@ -203,14 +204,12 @@ const BankedQuestion = ({
             editOptionClear();
             editQuestionClear();
           }}
+          style={{ margin: '8px 0' }}
         />
         <RaisedButton
           label="Save"
           primary
-          style={{
-            marginTop: 2,
-            marginBottom: 6,
-          }}
+          style={{ margin: '8px 0' }}
           onTouchTap={() => {
             console.log('click')
             console.log('questionEditMode', questionEditMode);
@@ -239,12 +238,14 @@ const BankedQuestion = ({
             <RaisedButton
               label="To Bank"
               onTouchTap={onToBankClick}
+              style={{ margin: '8px 0' }}
             />
           )
           : (
             <RaisedButton
               label="To Queue"
               onTouchTap={onToQueueClick}
+              style={{ margin: '8px 0' }}
             />
           )
         }
@@ -253,10 +254,7 @@ const BankedQuestion = ({
             <RaisedButton
               label="Use For Reflective"
               disabled={!!isAssessmentActive}
-              style={{
-                marginTop: 2,
-                marginBottom: 6,
-              }}
+              style={{ margin: '8px 0' }}
               onTouchTap={() => {
                 onUseForReflectiveClick(question);
               }}
@@ -269,10 +267,7 @@ const BankedQuestion = ({
             <RaisedButton
               label="Use For Instant"
               disabled={!!isAssessmentActive}
-              style={{
-                marginTop: 2,
-                marginBottom: 6,
-              }}
+              style={{ margin: '8px 0' }}
               onTouchTap={() => {
                 onUseForInstantClick(question, options);
               }}

@@ -15,6 +15,7 @@ const BankedAssessment = (state = {}, action) => {
         editQuestionMode: false,
         optionEditModes: action.options.map(o => false),
         addTagMode: false,
+        courseId: action.courseId,
       }
     }
 
@@ -53,22 +54,22 @@ const BankedAssessment = (state = {}, action) => {
       return {
         ...state,
         options: [...state.options, action.option],
-        optionsEditied: [...state.optionsEditied, false],
+        optionsEdited: [...state.optionsEdited, false],
       }
     }
 
     case 'ASSESSMENT_BANK_REMOVE_OPTION': {
       if (state.id !== action.id) return state;
-      const { options, optionsEditied }  = state;
+      const { options, optionsEdited}  = state;
       return {
         ...state,
         options: [
           ...options.slice(0, action.index),
           ...options.slice(action.index + 1),
         ],
-        optionsEditied: [
-          ...optionsEditied.slice(0, action.index),
-          ...optionsEditied.slice(action.index + 1),
+        optionsEdited: [
+          ...optionsEdited.slice(0, action.index),
+          ...optionsEdited.slice(action.index + 1),
         ]
       }
     }

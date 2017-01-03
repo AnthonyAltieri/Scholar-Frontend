@@ -9,7 +9,7 @@ const initialState = {
   question: '',
   activeAssessmentId: null,
   mode: 'INSTANT',
-}
+};
 
 const Assess = (state = initialState, action) => {
   switch (action.type) {

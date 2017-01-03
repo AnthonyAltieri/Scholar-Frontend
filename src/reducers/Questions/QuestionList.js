@@ -22,8 +22,15 @@ const removeResponseById = (questions, id) => {
   return questions;
 };
 
-const QuestionList = (state = [], action) => {
+const initialState = [];
+
+const QuestionList = (state = initialState, action) => {
   switch (action.type) {
+
+    case 'LOG_OUT': {
+      return initialState;
+    }
+
     case 'RECEIVED_QUESTIONS': {
       return action.questions.map((q) => Question(q, action));
     }

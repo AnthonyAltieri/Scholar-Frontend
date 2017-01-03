@@ -16,7 +16,8 @@ const routes = {
   CLOSE_ATTENDANCE: PREFIX + '/attendance/end',
   STUDENT_JOIN_ATTENDANCE: PREFIX + '/attendance/join',
   NUMBER_IN_COURSESESSION_GET: PREFIX + '/numberInCourseSession/get',
-  GET_NUMBER_IN_ATTENDANCE: PREFIX + '/attendance/get'
+  GET_NUMBER_IN_ATTENDANCE: PREFIX + '/attendance/get',
+  GET_MOST_RECENT: PREFIX + '/get/mostRecent',
 };
 
 export async function createAttendanceCode( courseSessionId ) {
@@ -134,6 +135,18 @@ export async function getNumberInAttendance(courseSessionId) {
       '[ERROR] CourseSession Api > getNumberInAttendance',
       e
     );
+    return null;
+  }
+}
+
+export async function getMostRecent(courseId) {
+  try {
+    return await post(
+      routes.GET_MOST_RECENT,
+      { courseId }
+    );
+  } catch (e) {
+    console.error('[ERROR] CourseSession Api getMostRecent', e);
     return null;
   }
 }

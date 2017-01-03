@@ -4,6 +4,11 @@ const initialState = {
 
 const Menu = (state = initialState, action) => {
   switch (action.type) {
+
+    case 'LOG_OUT': {
+      return initialState;
+    }
+
     case 'MENU_OPEN': {
       return {
         ...state,

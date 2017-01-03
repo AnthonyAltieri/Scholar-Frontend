@@ -1,11 +1,16 @@
 import Alert from './Alert';
 
 const initialState = {
-  Alert: Alert(undefined, {type: 'FAKE_ACTION'}),
+  Alert: Alert(undefined, {}),
 };
 
 const Graph = (state = initialState, action) => {
   switch (action.type) {
+
+    case 'LOG_OUT': {
+      return initialState;
+    }
+
     case 'JOIN_COURSE':
     case 'ACTIVATE_COURSE':
     case 'SET_ALERT_THRESHOLD':

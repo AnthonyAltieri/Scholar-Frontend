@@ -16,8 +16,20 @@ import * as OverlayActions from '../../../../actions/Overlay'
 import AddCodeDialog from './AddCodeDialog';
 import CourseListSection from './CourseList/Section';
 import CourseSessionListSection from './CourseSessionList/Section';
+import * as CourseSessionApi from '../../../../api/CourseSession';
+import PanelSelectedCourse from './PanelSelectedCourse';
 import { setId as setAssessmentBankId } from '../../../../actions/AssessmentBank';
 import { getByUserId as getAssessmentBankByUserId } from '../../../../api/AssessmentBank';
+import {
+  setSelectedCourse,
+  clearSelectedCourse,
+  setCourseSectionPanelLoadingOn,
+  setCourseSectionPanelLoadingOff,
+  setCourseSectionError,
+  clearCourseSectionError,
+  setCourseSectionLastCourseSession,
+  clearCourseSectionLastCourseSession,
+} from '../../../../actions/Dash/Instructor'
 
 
 async function handleCourses(userId, receivedCourses) {
@@ -62,7 +74,9 @@ class Home extends Component {
       receivedCourses,
       endLoading,
       receivedBankId,
+      chooseCourse,
     } = this.props;
+    console.log('componentDidMount()')
 
     if (!userId) {
       toastr.info('You have been logged out', 'Please log in again');
@@ -95,6 +109,17 @@ class Home extends Component {
       hideOverlay,
       isOverlayVisible,
       overlayType,
+      chooseCourse,
+      selectedCourse,
+      isPanelLoading,
+      panelLoadingOn,
+      panelLoadingOff,
+      setLastCourseSession,
+      clearLastCourseSession,
+      setLastCourseSessionError,
+      clearLastCourseSessionError,
+      lastCourseSession,
+      hasLastCourseSessionError,
     } = this.props;
 
     return (
@@ -112,11 +137,64 @@ class Home extends Component {
           navigate={navigate}
           changeFilter={changeFilter}
           showAddCodeDialog={() => showOverlay('ADD_CODES')}
+          chooseCourse={chooseCourse}
+          selectedCourse={selectedCourse.id}
+          onCourseClick={async (c) => {
+            if (c.id === selectedCourse.id) return;
+            panelLoadingOn();
+            clearLastCourseSession();
+            clearLastCourseSessionError();
+            chooseCourse(c);
+            try {
+              const payload = await CourseSessionApi.getMostRecent(c.id);
+              if (!!payload.error) {
+                toastr.error('Something went wrong please try again');
+                setLastCourseSessionError();
+                panelLoadingOff();
+                return;
+              }
+              if (!!payload.none) {
+               setLastCourseSession(null);
+               panelLoadingOff();
+               return;
+              }
+              setLastCourseSession(payload.mostRecentCourseSession);
+              panelLoadingOff();
+            } catch (e) {
+              console.error('[ERROR] onCourseClick', e);
+            }
+          }}
         />
         {/* <CourseSessionListSection
           courses={courses}
           filter={courseSessionFilter}
         /> */}
+        {!!selectedCourse
+          ? (
+            <PanelSelectedCourse
+              abbreviation={selectedCourse.abbreviation}
+              title={selectedCourse.title}
+              isLoading={isPanelLoading}
+              lastCourseSession={lastCourseSession}
+              hasLastCourseSessionError={hasLastCourseSessionError}
+              hasActiveCourseSession={!!selectedCourse.activeCourseSessionId}
+              onClickEnterCourse={() => {
+                joinCourse(
+                  selectedCourse.id,
+                  selectedCourse.abbreviation,
+                  selectedCourse.title,
+                  selectedCourse.activeCourseSessionId,
+                  selectedCourse.timeStart,
+                  selectedCourse.timeEnd,
+                );
+                goToCourse(selectedCourse.id);
+              }}
+              onClickViewCourseSessions={() => {
+              }}
+            />
+          )
+          : null
+        }
       </div>
     );
 
@@ -125,9 +203,14 @@ class Home extends Component {
 const stateToProps = (state) => ({
   courses: state.Courses.all || [],
   userId: state.User.id,
-  filter: state.Dash.Instructor.Home.Courses.filter || 'ANY',
   isOverlayVisible: state.Overlay.isVisible,
   overlayType: state.Overlay.type,
+  filter: state.Dash.Instructor.Home.CourseSection.filter || 'ALL',
+  selectedCourse: state.Dash.Instructor.Home.CourseSection.selectedCourse,
+  isPanelLoading: !!state.Dash.Instructor.Home.CourseSection.isLoading,
+  lastCourseSession: state.Dash.Instructor.Home.CourseSection.lastCourseSession,
+  hasLastCourseSessionError: state.Dash.Instructor.Home
+    .CourseSection.lastCourseSessionError,
 });
 const dispatchToProps = (dispatch) => ({
   endLoading: () => {
@@ -176,6 +259,32 @@ const dispatchToProps = (dispatch) => ({
     dispatch(OverlayActions.clearOverlayType());
     dispatch(OverlayActions.hideOverlay());
   },
+  chooseCourse: (course) => {
+    dispatch(setSelectedCourse(course));
+  },
+  clearChosenCourse: () => {
+    dispatch(clearSelectedCourse())
+  },
+  panelLoadingOn: () => {
+    dispatch(setCourseSectionPanelLoadingOn());
+  },
+  panelLoadingOff: () => {
+    dispatch(setCourseSectionPanelLoadingOff());
+  },
+  setLastCourseSession: (courseSession) => {
+    dispatch(setCourseSectionLastCourseSession(courseSession));
+  },
+  clearLastCourseSession: () => {
+    dispatch(clearCourseSectionLastCourseSession());
+  },
+  setLastCourseSessionError: () => {
+    dispatch(setCourseSectionError());
+  },
+  clearLastCourseSessionError: () => {
+    dispatch(clearCourseSectionError());
+  }
+
+
 });
 
 Home = connect(

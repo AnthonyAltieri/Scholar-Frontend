@@ -13,6 +13,10 @@ const initialState = {
 const Alert = (state = initialState, action) => {
   switch (action.type) {
 
+    case 'LOG_OUT': {
+      return initialState;
+    }
+
     case 'JOIN_COURSE':
     case 'ACTIVATE_COURSE': {
       return {

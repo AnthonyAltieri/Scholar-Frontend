@@ -11,6 +11,14 @@ import * as AssessmentBankActions from '../../../../../actions/AssessmentBank';
 import * as OverlayActions from '../../../../../actions/Overlay';
 import { toastr } from 'react-redux-toastr';
 
+
+function testTag(bankedAssessment, tag) {
+  const searchString = bankedAssessment
+    .tags
+    .reduce((a, c) => (a + (c + ' ')), '');
+  return (new RegExp(tag.trim())).test(searchString);
+}
+
 const fabStyle = {
   position: "absolute",
   bottom: "30px",
@@ -66,13 +74,13 @@ class QuestionBank extends Component {
       hideOverlay,
       isOverlayVisible,
       overlayType,
-      clearAddDialoge,
-      addOptionAddDialoge,
+      clearAddDialog,
+      addOptionAddDialog,
       addOptions,
-      removeOptionAddDialoge,
+      removeOptionAddDialog,
       addTags,
-      addTagAddDialoge,
-      removeTagAddDialoge,
+      addTagAddDialog,
+      removeTagAddDialog,
       addToAssessmentBank,
       courseId,
       editOptionClear,
@@ -85,7 +93,14 @@ class QuestionBank extends Component {
       remove,
       moveToBank,
       moveToQueue,
+      setBankTag,
+      setQueueTag,
+      queueTag,
+      bankTag,
     } = this.props;
+
+    let inputTagBank = '';
+    let inputTagQueue = '';
 
     return (
       <div className="question-bank">
@@ -95,6 +110,8 @@ class QuestionBank extends Component {
           }
           onSaveClick={async function(question, options, tags) {
             const created = new Date();
+            console.log('!@@@!!@!@!@!@!@!@!@!!!@!@!@!@')
+            console.log('tags', tags);
             try {
               const payload = await BankedAssessmentApi
                 .create(
@@ -119,7 +136,7 @@ class QuestionBank extends Component {
                 created,
               );
               hideOverlay();
-              clearAddDialoge();
+              clearAddDialog();
             } catch (e) {
               console.error('onSaveClick', e);
               toastr.error('Server error please try again');
@@ -127,27 +144,27 @@ class QuestionBank extends Component {
           }}
           onCancelClick={() => {
             hideOverlay();
-            clearAddDialoge();
+            clearAddDialog();
           }}
           options={addOptions}
           tags={addTags}
           onTagAddClick={(content) => {
-            addTagAddDialoge(content);
+            addTagAddDialog(content);
           }}
           onTagClearClick={(index, tags) => {
             const remainingTags = [
               ...tags.slice(0, index),
               ...tags.slice(index + 1),
             ];
-            removeTagAddDialoge(remainingTags);
+            removeTagAddDialog(remainingTags);
           }}
-          addOptionClick={addOptionAddDialoge}
+          addOptionClick={addOptionAddDialog}
           onOptionClearClick={(index, options) => {
             const remainingOptions = [
               ...options.slice(0, index),
               ...options.slice(index + 1),
             ]
-            removeOptionAddDialoge(remainingOptions);
+            removeOptionAddDialog(remainingOptions);
           }}
         />
         <FloatingActionButton
@@ -160,7 +177,28 @@ class QuestionBank extends Component {
             add
           </FontIcon>
         </FloatingActionButton>
-        <FloatingHeading />
+        <FloatingHeading
+          inputTagBankRef={(n) => {
+            inputTagBank = n;
+          }}
+          onTagBankClear={() => {
+            setBankTag('');
+          }}
+          tagBankValue={bankTag}
+          onInputTagBankChange={(e, v) => {
+            setBankTag(v);
+          }}
+          inputTagQueueRef={(n) => {
+            inputTagQueue = n;
+          }}
+          onTagQueueClear={() => {
+            setQueueTag('');
+          }}
+          tagQueueValue={queueTag}
+          onInputTagQueueChange={(e, v) => {
+            setQueueTag(v);
+          }}
+        />
         <div className="c-between">
           <div
             className="r"
@@ -174,7 +212,9 @@ class QuestionBank extends Component {
           >
             <div className="half-sliding-strip left">
               <BankedQuestionList
-                bankedAssessments={visible.filter(ba => !ba.inQueue)}
+                bankedAssessments={visible
+                  .filter(ba => !ba.inQueue && testTag(ba, bankTag))
+                }
                 onQuestionClick={(questionEditMode, baId) => {
                   if (!questionEditMode) {
                     editQuestionMode(baId);
@@ -194,9 +234,19 @@ class QuestionBank extends Component {
                     return;
                   }
                 }}
-                onOptionClearClick={(index, baId) => {
-                  BankedAssessment.clearOption(index, baId);
-                  removeOption(index, baId)
+                onOptionClearClick={async (index, baId, options) => {
+                  try {
+                    const payload = await BankedAssessmentApi
+                      .clearOption(index, baId);
+                     if (!!payload.error) {
+                      toastr.error('Something went wrong please try again');
+                      return;
+                     }
+                    removeOption(index, baId)
+                  } catch (e) {
+                    console.error('[ERROR] onOptionClearClick', e);
+                    toastr.error('Something went wrong please try again');
+                  }
                 }}
                 editOptionClear={editOptionClear}
                 editQuestionClear={editQuestionClear}
@@ -321,9 +371,19 @@ class QuestionBank extends Component {
                     return;
                   }
                 }}
-                onOptionClearClick={(index, baId) => {
-                  BankedAssessment.clearOption(index, baId);
-                  removeOption(index, baId)
+                onOptionClearClick={async (index, baId) => {
+                  try {
+                    const payload = await BankedAssessmentApi
+                      .clearOption(index, baId);
+                     if (!!payload.error) {
+                      toastr.error('Something went wrong please try again');
+                      return;
+                     }
+                    removeOption(index, baId)
+                  } catch (e) {
+                    console.error('[ERROR] onOptionClearClick', e);
+                    toastr.error('Something went wrong please try again');
+                  }
                 }}
                 editOptionClear={editOptionClear}
                 editQuestionClear={editQuestionClear}
@@ -444,6 +504,8 @@ const stateToProps = (state) => ({
   addTags: !!state.AssessmentBank.add
     ? state.AssessmentBank.add.tags
     : [],
+  bankTag: state.AssessmentBank.bankTag,
+  queueTag: state.AssessmentBank.queueTag,
 });
 
 const dispatchToProps = (dispatch) => ({
@@ -473,19 +535,19 @@ const dispatchToProps = (dispatch) => ({
     dispatch(OverlayActions.clearOverlayType());
     dispatch(OverlayActions.hideOverlay());
   },
-  clearAddDialoge: () => {
+  clearAddDialog: () => {
     dispatch(AssessmentBankActions.addClear());
   },
-  addOptionAddDialoge: () => {
+  addOptionAddDialog: () => {
     dispatch(AssessmentBankActions.addAnotherOption());
   },
-  removeOptionAddDialoge: (options) => {
+  removeOptionAddDialog: (options) => {
     dispatch(AssessmentBankActions.addRemoveOption(options));
   },
-  addTagAddDialoge: (tag) => {
+  addTagAddDialog: (tag) => {
     dispatch(AssessmentBankActions.addAnotherTag(tag))
   },
-  removeTagAddDialoge: (tags) => {
+  removeTagAddDialog: (tags) => {
     dispatch(AssessmentBankActions.addRemoveTag(tags));
   },
   addToAssessmentBank: (id, tags, question, options, created) => {
@@ -528,6 +590,12 @@ const dispatchToProps = (dispatch) => ({
   },
   moveToQueue: (id) => {
     dispatch(AssessmentBankActions.moveToQueue(id));
+  },
+  setBankTag: (bankTag) => {
+    dispatch(AssessmentBankActions.setBankTag(bankTag));
+  },
+  setQueueTag: (queueTag) => {
+    dispatch(AssessmentBankActions.setQueueTag(queueTag));
   },
 });
 
