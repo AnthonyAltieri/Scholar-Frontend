@@ -553,7 +553,7 @@ class DashStudent extends Component {
             : null
           }
           <ConnectionBar
-            isCourseSesionActive={!!courseSessionId}
+            isCourseSessionActive={!!courseSessionId}
             courseSessionId={courseSessionId}
             connectionStatus={connectionStatus}
             setConnectionStatus={setConnectionStatus}
