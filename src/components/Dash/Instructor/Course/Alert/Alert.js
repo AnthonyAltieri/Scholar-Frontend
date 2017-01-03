@@ -19,7 +19,7 @@ class Alert extends Component {
 
     return (
       <div className="c">
-        <div className="two-thirds-pane card">
+        <div className="two-thirds-pane card" id="lineChart">
           <Graph />
         </div>
         <div id="alertStats" className=" one-thirds-pane card">

@@ -2034,6 +2034,12 @@ $connection-bar-height: 18px;
   max-width: 750px;
 }
 
+#main-alert-graph svg  {
+  margin: auto;
+  min-height: 280px;
+  //max-width: 500px;
+}
+
 #instantGraph svg {
   min-height: 300px;
 }

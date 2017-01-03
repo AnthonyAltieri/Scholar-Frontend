@@ -11,6 +11,7 @@ import * as AskActions from '../../../../../actions/Dash/Courses/Ask';
 import * as QuestionsActions from '../../../../../actions/Questions'
 import * as QuestionListActions from '../../../../../actions/QuestionList';
 import Questions from './Questions';
+import AlertGraph from '../Alert/Graph';
 
 const getVisibleQuestions = (filter = 'MOST_RECENT', allQuestions = []) => {
   const questions = allQuestions.filter(q => !q.isDismissed);
@@ -69,9 +70,10 @@ class Main extends Component {
         <div className="left-pane c fullheight">
           <div
             className="half-pane card"
+            id="main-alert-graph"
             style={{ marginBottom: '1%' }}
           >
-            alert graph
+            <AlertGraph />
           </div>
           <div
             className="half-pane card"
