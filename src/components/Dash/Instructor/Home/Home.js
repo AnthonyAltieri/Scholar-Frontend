@@ -12,6 +12,8 @@ import * as CoursesActions from '../../../../actions/Dash/Courses/Courses';
 import * as ModeActions from '../../../../actions/DashInstructor/Course/Mode';
 import * as CourseActions from '../../../../actions/Course';
 import * as HomeCoursesActions from '../../../../actions/DashInstructor/Home/Courses';
+import * as OverlayActions from '../../../../actions/Overlay'
+import AddCodeDialog from './AddCodeDialog';
 import CourseListSection from './CourseList/Section';
 import CourseSessionListSection from './CourseSessionList/Section';
 import { setId as setAssessmentBankId } from '../../../../actions/AssessmentBank';
@@ -89,10 +91,19 @@ class Home extends Component {
       joinCourse,
       courseSessionFilter,
       changeFilter,
+      showOverlay,
+      hideOverlay,
+      isOverlayVisible,
+      overlayType,
     } = this.props;
 
     return (
       <div className="home-instructor">
+        <AddCodeDialog
+          isOpen={!!isOverlayVisible && overlayType === 'ADD_CODES'}
+          addCodes={courses}
+          onOkClick={() => hideOverlay()}
+        />
         <CourseListSection
           courses={courses}
           filter={filter}
@@ -100,6 +111,7 @@ class Home extends Component {
           joinCourse={joinCourse}
           navigate={navigate}
           changeFilter={changeFilter}
+          showAddCodeDialog={() => showOverlay('ADD_CODES')}
         />
         {/* <CourseSessionListSection
           courses={courses}
@@ -114,6 +126,8 @@ const stateToProps = (state) => ({
   courses: state.Courses.all || [],
   userId: state.User.id,
   filter: state.Dash.Instructor.Home.Courses.filter || 'ANY',
+  isOverlayVisible: state.Overlay.isVisible,
+  overlayType: state.Overlay.type,
 });
 const dispatchToProps = (dispatch) => ({
   endLoading: () => {
@@ -153,6 +167,14 @@ const dispatchToProps = (dispatch) => ({
   },
   changeFilter: (filter) => {
     dispatch(HomeCoursesActions.changeFilter(filter));
+  },
+  showOverlay: (overlayType) => {
+    dispatch(OverlayActions.setOverlayType(overlayType));
+    dispatch(OverlayActions.showOverlay());
+  },
+  hideOverlay: () => {
+    dispatch(OverlayActions.clearOverlayType());
+    dispatch(OverlayActions.hideOverlay());
   },
 });
 

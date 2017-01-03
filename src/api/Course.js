@@ -10,6 +10,7 @@ const routes = {
   GET_BANKED_ASSESSMENTS: '/api/course/get/bankedAssessments',
   ENROLL_STUDENT: '/api/course/enroll/student',
   GRADE_SUMMARY: '/api/course/grade/summary',
+  GET_ADD_CODES: '/api/course/get/addCodes',
 };
 
 /**
@@ -103,3 +104,12 @@ export function gradeSummary(
   console.log('about to do this route',route);
   window.location = route;
 };
+
+export async function getAddCodes(userId) {
+  try {
+    return await post(routes.GET_ADD_CODES, { userId });
+  } catch (e) {
+    console.error('[ERROR] Course Api getAddCodes', e);
+    return null;
+  }
+}

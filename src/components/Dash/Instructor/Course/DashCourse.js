@@ -19,6 +19,7 @@ import Socket from '../../../../socket/Socket'
 import Events from '../../../../socket/Events';
 import Ask from './Ask/Ask';
 import Alert from './Alert/Alert';
+import ConnectionBar from '../../../ConnectionBar';
 import Graph from './Alert/Graph';
 import Assess from './Assess/Assess';
 import QuestionBank from './QuestionBank/QuestionBank';
@@ -71,87 +72,73 @@ function handleSockets(props) {
   } = props;
   const courseSessionChannel = `private-${courseSessionId}`;
   Socket.subscribe(courseSessionChannel);
-  Socket.bind(
-    courseSessionChannel,
-    Events.INSTANT_ASSESSMENT_ANSWERED,
-    (data) => {
-      instantAnswerReceived(
+  const events = {
+    [Events.INSTANT_ASSESSMENT_ANSWERED]: {
+      name: Events.INSTANT_ASSESSMENT_ANSWERED,
+      handler: (data) => instantAnswerReceived(
         data.userId,
-        data.optionIndex
-      )
+        data.optionIndex,
+      ),
+    },
+    [Events.REFLECTIVE_ASSESSMENT_REVIEWED]: {
+      name: Events.REFLECTIVE_ASSESSMENT_REVIEWED,
+      handler: (data) => reflectiveAssessmentReviewed(),
+    },
+    [Events.REFLECTIVE_ASSESSMENT_ANSWERED]: {
+      name: Events.REFLECTIVE_ASSESSMENT_ANSWERED,
+      handler: (data) => reflectiveAssessmentAnswered(),
+    },
+    [Events.QUESTION_ASKED]: {
+      name: Events.QUESTION_ASKED,
+      handler: (data) => addQuestion(data.question),
+    },
+    [Events.RESPONSE_ADD]: {
+      name: Events.RESPONSE_ADD,
+      handler: (data) => addResponse(data.response),
+    },
+    [Events.RESPONSE_REMOVED]: {
+      name: Events.RESPONSE_REMOVED,
+      handler: (data) => removeResponse(data.id),
+    },
+    [Events.VOTE_ADD]: {
+      name: Events.VOTE_ADD,
+      handler: (data) => {
+        if (data.vote.userId === userId) return;
+        addVote(
+          data.targetId,
+          data.vote,
+        )
+      }
+    },
+    [Events.VOTE_REMOVE]: {
+      name: Events.VOTE_REMOVE,
+      handler: (data) => {
+        if (data.userId === userId) return;
+        removeVote(data.id, data.userId)
+      }
+    },
+    [Events.ADD_FLAG]: {
+      name: Events.ADD_FLAG,
+      handler: (data) => addFlag(data.id),
+    },
+    [Events.REMOVE_FLAG]: {
+      name: Events.REMOVE_FLAG,
+      handler: (data) => removeFlag(data.id),
+    },
+    [Events.STUDENT_JOINED_COURSESESSION]: {
+      name: Events.STUDENT_JOINED_COURSESESSION,
+      handler: (data) => studentJoinedCourseSession(
+        data.numberInCourseSession,
+      ),
+    },
+    [Events.STUDENT_JOINED_ATTENDANCE]: {
+      name: Events.STUDENT_JOINED_ATTENDANCE,
+      handler: (data) => handleStudentJoinedAttendance(
+        data.attendance
+      ),
     }
-  );
-  Socket.bind(
-    courseSessionChannel,
-    Events.REFLECTIVE_ASSESSMENT_REVIEWED,
-    (data) => {
-      reflectiveAssessmentReviewed();
-    }
-  );
-  Socket.bind(
-    courseSessionChannel,
-    Events.REFLECTIVE_ASSESSMENT_ANSWERED,
-    (data) => {
-      reflectiveAssessmentAnswered();
-    }
-  );
-  Socket.bind(
-    courseSessionChannel,
-    Events.QUESTION_ASKED,
-    (data) => { addQuestion(data.question) }
-  );
-  Socket.bind(
-    courseSessionChannel,
-    Events.RESPONSE_ADD,
-    (data) => { addResponse(data.resposne) }
-  );
-  Socket.bind(
-    courseSessionChannel,
-    Events.RESPONSE_REMOVED,
-    (data) => { removeResponse(data.id) }
-  );
-  Socket.bind(
-    courseSessionChannel,
-    Events.VOTE_ADD,
-    (data) => {
-      if (data.vote.userId === userId) return;
-      addVote(
-        data.targetId,
-        data.vote,
-      )
-    }
-  );
-  Socket.bind(
-    courseSessionChannel,
-    Events.VOTE_REMOVE,
-    (data) => {
-      if (data.userId === userId) return;
-      removeVote(data.id, data.userId)
-    }
-  );
-  Socket.bind(
-    courseSessionChannel,
-    Events.ADD_FLAG,
-    (data) => { addFlag(data.id) }
-  );
-  Socket.bind(
-    courseSessionChannel,
-    Events.REMOVE_FLAG,
-    (data) => { removeFlag(data.id) }
-  );
-  Socket.bind(
-    courseSessionChannel,
-    Events.STUDENT_JOINED_COURSESESSION,
-    (data) => studentJoinedCourseSession(data.numberInCourseSession),
-  );
-  Socket.bind(
-    courseSessionChannel,
-    Events.STUDENT_JOINED_ATTENDANCE,
-    (data) => {
-      handleStudentJoinedAttendance(data.attendance);
-    }
-  );
-  console.log('pusher', Socket.getPusher());
+  };
+  Socket.bindAllEvents(events, courseSessionChannel);
 }
 
 class DashCourse extends Component {
@@ -159,8 +146,21 @@ class DashCourse extends Component {
     const {
       courseSessionId,
       studentJoinedCourseSession,
-      handleStudentJoinedAttendance
+      handleStudentJoinedAttendance,
+      instantAnswerReceived,
+      reflectiveAssessmentReviewed,
+      reflectiveAssessmentAnswered,
+      userId,
+      addVote,
+      removeVote,
+      addQuestion,
+      removeQuestion,
+      addResponse,
+      removeResponse,
+      addFlag,
+      removeFlag,
     } = this.props;
+    console.log('DashCourse componentDidMount()');
     if (this.props.isCourseSessionActive) {
       handleSockets(this.props);
       let {
@@ -170,6 +170,7 @@ class DashCourse extends Component {
       if (!error) {
         studentJoinedCourseSession(numberInCourseSession);
       }
+
 
 
       const payload =  await getNumberInAttendance(courseSessionId);
@@ -194,8 +195,7 @@ class DashCourse extends Component {
 
   }
   componentWillUnmount() {
-    Socket.disconnect();
-    window.clearInterval(window.intervalGetAlerts);
+    console.log('DashCourse componentWillUnmount');
   }
 
   render() {
@@ -210,7 +210,77 @@ class DashCourse extends Component {
       deactivateCourseSession,
       alertGraph,
       isCourseSessionActive,
+      courseSessionId,
+      connectionStatus,
+      setConnectionStatus,
     } = this.props;
+
+    const events = {
+      [Events.INSTANT_ASSESSMENT_ANSWERED]: {
+        name: Events.INSTANT_ASSESSMENT_ANSWERED,
+        handler: (data) => instantAnswerReceived(
+          data.userId,
+          data.optionIndex,
+        ),
+      },
+      [Events.REFLECTIVE_ASSESSMENT_REVIEWED]: {
+        name: Events.REFLECTIVE_ASSESSMENT_REVIEWED,
+        handler: (data) => reflectiveAssessmentReviewed(),
+      },
+      [Events.REFLECTIVE_ASSESSMENT_ANSWERED]: {
+        name: Events.REFLECTIVE_ASSESSMENT_ANSWERED,
+        handler: (data) => reflectiveAssessmentAnswered(),
+      },
+      [Events.QUESTION_ASKED]: {
+        name: Events.QUESTION_ASKED,
+        handler: (data) => addQuestion(data.question),
+      },
+      [Events.RESPONSE_ADD]: {
+        name: Events.RESPONSE_ADD,
+        handler: (data) => addResponse(data.response),
+      },
+      [Events.RESPONSE_REMOVED]: {
+        name: Events.RESPONSE_REMOVED,
+        handler: (data) => removeResponse(data.id),
+      },
+      [Events.VOTE_ADD]: {
+        name: Events.VOTE_ADD,
+        handler: (data) => {
+          if (data.vote.userId === userId) return;
+          addVote(
+            data.targetId,
+            data.vote,
+          )
+        }
+      },
+      [Events.VOTE_REMOVE]: {
+        name: Events.VOTE_REMOVE,
+        handler: (data) => {
+          if (data.userId === userId) return;
+          removeVote(data.id, data.userId)
+        }
+      },
+      [Events.ADD_FLAG]: {
+        name: Events.ADD_FLAG,
+        handler: (data) => addFlag(data.id),
+      },
+      [Events.REMOVE_FLAG]: {
+        name: Events.REMOVE_FLAG,
+        handler: (data) => removeFlag(data.id),
+      },
+      [Events.STUDENT_JOINED_COURSESESSION]: {
+        name: Events.STUDENT_JOINED_COURSESESSION,
+        handler: (data) => studentJoinedCourseSession(
+          data.numberInCourseSession,
+        ),
+      },
+      [Events.STUDENT_JOINED_ATTENDANCE]: {
+        name: Events.STUDENT_JOINED_ATTENDANCE,
+        handler: (data) => handleStudentJoinedAttendance(
+          data.attendance
+        ),
+      }
+    };
 
     const { courseId } = params;
 
@@ -301,6 +371,13 @@ class DashCourse extends Component {
           onCancelClick={() => { hideOverlay(); }}
         />
         {content}
+        <ConnectionBar
+          isCourseSessionActive={!!courseSessionId}
+          courseSessionId={courseSessionId}
+          connectionStatus={connectionStatus}
+          setConnectionStatus={setConnectionStatus}
+          requiredEvents={events}
+        />
       </div>
     );
   }
@@ -315,6 +392,7 @@ const stateToProps = state => ({
   courseSessionId: state.Course.activeCourseSessionId,
   alertGraph: !!state.Graph.Alert.graph ? state.Graph.Alert.graph : initInstructorAlertGraph(),
   numberAttendees: state.Course.Attendance.numberAttendees,
+  connectionStatus: state.Socket.connectionStatus,
 });
 
 const dispatchToProps = (dispatch, ownProps) => ({
@@ -408,6 +486,9 @@ const dispatchToProps = (dispatch, ownProps) => ({
   },
   handleStudentJoinedAttendance: (attendance) => {
     dispatch(AttendanceActions.studentJoined(attendance))
+  },
+  setConnectionStatus: (connectionStatus) => {
+    dispatch(SocketActions.setConnectionStatus(connectionStatus));
   },
 });
 

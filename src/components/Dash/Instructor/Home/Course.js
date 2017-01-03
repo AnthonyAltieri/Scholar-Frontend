@@ -15,6 +15,7 @@ const Course = ({
 }) => {
   let imgSrc = null;
   let backgroundColor = '';
+  let imgStyle = null;
   console.log('in Course, subject', subject)
   switch (subject) {
     case 'COMPUTER_SCIENCE': {
@@ -22,6 +23,28 @@ const Course = ({
       backgroundColor = Colors.courseTiles.blue;
       break;
     }
+
+    case 'BIOLOGY': {
+      imgSrc = require('../../../../img/CourseIcons/dna.svg');
+      backgroundColor = Colors.courseTiles.pink;
+      imgStyle = {
+        marginTop: 8,
+        height: 62,
+      };
+      break;
+    }
+
+    case 'CHEMISTRY': {
+      imgSrc = require('../../../../img/CourseIcons/flask.svg');
+      backgroundColor = Colors.courseTiles.orange;
+      imgStyle = {
+        marginTop: 12,
+        marginBottom: 10,
+        height: 56,
+      };
+      break;
+    }
+
     default: {
       throw new Error(`Invalid course subject: ${subject}`);
     }
@@ -38,6 +61,7 @@ if (!date) {
         <img
           className="icon"
           src={imgSrc}
+          style={imgStyle}
         />
         <p className="abbreviation">{abbreviation}</p>
         <p className="time">{time}</p>

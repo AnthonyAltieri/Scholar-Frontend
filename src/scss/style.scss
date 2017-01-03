@@ -8,6 +8,7 @@ $mobile: "(max-width: 767px)";
 // Colors
 $color-green: #39C05D;
 $color-green-light: #B8F4B8;
+$color-yellow-light: #FFFAC0;
 $color-red: #F44336;
 $color-red-light: #FFCDD2;
 
@@ -1260,6 +1261,31 @@ $nav-btn-height: 40px;
   cursor: pointer;
 }
 
+$connection-bar-height: 18px;
+.connection-bar {
+  height: $connection-bar-height;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  p {
+    line-height: $connection-bar-height;
+    text-align: center;
+    font-weight: 400;
+    margin: 0;
+    @extend .no-text-sel;
+  }
+}
+.connection-bar.connected {
+  background-color: $color-green-light;
+}
+.connection-bar.partial {
+  background-color: $color-yellow-light;
+}
+.connection-bar.disconnected {
+  background-color: $color-red-light;
+}
+
 .reflective {
   .stage {
     width: 100%;
@@ -1488,7 +1514,6 @@ $nav-btn-height: 40px;
     @extend .card;
   }
   .heading {
-    width: 100%;
     margin-bottom: 4px;
     border-bottom: 1px dashed $color-gray;
     text-align: center;
@@ -1548,7 +1573,7 @@ $nav-btn-height: 40px;
 
   .mode-content {
     position: absolute;
-    top: 68px; left: 4px; right: 4px; bottom: 6px;
+    top: 68px; left: 4px; right: 4px; bottom: 6px + $connection-bar-height;
   }
 
   .assess {
@@ -1816,7 +1841,7 @@ $nav-btn-height: 40px;
   width: 100%;
   height: $bar-height;
   position: absolute;
-  bottom: 0;
+  bottom: $connection-bar-height;
   background-color: $color-white;
   box-shadow: 0 0px 2px 1px rgba(0,0,0,.14),0 3px 16px 2px rgba(0,0,0,.12),0 5px 5px -3px rgba(0,0,0,.2);
   z-index: 1;
@@ -1911,6 +1936,7 @@ $nav-btn-height: 40px;
 
     .icon {
       width: 82px;
+      height: 76px;
       display: block;
       cursor: pointer;
       @extend .no-text-sel;

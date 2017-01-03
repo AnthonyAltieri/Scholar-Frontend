@@ -6,7 +6,7 @@ var pusher;
 var channels = {};
 
 function connect() {
-  pusher = new Pusher(
+  window.pusher = new Pusher(
     'be327c8cfdbd733ab9e5',
     {
       authTransport: 'jsonp',
@@ -16,8 +16,8 @@ function connect() {
 }
 
 function subscribe(name) {
-  if (!pusher) connect();
-  channels[name] = pusher.subscribe(name);
+  if (!window.pusher) connect();
+  channels[name] = window.pusher.subscribe(name);
   if (!console.group) {
     console.log('[SOCKET] subscribed to ' + name);
   } else {
@@ -82,26 +82,66 @@ function getPusher() {
   return pusher;
 }
 
-function mainTainPersistence() {
-  // 2 seconds
-  const PERSISTENCE_TIME = 2000;
-  window.socketPersistence = window.setInterval(() => {
-    try {
-      if (!pusher || !pusher.connection.connection) {
-        connect();
-      }
-    } catch (e) {
-
-    }
-  }, PERSISTENCE_TIME);
-}
-
-function clearPersistenceInterval() {
-  if (!!window.socketPersistence) {
-    clearInterval(window.socketPersistence);
+function determineConnectionStatus(channelName, requiredEvents) {
+  // If there is no channelName that means we don't need to be connected
+  // to anything right now
+  if (channelName === null) return 'NONE';
+  const pusher = window.pusher;
+  // If there is no pusher object we are disconnected
+  if (!pusher) return 'DISCONNECTED';
+  // If there are no channels in the pusher object we are disconnected
+  if (!pusher.channels) return 'DISCONNECTED';
+  // Get the names of the channels that are subscribed to now
+  const channelNames = Object.keys(pusher.channels.channels);
+  // If there are none we are disconnected
+  if (!channelNames) return 'DISCONNECTED';
+  // Determine if we are connected to the provided channelName
+  // if not, we are disconnected
+  if (!channelNames.filter(cn => cn === channelName)[0]) {
+    return 'DISCONNECTED';
   }
+  // Get that channel if we are
+  const channel = pusher.channels.channels[channelName];
+  // Determine the events we are bound to, events are stored
+  // as `callbacks` in pusher
+  const callbackNames = Object
+    .keys(channel.callbacks._callbacks)
+    .map(cb => cb.split('').slice(1).reduce((a, c) => a + c));
+  // If we are missing being bound from at least one of these events
+  // we are only partially connected
+  Object.keys(requiredEvents)
+    .map(k => requiredEvents[k])
+    .forEach((re) => {
+    if (!callbackNames.filter(cbn => cbn === re.name)) {
+      return 'PARTIAL';
+    }
+  });
+  // If we are subscribed to the channel and bound to every event
+  // that we need to be bound to we are connected
+  return 'CONNECTED';
 }
 
+function bindAllEvents(events, channelName) {
+  const keys = Object.keys(events);
+  keys.forEach((key) => {
+    const event = events[key];
+    bind(
+      channelName,
+      event.name,
+      event.handler
+    )
+  });
+}
+
+function getEventNamesConnected(channelName) {
+  const pusher = window.pusher;
+  if (!pusher) return [];
+  const channel = pusher.channels.channels[channelName];
+  if (!channel) return [];
+  return Object
+    .keys(channel.callbacks._callbacks)
+    .map(cb => cb.split('').slice(1).reduce((a, c) => a + c));
+}
 
 export default {
   connect,
@@ -109,6 +149,7 @@ export default {
   bind,
   disconnect,
   getPusher,
-  mainTainPersistence,
-  clearPersistenceInterval,
+  determineConnectionStatus,
+  bindAllEvents,
+  getEventNamesConnected,
 }

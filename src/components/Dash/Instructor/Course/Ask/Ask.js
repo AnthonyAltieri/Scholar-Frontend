@@ -124,6 +124,7 @@ class Ask extends Component {
             <div
               style={{
                 overflowY: "auto",
+                minHeight: '88%',
               }}
             >
               {isCourseSessionActive ?
@@ -189,6 +190,7 @@ class Ask extends Component {
           <div
             style={{
               overflowY: "auto",
+              minHeight: '92%',
             }}
           >
             {isCourseSessionActive

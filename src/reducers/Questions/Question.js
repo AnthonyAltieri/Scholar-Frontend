@@ -48,12 +48,10 @@ let Question = (state = {}, action) => {
     case 'ADD_VOTE': {
       let votes = state.votes;
       let rank = state.rank;
-      console.log('old votes', votes);
       if (action.id === state.id) {
         votes = Votes(votes, action);
         rank = votes.length;
       }
-      console.log('new votes', votes);
       return {
         ...state,
         votes,

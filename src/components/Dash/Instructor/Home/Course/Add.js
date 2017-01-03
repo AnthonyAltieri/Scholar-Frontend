@@ -23,27 +23,26 @@ const subjectMenuItems = [
     value: 'COMPUTER_SCIENCE',
     primaryText: 'Computer Science',
   },
-	/*
-  {
-    value: 'ENGLISH',
-    primaryText: 'English',
-  },
-  {
-    value: 'HISTORY',
-    primaryText: 'History',
-  },
-  {
-    value: 'POLITICAL_SCIENCE',
-    primaryText: 'Political Science',
-  },
-  {
-    value: 'ANTHROPOLOGY',
-    primaryText: 'Anthropology',
-  },
-  {
-    value: 'PSYCHOLOGY',
-    primaryText: 'Psychology',
-  },
+  // {
+  //   value: 'ENGLISH',
+  //   primaryText: 'English',
+  // },
+  // {
+  //   value: 'HISTORY',
+  //   primaryText: 'History',
+  // },
+  // {
+  //   value: 'POLITICAL_SCIENCE',
+  //   primaryText: 'Political Science',
+  // },
+  // {
+  //   value: 'ANTHROPOLOGY',
+  //   primaryText: 'Anthropology',
+  // },
+  // {
+  //   value: 'PSYCHOLOGY',
+  //   primaryText: 'Psychology',
+  // },
   {
     value: 'BIOLOGY',
     primaryText: 'Biology',
@@ -52,11 +51,10 @@ const subjectMenuItems = [
     value: 'CHEMISTRY',
     primaryText: 'Chemistry',
   },
-  {
-    value: 'ENGINEERING',
-    primaryText: 'Engineering',
-  },
-	*/
+  // {
+  //   value: 'ENGINEERING',
+  //   primaryText: 'Engineering',
+  // },
 ];
 
 const termsMenuItems = [

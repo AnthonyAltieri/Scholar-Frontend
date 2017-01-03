@@ -10,6 +10,7 @@ import * as DashStudentActions from '../../../actions/DashStudent';
 import * as CourseSessionActions from '../../../actions/CourseSession'
 import * as AssessmentActions from '../../../actions/Assess/Assess'
 import * as CoursesActions from '../../../actions/Dash/Courses/Courses'
+import * as SocketActions from '../../../actions/Socket'
 import Content from './Content';
 import Socket from '../../../socket/Socket';
 import Events from '../../../socket/Events';
@@ -20,10 +21,8 @@ import Colors from '../../../util/Colors'
 import ToCourseDialog from './ToCoursesDialog';
 import AlertDialog from './AlertDialog';
 import AttendanceDialog from './AttendanceDialog';
-import Paper from 'material-ui/Paper';
-import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
-import IconButton from 'material-ui/IconButton';
+import ConnectionBar from '../../ConnectionBar';
 import FontIcon from 'material-ui/FontIcon';
 import Drawer from 'material-ui/Drawer';
 import * as QuestionListActions from '../../../actions/QuestionList';
@@ -42,14 +41,14 @@ import { getByUser as getCoursesByUser } from '../../../api/Courses';
 
 const fabAskStyle = {
   position: "absolute",
-  bottom: "30px",
+  bottom: "40px",
   right: "16px",
   zIndex: "10",
 };
 
 const fabAlertStyle = {
   position: "absolute",
-  bottom: "106px",
+  bottom: "116px",
   right: "24px",
   zIndex: "10",
 };
@@ -85,111 +84,92 @@ function setUpSockets(props) {
     receivedActiveAssessment,
     deactivateAssessment,
     reflectiveStartReview,
-    socketConnect,
     addEndorse,
     removeEndorse,
     userId,
     studentJoinedAttendance,
     goToCourses,
+    addResponse,
+    removeResponse,
   } = props;
   const courseSessionChannel = `private-${courseSessionId}`;
   Socket.subscribe(courseSessionChannel);
-  Socket.bind(
-    courseSessionChannel,
-    Events.QUESTION_ASKED,
-    (data) => { addQuestion(data.question) }
-  );
-  Socket.bind(
-    courseSessionChannel,
-    Events.QUESTION_REMOVED,
-    (data) => { dismissQuestion(data.id) }
-  );
-  Socket.bind(
-    courseSessionChannel,
-    Events.RESPONSE_ADD,
-    (data) => { addResponse(data.resposne) }
-  );
-  Socket.bind(
-    courseSessionChannel,
-    Events.RESPONSE_REMOVED,
-    (data) => { removeResponse(data.id) }
-  );
-  Socket.bind(
-    courseSessionChannel,
-    Events.VOTE_ADD,
-    (data) => {
-      if (data.vote.userId === userId) return;
-      addVote(data.targetId, data.vote)
-    }
-  );
-  Socket.bind(
-    courseSessionChannel,
-    Events.VOTE_REMOVE,
-    (data) => {
-      if (data.userId === userId) return;
-      removeVote(data.id, data.userId)
-    }
-  );
-  Socket.bind(
-    courseSessionChannel,
-    Events.ADD_FLAG,
-    (data) => { addFlag(data.id) }
-  );
-  Socket.bind(
-    courseSessionChannel,
-    Events.REMOVE_FLAG,
-    (data) => { removeFlag(data.id) }
-  );
-  Socket.bind(
-    courseSessionChannel,
-    Events.ASSESSMENT_ACTIVATED,
-    (data) => {
-      receivedActiveAssessment(
+  const events = {
+    [Events.QUESTION_ASKED]: {
+      name: Events.QUESTION_ASKED,
+      handler: (data) => addQuestion(data.question),
+    },
+    [Events.QUESTION_REMOVED]: {
+      name: Events.QUESTION_REMOVED,
+      handler: (data) => dismissQuestion(data.id),
+    },
+    [Events.RESPONSE_ADD]: {
+      name: Events.RESPONSE_ADD,
+      handler: (data) => addResponse(data.response),
+    },
+    [Events.RESPONSE_REMOVED]: {
+      name: Events.RESPONSE_ADD,
+      handler: (data) => removeResponse(data.response)
+    },
+    [Events.VOTE_ADD]: {
+      name: Events.VOTE_ADD,
+      handler: (data) => {
+        if (data.vote.userId === userId) return;
+        addVote(data.targetId, data.vote)
+      },
+    },
+    [Events.VOTE_REMOVE]: {
+      name: Events.VOTE_REMOVE,
+      handler: (data) => {
+        if (data.userId === userId) return;
+        removeVote(data.id, data.userId)
+      },
+    },
+    [Events.ADD_FLAG]: {
+      name: Events.ADD_FLAG,
+      handler: (data) => addFlag(data.id),
+    },
+    [Events.REMOVE_FLAG]: {
+      name: Events.REMOVE_FLAG,
+      handler: (data) => removeFlag(data.id),
+    },
+    [Events.ASSESSMENT_ACTIVATED]: {
+      name: Events.ASSESSMENT_ACTIVATED,
+      handler: (data) => receivedActiveAssessment(
         data.assessmentId,
         data.assessmentType,
         data.question,
         data.options,
-      )
+      ),
+    },
+    [Events.ASSESSMENT_DEACTIVATED]: {
+      name: Events.ASSESSMENT_DEACTIVATED,
+      handler: (data) => deactivateAssessment(),
+    },
+    [Events.REFLECTIVE_ASSESSMENT_START_REVIEW]: {
+      name: Events.REFLECTIVE_ASSESSMENT_START_REVIEW,
+      handler: (data) => reflectiveStartReview(
+        data.toReview.filter(a => a.userId !== userId)
+      ),
+    },
+    [Events.ADD_ENDORSE]: {
+      name: Events.ADD_ENDORSE,
+      handler: (data) => addEndorse(data.id),
+    },
+    [Events.REMOVE_ENDORSE]: {
+      name: Events.REMOVE_ENDORSE,
+      handler: (data) => removeEndorse(data.id),
+    },
+    [Events.STUDENT_JOINED_ATTENDANCE]: {
+      name: Events.STUDENT_JOINED_ATTENDANCE,
+      handler: (data) => studentJoinedAttendance(data.attendance),
+    },
+    [Events.END_COURSESESSION]: {
+      name: Events.END_COURSESESSION,
+      handler: (data) => goToCourses(userId),
     }
-  );
-  Socket.bind(
-    courseSessionChannel,
-    Events.ASSESSMENT_DEACTIVATED,
-    (data) => {
-      deactivateAssessment();
-    }
-  );
-  Socket.bind(
-    courseSessionChannel,
-    Events.REFLECTIVE_ASSESSMENT_START_REVIEW,
-    (data) => {
-      reflectiveStartReview(data.toReview.filter(a => a.userId !== userId));
-    }
-  );
-  Socket.bind(
-    courseSessionChannel,
-    Events.ADD_ENDORSE,
-    (data) => addEndorse(data.id),
-  );
-  Socket.bind(
-    courseSessionChannel,
-    Events.REMOVE_ENDORSE,
-    (data) => removeEndorse(data.id),
-  );
-  Socket.bind(
-    courseSessionChannel,
-    Events.STUDENT_JOINED_ATTENDANCE,
-    (data) => {
-      console.log("Student Joined Attendance");
-      console.log(JSON.stringify(data, null, 2));
-      studentJoinedAttendance(data.attendance);
-    }
-  );
-  Socket.bind(
-    courseSessionChannel,
-    Events.END_COURSESESSION,
-    (data) => goToCourses(userId)
-  )
+  };
+  Socket.bindAllEvents(events, courseSessionChannel);
 }
 
 async function handleAlertThreshold(
@@ -270,7 +250,6 @@ class DashStudent extends Component {
 
   componentWillUnmount() {
     Socket.disconnect() ;
-    Socket.clearPersistenceInterval();
     window.clearInterval(window.intervalGetAlerts);
   }
 
@@ -281,7 +260,6 @@ class DashStudent extends Component {
       courseId,
       courseSessionId,
       userId,
-      onConfirmClick,
       onAlertClick,
       setModeToAsk,
       setModeToQuestions,
@@ -291,23 +269,107 @@ class DashStudent extends Component {
       hideOverlay,
       hideAlertOverlay,
       isAlertOverlayVisible,
-      isAlertOverlayShown,
-      children,
-      logOut,
       params,
       activeAlerts,
-      attendance,
       threshold,
       isDrawerOpen,
-      openDrawer,
       closeDrawer,
       isInAttendance,
       overlayType,
       openAttendanceDialog,
       closeAttendanceDialog,
-      studentJoinedAttendance
+      addQuestion,
+      addVote,
+      removeVote,
+      dismissQuestion,
+      addFlag,
+      removeFlag,
+      receivedActiveAssessment,
+      deactivateAssessment,
+      reflectiveStartReview,
+      addEndorse,
+      removeEndorse,
+      studentJoinedAttendance,
+      addResponse,
+      removeResponse,
+      connectionStatus,
+      setConnectionStatus,
     }  = this.props;
-    console.log('overlayType', overlayType);
+    const events = {
+      [Events.QUESTION_ASKED]: {
+        name: Events.QUESTION_ASKED,
+        handler: (data) => addQuestion(data.question),
+      },
+      [Events.QUESTION_REMOVED]: {
+        name: Events.QUESTION_REMOVED,
+        handler: (data) => dismissQuestion(data.id),
+      },
+      [Events.RESPONSE_ADD]: {
+        name: Events.RESPONSE_ADD,
+        handler: (data) => addResponse(data.response),
+      },
+      [Events.RESPONSE_REMOVED]: {
+        name: Events.RESPONSE_ADD,
+        handler: (data) => removeResponse(data.response)
+      },
+      [Events.VOTE_ADD]: {
+        name: Events.VOTE_ADD,
+        handler: (data) => {
+          if (data.userId === userId) return;
+          addVote(data.targetId, data.vote)
+        },
+      },
+      [Events.VOTE_REMOVE]: {
+        name: Events.VOTE_REMOVE,
+        handler: (data) => {
+          if (data.userId === userId) return;
+          removeVote(data.id, data.userId)
+        },
+      },
+      [Events.ADD_FLAG]: {
+        name: Events.ADD_FLAG,
+        handler: (data) => addFlag(data.id),
+      },
+      [Events.REMOVE_FLAG]: {
+        name: Events.REMOVE_FLAG,
+        handler: (data) => removeFlag(data.id),
+      },
+      [Events.ASSESSMENT_ACTIVATED]: {
+        name: Events.ASSESSMENT_ACTIVATED,
+        handler: (data) => receivedActiveAssessment(
+          data.assessmentId,
+          data.assessmentType,
+          data.question,
+          data.options,
+        ),
+      },
+      [Events.ASSESSMENT_DEACTIVATED]: {
+        name: Events.ASSESSMENT_DEACTIVATED,
+        handler: (data) => deactivateAssessment(),
+      },
+      [Events.REFLECTIVE_ASSESSMENT_START_REVIEW]: {
+        name: Events.REFLECTIVE_ASSESSMENT_START_REVIEW,
+        handler: (data) => reflectiveStartReview(
+          data.toReview.filter(a => a.userId !== userId)
+        ),
+      },
+      [Events.ADD_ENDORSE]: {
+        name: Events.ADD_ENDORSE,
+        handler: (data) => addEndorse(data.id),
+      },
+      [Events.REMOVE_ENDORSE]: {
+        name: Events.REMOVE_ENDORSE,
+        handler: (data) => removeEndorse(data.id),
+      },
+      [Events.STUDENT_JOINED_ATTENDANCE]: {
+        name: Events.STUDENT_JOINED_ATTENDANCE,
+        handler: (data) => studentJoinedAttendance(data.attendance),
+      },
+      [Events.END_COURSESESSION]: {
+        name: Events.END_COURSESESSION,
+        handler: (data) => goToCourses(userId),
+      }
+    };
 
     const adjustedAlertPercentage = () => {
       console.log("ADJUSTED ALERT PERCENTAGE");
@@ -477,6 +539,13 @@ class DashStudent extends Component {
             )
             : null
           }
+          <ConnectionBar
+            isCourseSesionActive={!!courseSessionId}
+            courseSessionId={courseSessionId}
+            connectionStatus={connectionStatus}
+            setConnectionStatus={setConnectionStatus}
+            requiredEvents={events}
+          />
         </div>
       );
     }
@@ -498,7 +567,8 @@ const mapStateToProps = (state) => {
     isDrawerOpen: !!state.Drawer.isOpen,
     isInAttendance: !!state.Drawer.isInAttendance,
     overlayType: state.Overlay.type,
-    attendance: state.Course.Attendance.numberAttendees
+    attendance: state.Course.Attendance.numberAttendees,
+    connectionStatus: state.Socket.connectionStatus,
   }
 };
 
@@ -666,7 +736,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     studentJoinedAttendance : (attendance) => {
       dispatch(AttendanceActions.studentJoined(attendance));
-    }
+    },
+    setConnectionStatus: (connectionStatus) => {
+      dispatch(SocketActions.setConnectionStatus(connectionStatus));
+    },
   }
 };
 
