@@ -22,7 +22,7 @@ import Menu from './Menu';
 import Drawer from './Drawer';
 import {reducer as Toastr} from 'react-redux-toastr'
 import { routerReducer } from 'react-router-redux';
-
+import Window from './Window';
 
 const Root = combineReducers({
   Loading,
@@ -41,6 +41,7 @@ const Root = combineReducers({
   Graph,
   Menu,
   Drawer,
+  Window,
   toastr: Toastr,
   routing: routerReducer,
   Admin,

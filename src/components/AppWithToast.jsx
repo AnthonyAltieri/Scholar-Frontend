@@ -13,6 +13,8 @@ import { grey100, grey300, grey500, darkBlack, fullBlack,
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import { fade } from '../../node_modules/material-ui/utils/colorManipulator';
+import * as WindowActions from '../actions/Window'
+import throttle from 'lodash/throttle';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
@@ -41,6 +43,21 @@ const muiTheme = getMuiTheme({
 });
 
 class AppWithToast extends Component {
+
+  componentDidMount() {
+    this.props.dispatch(WindowActions.resize(
+      window.innerWidth,
+      window.innerHeight
+    ));
+    window.onresize = throttle(() => {
+      this.props.dispatch(WindowActions.resize(
+        window.innerWidth,
+        window.innerHeight
+      ))
+    }, 500);
+
+  }
+
   render() {
     const { children, isLoading } = this.props;
 

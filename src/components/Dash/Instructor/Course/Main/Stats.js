@@ -10,6 +10,7 @@ const Stats = ({
   numberPresent,
   numberActiveAlerts,
   numberAttendance,
+  windowHeight,
 }) => (
   <div className="fullwidth fullheight">
     <div className="heading">

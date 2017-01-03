@@ -106,6 +106,7 @@ const stateToProps = (state) => ({
   isCourseSessionActive: !!state.Course.activeCourseSessionId,
   activeCourseSessionId: state.Course.activeCourseSessionId,
   filter: state.Dash.Instructor.Course.Main.filter,
+  windowHeight: state.Window.height,
 });
 
 const dispatchToProps = (dispatch) => ({
