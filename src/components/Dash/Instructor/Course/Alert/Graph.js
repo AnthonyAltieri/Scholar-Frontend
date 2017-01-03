@@ -46,10 +46,7 @@ var AlertGraph = React.createClass({
             },
             x: 'label',
             y: 'value',
-            duration: 1,
-            margin: {
-              left: 200
-            }
+            duration: 1
           })
         }
       </div>

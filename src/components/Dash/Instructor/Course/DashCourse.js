@@ -306,7 +306,7 @@ class DashCourse extends Component {
       }
 
       case 'ALERT': {
-        content = (<Graph />);
+        content = (<Alert />);
         break;
       }
 

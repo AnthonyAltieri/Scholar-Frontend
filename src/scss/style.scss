@@ -2001,7 +2001,8 @@ $connection-bar-height: 18px;
 }
 
 #lineChart svg {
-  min-height: 400px;
+  margin: auto;
+  min-height: 444px;
   max-width: 750px;
 }
 
