@@ -1562,11 +1562,25 @@ $connection-bar-height: 18px;
     }
   }
 
+  .stats-row {
+    flex-wrap: wrap;
+    @extend .r-center;
+  }
   .stat {
-    margin: 0 8px;
+    margin: 8px 8px;
+    width: 120px;
+    height: 120px;
+    display: inline-block;
+    border: 1px solid rgba(0,0,0,0.2);
+    .name-container {
+      height: 60px;
+      background-color: rgba(0,0,0,0.1);
+    }
     .name {
       font-weight: 700;
       margin: 0 auto;
+      text-align: center;
+      max-width: 100px;
     }
     .number {
       margin: 0 auto;
@@ -1574,7 +1588,20 @@ $connection-bar-height: 18px;
       width: 100%;
       text-align: center;
     }
-
+  }
+  .stat.mini {
+    width: 100px;
+    height: 100px;
+    .name-container {
+      height: 42px;
+    }
+    .name {
+      max-width: 80px;
+      font-size: 14px;
+    }
+    .number {
+      font-size: 38px;
+    }
   }
 
   .mode-content {

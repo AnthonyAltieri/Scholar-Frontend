@@ -188,6 +188,7 @@ class DashInstructor extends Component {
             onTouchTap={() => {
               logOut();
               navigate('/login');
+              closeDrawer();
             }}
           />
           <MenuItem
@@ -220,7 +221,9 @@ class DashInstructor extends Component {
     }
 
     return (
-      <div className="dash-instructor">
+      <div
+        className="dash-instructor"
+      >
         {/* <Nav
           courseAbbreviation={courseAbbreviation}
           isCourseSessionActive={isCourseSessionActive}
@@ -251,6 +254,8 @@ class DashInstructor extends Component {
                     className="no-text-sel"
                     style={{
                       margin: '0 4px 0 0',
+                      position: 'relative',
+                      bottom: 1,
                       color: isCourseSessionActive
                         ? Colors.green
                         : Colors.red,
@@ -262,6 +267,7 @@ class DashInstructor extends Component {
                   <FontIcon
                     className="material-icons"
                     style={{
+                      fontSize: 14,
                       color: isCourseSessionActive
                         ? Colors.green
                         : Colors.red,

@@ -16,6 +16,9 @@ const Questions = ({
   filter,
 }) => (
   <div className="fullheight fullwidth">
+    <div className="heading">
+      <p className="header">Question List</p>
+    </div>
     <QuestionsFilterBar
       activeFilter={filter}
       onMostRecentClick={() => setFilter('MOST_RECENT')}
