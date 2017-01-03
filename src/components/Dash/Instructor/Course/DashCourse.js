@@ -19,6 +19,7 @@ import Socket from '../../../../socket/Socket'
 import Events from '../../../../socket/Events';
 import Ask from './Ask/Ask';
 import Alert from './Alert/Alert';
+import Main from './Main/Main';
 import ConnectionBar from '../../../ConnectionBar';
 import Graph from './Alert/Graph';
 import Assess from './Assess/Assess';
@@ -291,7 +292,7 @@ class DashCourse extends Component {
     let content = null;
     switch (mode) {
       case 'MAIN': {
-        content = (<p>main</p>);
+        content = (<Main />);
         break;
       }
 

@@ -14,7 +14,7 @@ const TagBar = ({
 }) => (
   <div className="r-center fullwidth">
     <TextField
-      hintText="tag(s)"
+      hintText="search by tag(s)"
       id={inputId}
       ref={inputRef}
       onChange={onChange}
