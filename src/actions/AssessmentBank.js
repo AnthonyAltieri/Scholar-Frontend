@@ -158,3 +158,13 @@ export const moveToQueue = (id) => ({
   type: 'ASSESSMENT_BANK_MOVE_TO_QUEUE',
   id,
 });
+
+export const setBankTag = (bankTag) => ({
+  type: 'ASSESSMENT_BANK_SET_BANK_TAG',
+  bankTag,
+});
+
+export const setQueueTag = (queueTag) => ({
+  type: 'ASSESSMENT_BANK_SET_QUEUE_TAG',
+  queueTag,
+});

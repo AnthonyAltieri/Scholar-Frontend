@@ -62,7 +62,8 @@ const BankedQuestionList = ({
             )
           }}
           onOptionClearClick={(index) => {
-            onOptionClearClick(index, bq.id)
+          console.log('onOptionClearClick, bq', bq);
+            onOptionClearClick(index, bq.id, bq.tags)
           }}
           onSaveClick={onSaveClick}
           onRemoveClick={onRemoveClick}

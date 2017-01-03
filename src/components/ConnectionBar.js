@@ -27,7 +27,7 @@ function reconnectDisconnectedSockets(
 
 
 const secondsToMili = seconds => seconds * 1000;
-const INTERVAL_TIME = secondsToMili(5);
+const INTERVAL_TIME = secondsToMili(60);
 
 class ConnectionBar extends Component {
   componentDidMount() {
@@ -38,6 +38,34 @@ class ConnectionBar extends Component {
       connectionStatus,
       setConnectionStatus,
     } = this.props;
+    try {
+      // Determine new connection status
+      let newConnectionStatus = Socket
+        .determineConnectionStatus(
+          `private-${courseSessionId}`,
+          requiredEvents
+        );
+      if (process.NODE_ENV !== 'production') {
+        console.group('[SOCKET] - Status');
+        console.log('%c Connection Status', 'color: blue', newConnectionStatus);
+        console.groupEnd();
+      }
+      // If that is not the same as it used to be, change it
+      if (newConnectionStatus !== connectionStatus) {
+        setConnectionStatus(newConnectionStatus);
+      }
+      if (newConnectionStatus === 'DISCONNECTED'
+        || newConnectionStatus === 'PARTIAL') {
+        reconnectDisconnectedSockets(
+          isCourseSessionActive,
+          courseSessionId,
+          Socket.getEventNamesConnected(`private-${courseSessionId}`),
+          requiredEvents,
+        )
+      }
+    } catch (e) {
+      console.error('[ERROR] socketConnectionInterval', e);
+    }
     window.socketConnectionInterval = window.setInterval(() => {
       try {
         // Determine new connection status
@@ -48,8 +76,7 @@ class ConnectionBar extends Component {
           );
         if (process.NODE_ENV !== 'production') {
           console.group('[SOCKET] - Status');
-          console.log('%c Old Connection Status', 'color: red',connectionStatus);
-          console.log('%c New Connection Status', 'color: blue', newConnectionStatus);
+          console.log('%c Connection Status', 'color: blue', newConnectionStatus);
           console.groupEnd();
         }
         // If that is not the same as it used to be, change it
@@ -80,9 +107,10 @@ class ConnectionBar extends Component {
   render() {
     const {
       connectionStatus,
+      isCourseSessionActive,
     } = this.props;
     let statusText = 'disconnected';
-    if (connectionStatus === 'DISCONNECTED') {
+    if (connectionStatus === 'DISCONNECTED' || !isCourseSessionActive) {
       statusText = 'disconnected';
     } else if (connectionStatus === 'PARTIAL') {
       statusText = 'partial';
@@ -93,7 +121,17 @@ class ConnectionBar extends Component {
     }
     return (
       <div className={`connection-bar ${statusText}`}>
-        <p>{statusText}</p>
+        <p>
+          <span
+            style={{
+              fontWeight: 300,
+              marginRight: 4,
+            }}
+          >
+            Connection Status:
+          </span>
+          {statusText}
+        </p>
       </div>
     );
   }

@@ -10,6 +10,10 @@ const initialState = {
 const Overlay = (state = initialState, action) => {
   switch (action.type) {
 
+    case 'LOG_OUT': {
+      return initialState;
+    }
+
     case 'PROMPT_END_SESSION':
     case 'SHOW_OVERLAY': {
       return {

@@ -18,11 +18,13 @@ const LogOutDialog = ({
     modal={false}
     actions={[
       <FlatButton
+        key="log-out-dialog-no"
         label="No"
         onTouchTap={onNoClick}
         style={{ color: Colors.red}}
       />,
       <FlatButton
+        key="log-out-dialog-yes"
         label="Yes"
         onTouchTap={onYesClick}
         style={{ color: Colors.green }}

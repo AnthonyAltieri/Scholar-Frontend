@@ -33,6 +33,9 @@ $font-default: Lato, Helvetica, SansSerif;
 //g.nvd3.nv-wrap.nv-lineChart{
 //  width: 100%;
 //}
+svg.nvd3-svg {
+  margin: 0 auto;
+}
 
 
 
@@ -76,7 +79,7 @@ $font-default: Lato, Helvetica, SansSerif;
 }
 
 .background-bright {
-  background-color: $color-bright;
+  background-color: $color-bright !important;
 }
 .background-secondary {
   background-color: $color-secondary !important;
@@ -1023,7 +1026,7 @@ $nav-btn-height: 40px;
   overflow-x: hidden;
   top: 0;
   bottom: 0;
-  padding: 180px 0 4px 0;
+  padding: 200px 0 4px 0;
   position: absolute;
   @extend .c, .card;
 }
@@ -1041,9 +1044,9 @@ $nav-btn-height: 40px;
     text-align: center;
     margin: 4px 0;
     border-radius: 14px;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: bold;
-    padding: 8px 12px;
+    padding: 2px 8px;
     color: white;
     background-color: $color-dark;
     @extend .no-text-sel;
@@ -1163,11 +1166,13 @@ $nav-btn-height: 40px;
 }
 .floating-heading {
   position: fixed;
-  top: 68px;
-  right: 4px;
-  left: 4px;
-  z-index: 10;
-
+  top: 64px;
+  right: 0px;
+  left: 0px;
+  z-index: 200;
+  .heading {
+    width: 100%;
+  }
   .partition-half {
     width: 50%;
     display: block;
@@ -1337,6 +1342,7 @@ $connection-bar-height: 18px;
 .dash-instructor {
   $side-nav-width: 0px;
   min-height: 660px;
+  min-width: 768px;
   position: absolute;
   top: 0; right: 0; bottom: 0;
   left: $side-nav-width + 2;
@@ -1908,6 +1914,8 @@ $connection-bar-height: 18px;
     justify-content: space-between;
     cursor: pointer;
     box-shadow: rgba(0, 0, 0, 0.247059) 0px 2px 8px, rgba(0, 0, 0, 0.219608) 0px 0px 3px;
+    border: 3px solid transparent;
+
 
     p {
       cursor: pointer;
@@ -1959,6 +1967,36 @@ $connection-bar-height: 18px;
   .course:active {
     box-shadow: rgba(0, 0, 0, 0.247059) 0px 2px 1px, rgba(0, 0, 0, 0.219608) 0px 0px 1px;
   }
+  .course.selected {
+    border: dashed 3px $color-bright;
+  }
+  .panel-selected-course {
+    height: 150px;
+    min-height: 150px;
+    padding: 12px;
+    position: absolute;
+    bottom: 4px;
+    left: 6px;
+    right: 6px;
+    z-index: 200;
+    justify-content: space-between;
+    .selected-course-label {
+      font-size: 22px;
+      font-weight: bolder;
+      margin: 4px 8px 4px 0;
+    }
+    .selected-course {
+      font-size: 22px;
+      margin: 4px 8px 4px 0;
+    }
+    .selected-course-info-label {
+      margin: 4px 8px 4px 0;
+    }
+    .selected-course-info{
+      margin: 0;
+    }
+    @extend .card, .c;
+  }
 
 }
 
@@ -1970,3 +2008,38 @@ $connection-bar-height: 18px;
 #instantGraph svg {
   min-height: 300px;
 }
+.sk-three-bounce {
+  margin: 40px auto;
+  width: 80px;
+  text-align: center; }
+.sk-three-bounce .sk-child {
+  width: 20px;
+  height: 20px;
+  background-color: #333;
+  border-radius: 100%;
+  display: inline-block;
+  -webkit-animation: sk-three-bounce 1.4s ease-in-out 0s infinite both;
+  animation: sk-three-bounce 1.4s ease-in-out 0s infinite both; }
+.sk-three-bounce .sk-bounce1 {
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s; }
+.sk-three-bounce .sk-bounce2 {
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s; }
+
+@-webkit-keyframes sk-three-bounce {
+  0%, 80%, 100% {
+    -webkit-transform: scale(0);
+    transform: scale(0); }
+  40% {
+    -webkit-transform: scale(1);
+    transform: scale(1); } }
+
+@keyframes sk-three-bounce {
+  0%, 80%, 100% {
+    -webkit-transform: scale(0);
+    transform: scale(0); }
+  40% {
+    -webkit-transform: scale(1);
+    transform: scale(1); } }
+

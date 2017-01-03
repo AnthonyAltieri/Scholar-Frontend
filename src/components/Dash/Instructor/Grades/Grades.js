@@ -23,14 +23,13 @@ class Grades extends Component {
       courses
     } = this.props;
     return (
-      <div className="home-instructor fullheight">
-        <div className="c-center fullheight">
+      <div className="home-instructor">
+        <div className="c-center">
           <div
             className="card"
             style={{
-              height: 400,
               width: '98%',
-              margin: 'auto',
+              margin: '12px auto auto auto',
             }}
           >
             <p

@@ -36,7 +36,7 @@ function bind(channelName, event, callback) {
   if (!console.group) {
     console.log('[SOCKET] bind to ' + channelName + ' | ' + event);
   } else {
-    console.group('[SOCKET]');
+    console.group('[SOCKET] - bind');
     console.log('%c Channel Name', 'color: blue', channelName);
     console.log('%c Event', 'color: green', event);
     console.groupEnd();

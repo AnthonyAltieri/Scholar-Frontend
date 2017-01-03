@@ -35,14 +35,28 @@ const Section = ({
   filter,
   changeFilter,
   showAddCodeDialog,
+  chooseCourse,
+  selectedCourse,
+  onCourseClick,
 }) => {
   return (
-    <div className="full-pane card">
-      <div className="header">
+    <div
+      className="full-pane card"
+      style={{
+        bottom: 160,
+      }}
+    >
+      <div
+        className="header"
+        style={{
+          borderBottom: '1px dashed #ece7ef',
+        }}
+      >
         <h1
           className="heading"
           style={{
             marginRight: 18,
+            borderBottom: 'none',
           }}
         >
           Course List
@@ -53,44 +67,48 @@ const Section = ({
           onTouchTap={() => showAddCodeDialog()}
         />
       </div>
-      <div className="r">
-        <p className="filters-text">Filters:</p>
-        <Filter
-          isActive={filter === 'ALL'}
-          text="All"
-          onClick={() => {
-            if (filter !== 'ALL') {
-              changeFilter('ALL');
-            }
-          }}
-        />
-        <Filter
-          isActive={filter === 'CURRENT_TERM'}
-          text="Current Term"
-          onClick={() => {
-            if (filter !== 'CURRENT_TERM') {
-              changeFilter('CURRENT_TERM');
-            }
-          }}
-        />
-        <Filter
-          isActive={filter === 'PRIOR_TERM'}
-          text="Prior Term"
-          onClick={() => {
-            if (filter !== 'PRIOR_TERM') {
-              changeFilter('PRIOR_TERM');
-            }
-          }}
-        />
-      </div>
       <CourseList
+        onCourseClick={onCourseClick}
         courses={filterCourses(filter, courses)}
         navigate={navigate}
         goToCourse={goToCourse}
         joinCourse={joinCourse}
+        chooseCourse={chooseCourse}
+        selectedCourse={selectedCourse}
       />
     </div>
   );
 };
+
+// <div className="r">
+//   <p className="filters-text">Filters:</p>
+//   <Filter
+//     isActive={filter === 'ALL'}
+//     text="All"
+//     onClick={() => {
+//             if (filter !== 'ALL') {
+//               changeFilter('ALL');
+//             }
+//           }}
+//   />
+//   <Filter
+//     isActive={filter === 'CURRENT_TERM'}
+//     text="Current Term"
+//     onClick={() => {
+//             if (filter !== 'CURRENT_TERM') {
+//               changeFilter('CURRENT_TERM');
+//             }
+//           }}
+//   />
+//   <Filter
+//     isActive={filter === 'PRIOR_TERM'}
+//     text="Prior Term"
+//     onClick={() => {
+//             if (filter !== 'PRIOR_TERM') {
+//               changeFilter('PRIOR_TERM');
+//             }
+//           }}
+//   />
+// </div>
 
 export default Section;

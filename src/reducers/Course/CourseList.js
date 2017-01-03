@@ -15,8 +15,6 @@ const setCourseActivation = (state, action) => {
 };
 
 const CourseList = (state = [], action) => {
-    console.log('CourseList Reducer, state', state)
-    console.log('action', action);
   switch (action.type) {
     case 'RECEIVED_COURSES': {
       return [

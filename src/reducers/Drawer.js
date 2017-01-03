@@ -1,5 +1,11 @@
-const Drawer = (state = {}, action) => {
+const initialState = {};
+
+const Drawer = (state = initialState, action) => {
   switch (action.type) {
+    case 'LOG_OUT': {
+      return initialState;
+    }
+
     case 'DRAWER_OPEN': {
       return {
         ...state,

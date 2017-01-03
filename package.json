@@ -17,6 +17,7 @@
     "fixed-data-table": "^0.6.3",
     "material-ui": "^0.16.1",
     "moment": "^2.17.0",
+    "moment-timezone": "^0.5.11",
     "nvd3": "^1.8.2",
     "react": "^15.3.2",
     "react-addons-css-transition-group": "^15.3.1",
@@ -31,6 +32,7 @@
     "redux": "^3.5.2",
     "shortid": "^2.2.6",
     "spinkit": "^1.2.5",
+    "tzwhere": "^1.0.0",
     "uuid": "^2.0.3"
   },
   "devDependencies": {

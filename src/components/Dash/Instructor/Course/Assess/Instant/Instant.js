@@ -51,6 +51,7 @@ const Instant = ({
         <textarea
           placeholder="Enter question here..."
           className="reflective-question"
+          id="questiontext-instant"
           style={{
             height: 52,
           }}

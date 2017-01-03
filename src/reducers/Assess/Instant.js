@@ -1,10 +1,16 @@
 const initialState = {
   options: [],
   answers: [],
-}
+  correctOption: -1,
+};
 
 const Instant = (state = initialState, action) => {
   switch (action.type) {
+
+    case 'LOG_OUT': {
+      return initialState;
+    }
+
     case 'RECEIVED_ACTIVE_ASSESSMENT': {
       return action.assessmentType === 'INSTANT'
         ? {
@@ -13,8 +19,8 @@ const Instant = (state = initialState, action) => {
           options: action.options,
         }
         : state;
-
     }
+
 
     case 'FOUND_ACTIVE_INSTANT_ASSESSMENT': {
       return {
@@ -38,6 +44,7 @@ const Instant = (state = initialState, action) => {
       return {
         ...state,
         isActive: false,
+        correctOption: -1,
         options: [],
       }
     }

@@ -12,11 +12,11 @@ const Course = ({
   time,
   days,
   onClick,
+  isSelectedCourse,
 }) => {
   let imgSrc = null;
   let backgroundColor = '';
   let imgStyle = null;
-  console.log('in Course, subject', subject)
   switch (subject) {
     case 'COMPUTER_SCIENCE': {
       imgSrc = require('../../../../img/CourseIcons/computer.svg');
@@ -53,7 +53,7 @@ if (!date) {
     return (
       <div
         onClick={onClick}
-        className="course"
+        className={`course ${!!isSelectedCourse ? 'selected' : ''}`}
         style={{
         backgroundColor,
       }}

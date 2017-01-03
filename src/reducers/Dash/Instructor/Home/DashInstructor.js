@@ -4,11 +4,11 @@
 
 import { combineReducers } from 'redux';
 import AddCourse from './AddCourse';
-import Courses from './Courses';
+import CourseSection from './CourseSection';
 
 const DashInstructor = combineReducers({
   AddCourse,
-  Courses,
+  CourseSection,
 });
 
 export default DashInstructor;

@@ -34,7 +34,7 @@ import * as AlertActions from '../../../actions/Alert'
 import * as MenuActions from '../../../actions/Menu'
 import * as ReflectiveActions from '../../../actions/Assess/Reflelctive';
 import { createAlert } from '../../../api/Alert'
-import { joinAttendance, getNumberInAttendance } from '../../../api/CourseSession'
+import { joinAttendance, getNumberInAttendance, numberInCourseSessionGet } from '../../../api/CourseSession'
 import { toastr } from 'react-redux-toastr';
 import * as AttendanceActions from '../../../actions/Attendance'
 import { getByUser as getCoursesByUser } from '../../../api/Courses';
@@ -88,6 +88,7 @@ function setUpSockets(props) {
     removeEndorse,
     userId,
     studentJoinedAttendance,
+    studentJoinedCourseSession,
     goToCourses,
     addResponse,
     removeResponse,
@@ -167,7 +168,13 @@ function setUpSockets(props) {
     [Events.END_COURSESESSION]: {
       name: Events.END_COURSESESSION,
       handler: (data) => goToCourses(userId),
-    }
+    },
+    [Events.STUDENT_JOINED_COURSESESSION]: {
+      name: Events.STUDENT_JOINED_COURSESESSION,
+      handler: (data) => studentJoinedCourseSession(
+        data.numberInCourseSession,
+      ),
+    },
   };
   Socket.bindAllEvents(events, courseSessionChannel);
 }
@@ -224,7 +231,8 @@ class DashStudent extends Component {
       setAlertThreshold,
       setAlertPercentage,
       updateAlertGraph,
-      attendance
+      attendance,
+      studentJoinedCourseSession
     } = this.props;
     endLoading();
     // handleAlertThreshold(
@@ -233,11 +241,18 @@ class DashStudent extends Component {
     //   setAlertThreshold,
     //   setAlertPercentage
     // );
+    let {
+      numberInCourseSession,
+      error,
+    } = await numberInCourseSessionGet(courseSessionId);
+    if (!error) {
+      studentJoinedCourseSession(numberInCourseSession);
+    }
 
     window.intervalGetAlerts =  window.setInterval( async () => {
       try {
         let alerts = await getAlerts(courseSessionId);
-        updateAlertGraph(alerts, 5);
+        updateAlertGraph(alerts);
       }
       catch (e) {
         console.error("[ERROR] in DashCourse Component > ComponentDidMount : " + e)
@@ -294,6 +309,7 @@ class DashStudent extends Component {
       removeResponse,
       connectionStatus,
       setConnectionStatus,
+      numberInCourseSession
     }  = this.props;
     const events = {
       [Events.QUESTION_ASKED]: {
@@ -371,11 +387,9 @@ class DashStudent extends Component {
       }
     };
 
-    const adjustedAlertPercentage = () => {
-      console.log("ADJUSTED ALERT PERCENTAGE");
+    const adjustedAlertPercentage = (numberInCourseSession) => {
       {
-        //TODO: FIX THIS LATER
-        return ((activeAlerts/5)*100);
+        return ((activeAlerts/numberInCourseSession)*100);
       }
     };
         return (
@@ -533,8 +547,8 @@ class DashStudent extends Component {
           {mode !== 'ASSESSMENT'
             ? (
               <AlertGraph
-                percentage={adjustedAlertPercentage()}
-                isPastThreshold={(adjustedAlertPercentage() >= threshold) ? 1 : 0}
+                percentage={adjustedAlertPercentage(numberInCourseSession)}
+                isPastThreshold={(adjustedAlertPercentage(numberInCourseSession) >= threshold) ? 1 : 0}
               />
             )
             : null
@@ -568,6 +582,7 @@ const mapStateToProps = (state) => {
     isInAttendance: !!state.Drawer.isInAttendance,
     overlayType: state.Overlay.type,
     attendance: state.Course.Attendance.numberAttendees,
+    numberInCourseSession: state.Course.Attendance.numberInCourseSession,
     connectionStatus: state.Socket.connectionStatus,
   }
 };
@@ -705,8 +720,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch(DashStudentActions.setDashMode('QUESTIONS'));
       dispatch(AssessmentActions.deactivate());
     },
-    updateAlertGraph: (activeAlerts, attendance) => {
-      dispatch(AlertActions.updateActiveAlertsStudent(activeAlerts, attendance));
+    updateAlertGraph: (activeAlerts) => {
+      dispatch(AlertActions.updateActiveAlertsStudent(activeAlerts));
     },
     reflectiveStartReview: (toReview) => {
       dispatch(ReflectiveActions.startReview(toReview));
@@ -739,6 +754,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     setConnectionStatus: (connectionStatus) => {
       dispatch(SocketActions.setConnectionStatus(connectionStatus));
+    },
+    studentJoinedCourseSession: (number) => {
+      dispatch(AttendanceActions.studentJoinedCourseSession(number));
     },
   }
 };
