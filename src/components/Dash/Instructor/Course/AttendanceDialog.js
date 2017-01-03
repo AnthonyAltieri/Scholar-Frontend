@@ -6,7 +6,6 @@ import Colors from '../../../../util/Colors';
 import AttendanceCodeBox from './AttendanceCodeBox'
 import { createAttendanceCode, closeAttendance } from '../../../../api/CourseSession';
 import * as AttendanceActions from '../../../../actions/Attendance';
-import Events from '../../../../socket/Events';
 import {toastr} from 'react-redux-toastr'
 const INACTIVE_CODE_TEXT = "INACTIVE";
 
@@ -95,11 +94,9 @@ class AttendanceDialog extends Component {
         actions={[
           <FlatButton
             label="Get Code"
-            style={
-              !isAttendanceOpen?
-              { color: Colors.green }:
-              { color: Colors.lightGray }
-            }
+            style={{
+              color: !!isAttendanceOpen ? Colors.lightGray : Colors.green
+            }}
             disabled={isAttendanceOpen}
             onTouchTap={getCode}
           />,
@@ -107,11 +104,9 @@ class AttendanceDialog extends Component {
             label="Close"
             onTouchTap={deactivateCode}
             disabled={!isAttendanceOpen}
-            style={
-              !isAttendanceOpen?
-              { color: Colors.lightGray }:
-              { color: Colors.red }
-            }
+            style={{
+              color: !!isAttendanceOpen ? Colors.red : Colors.lightGray
+            }}
           />,
           <FlatButton
             label="Exit"
@@ -145,9 +140,6 @@ class AttendanceDialog extends Component {
     );
 
     return content;
-  }
-
-  componentWillUnmount() {
   }
 }
 

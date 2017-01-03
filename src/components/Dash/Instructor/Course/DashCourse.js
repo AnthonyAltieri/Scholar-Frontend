@@ -142,6 +142,10 @@ function handleSockets(props) {
 }
 
 class DashCourse extends Component {
+  componentWillMount() {
+    window.clearInterval(window.intervalGetAlerts);
+  }
+
   async componentDidMount() {
     const {
       courseSessionId,
@@ -183,7 +187,7 @@ class DashCourse extends Component {
       window.intervalGetAlerts =  window.setInterval( async () => {
         try {
           let alerts = await getAlerts(courseSessionId);
-          updateAlertGraph(alerts, numberInCourseSession, alertGraph);
+          updateAlertGraph(alerts, alertGraph);
         } catch (e) {
           console.error("[ERROR] in DashCourse Component > ComponentDidMount : " + e)
         }
@@ -408,8 +412,8 @@ const dispatchToProps = (dispatch, ownProps) => ({
     dispatch(CourseActions.deactivateCourse(ownProps.params.courseId));
     window.clearInterval(window.intervalGetAlerts);
   },
-  updateAlertGraph: (activeAlerts, attendance, graph) => {
-    dispatch(AlertActions.receivedActiveAlerts(activeAlerts, attendance, graph));
+  updateAlertGraph: (activeAlerts, graph) => {
+    dispatch(AlertActions.receivedActiveAlerts(activeAlerts, graph));
    },
   activateCourseSession: async (courseSessionId) => {
     dispatch(CourseActions.activateCourse(ownProps.params.courseId, courseSessionId));

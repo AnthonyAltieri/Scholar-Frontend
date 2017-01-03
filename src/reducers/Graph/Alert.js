@@ -6,7 +6,8 @@ const initialState = {
   threshold: DEFAULT_THRESHOLD,
   graph: null,
   activeAlerts: 0,
-  attendance: 0
+  numberInCourseSession: 0,
+  tickNumber: 0
 };
 
 
@@ -18,12 +19,20 @@ const Alert = (state = initialState, action) => {
     }
 
     case 'JOIN_COURSE':
+    case 'STUDENT_JOINED_COURSESESSION': {
+      return {
+        ...state,
+        numberInCourseSession: action.numberInCourseSession,
+      }
+    }
+
     case 'ACTIVATE_COURSE': {
       return {
         ...state,
         graph : initInstructorAlertGraph(DEFAULT_THRESHOLD),
         activeAlerts: 0,
-        attendance: 0
+        numberInCourseSession: 0,
+        tickNumber: 0
       }
     }
 
@@ -53,6 +62,7 @@ const Alert = (state = initialState, action) => {
     case 'RECEIVED_ACTIVE_ALERTS': {
       return {
         ...state,
+        tickNumber: state.tickNumber + 1,
         activeAlerts : (action.activeAlerts === 0 || !!action.activeAlerts)
           ? action.activeAlerts : state.activeAlerts,
         graph : (!!state.graph)
@@ -60,11 +70,11 @@ const Alert = (state = initialState, action) => {
             action.graph,
             (action.activeAlerts === 0 || !!action.activeAlerts)
               ? action.activeAlerts : state.activeAlerts,
-            (!!action.attendance) ? action.attendance : state.attendance,
+            state.numberInCourseSession,
             DEFAULT_THRESHOLD
           )
           : initInstructorAlertGraph(),
-        attendance : (!!action.attendance) ? action.attendance : state.attendance
+        numberInCourseSession : (!!action.numberInCourseSession) ? action.numberInCourseSession : state.numberInCourseSession
       }
     }
 
@@ -74,8 +84,7 @@ const Alert = (state = initialState, action) => {
       return {
         ...state,
         activeAlerts : (action.activeAlerts===0 || !!action.activeAlerts)
-          ? action.activeAlerts : state.activeAlerts,
-        attendance : (!!action.attendance) ? action.attendance : state.attendance
+          ? action.activeAlerts : state.activeAlerts
       }
     }
 

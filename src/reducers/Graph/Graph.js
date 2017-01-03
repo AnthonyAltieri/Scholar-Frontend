@@ -11,6 +11,7 @@ const Graph = (state = initialState, action) => {
       return initialState;
     }
 
+    case 'STUDENT_JOINED_COURSESESSION':
     case 'JOIN_COURSE':
     case 'ACTIVATE_COURSE':
     case 'SET_ALERT_THRESHOLD':
