@@ -1,59 +1,148 @@
 var path = require('path');
 var webpack = require('webpack');
+const merge = require('webpack-merge');
+const validate = require('webpack-validator');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
+var parts = require('./libs/parts');
+var pkg = require('./package.json');
 var DashboardPlugin = require('webpack-dashboard/plugin');
 
+var PATHS = {
+  app: path.join(__dirname, 'src/index.js'),
+  dist: path.join(__dirname, 'dist'),
+  style: path.join(__dirname, 'src/scss/style.scss'),
+  img: path.join(__dirname, 'src/img'),
+  outputCss: path.join(__dirname, 'dist', '[name]-[contenthash].css')
+};
 
-var babelPresets = {presets: ['react', 'es2015', 'stage-2']};
-
-module.exports = {
-  entry: [
-    'babel-polyfill',
-    './src/index'
-  ],
-  output: {
-    path: path.join(__dirname, 'dist'),
-    publicPath: '/static/',
-    filename: 'app.bundle.js',
+var common = {
+  entry: {
+    style: PATHS.style,
+    app: [
+	    'babel-polyfill',
+	    PATHS.app
+    ],
   },
-  plugins: [
-    //new DashboardPlugin(),
-  ],
+  output: {
+    path: PATHS.dist,
+    publicPath: '/static/',
+    // filename: 'app.bundle.js',
+  },
+  node: {
+    fs: "empty"
+  },
   module: {
     loaders: [
       {
         test: /(\.js$|\.jsx$)/,
         exclude: /node_modules/,
+        // loader: 'babel',
+        // query: {
+        //   cacheDirectory: true,
+        //   presets: ['react', 'es2015']
+        // },
+        // include: PATHS.app,
         loaders: ['babel'],
         include: path.join(__dirname, 'src'),
-      },
-      {
-        test: /\.css$/,
-        loaders: ['style', 'css'],
-      },
-      {
-        test: /\.scss$/,
-        loaders: ['style', 'css', 'sass'],
-      },
-      {
-        test: /\.less$/,
-        loaders: ['style', 'css', 'less'],
-      },
-      {
-        test: /\.png$/,
-        loader: 'url',
-      },
-      {
-        test: /\.svg$/,
-        loader: 'file',
-      },
-      {
-        test: /\.ttf$|\.eot$/,
-        loader: 'file',
-      },
-      {
-        test: /\.woff$/,
-        loader: "file-loader"
-      },
+      }
     ]
   }
 };
+
+var config;
+console.log('process.env.npm_lifecycle_event', process.env.npm_lifecycle_event);
+switch (process.env.npm_lifecycle_event) {
+  case 'build':
+    console.log('case `build`');
+    config = merge(
+      common,
+      {
+        devtool: 'source-map',
+        plugins: [
+          new HtmlWebpackPlugin({
+            title: 'Scholar',
+            filename: 'index.html',
+            template: 'template.ejs'
+          }),
+          new webpack.DefinePlugin({
+            'process.env': {
+              'NODE_ENV': JSON.stringify('production')
+            }
+          }),
+        ],
+        output: {
+          path: PATHS.dist,
+          filename: '[name].[hash].js',
+          chunkFilename: '[chunkhash].js',
+        }
+      },
+      parts.clean(PATHS.dist),
+      // parts.setupBabel(PATHS.app),
+      parts.setupImg(PATHS.img),
+      parts.setupFonts(),
+      parts.setFreeVariable(
+        'process.env.NODE_ENV',
+        'production'
+      ),
+      parts.setupJSON(),
+      parts.extractBundle({
+        name: 'vendor',
+        entries: Object.keys(pkg.dependencies)
+      }),
+      parts.extractCSS(PATHS.outputCss)
+      //parts.minify()
+    );
+    break;
+  default:
+    console.log('case `default`');
+    config = merge(
+      common,
+      {
+        entry: [
+          'babel-polyfill',
+          'webpack-dev-server/client?http://localhost:3000',
+          'webpack/hot/only-dev-server',
+          PATHS.app
+        ],
+        plugins: [
+          new HtmlWebpackPlugin({
+            title: 'Scholar',
+            filename: 'index.html',
+            template: 'template.ejs'
+          }),
+          new webpack.DefinePlugin({
+            'process.env': {
+              'NODE_ENV': JSON.stringify('development')
+            }
+          }),
+          new DashboardPlugin(),
+          new webpack.HotModuleReplacementPlugin()
+        ],
+        devtool: 'source-map',
+        output: {
+          path: PATHS.dist,
+          filename: 'app.bundle.js',
+          // chunkFilename: '[chunkhash].js',
+        }
+      },
+      // parts.setupBabel(PATHS.app),
+      parts.setupCSS(PATHS.style),
+      parts.setupImg(PATHS.img),
+      parts.setupFonts(),
+      parts.setupJSON(),
+      // parts.extractBundle({
+      //   name: 'vendor',
+      //   entries: Object.keys(pkg.dependencies)
+      // }),
+      parts.devServer({
+        host: process.env.HOST,
+        port: process.env.PORT,
+      })
+    );
+    break;
+}
+
+module.exports = validate(config, {
+  quiet: false
+});
+

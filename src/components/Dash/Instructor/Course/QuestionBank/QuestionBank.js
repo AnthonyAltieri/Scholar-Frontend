@@ -351,7 +351,9 @@ class QuestionBank extends Component {
               className="half-sliding-strip right"
             >
               <BankedQuestionList
-                bankedAssessments={visible.filter(ba => !!ba.inQueue)}
+                bankedAssessments={visible
+                .filter(ba => !!ba.inQueue && testTag(ba, queueTag))
+                }
                 onQuestionClick={(questionEditMode, baId) => {
                   if (!questionEditMode) {
                     editQuestionMode(baId);

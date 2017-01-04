@@ -2,11 +2,10 @@
  * @author Anthony Altieri on 11/1/16.
  */
 
-//const SERVER_PREFIX = process.NODE_ENV === 'production'
-  //? 'http://scholarapp.xyz'
-  //: 'http://localhost:7000';
 
-const SERVER_PREFIX = 'http://scholarapp.xyz';
+const SERVER_PREFIX = process.env.NODE_ENV === 'production'
+  ? 'https://scholarapp.xyz'
+  : 'http://localhost:7000';
 
 export const send = (type, url, params = {}, withCredentials = true) => {
   return new Promise((resolve, reject) => {

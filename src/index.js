@@ -6,12 +6,12 @@ import ReactDOM from 'react-dom';
 import React from 'react';
 import Root from './components/Root.js';
 import configureStore from './configureStore'
-import './scss/style.scss';
-
+//import './scss/style.scss';
 
 const store = configureStore();
-//module.hot.accept();
-//// test
+if (process.env.NODE_ENV === 'development') {
+  module.hot.accept();
+}
 
 
 ReactDOM.render(

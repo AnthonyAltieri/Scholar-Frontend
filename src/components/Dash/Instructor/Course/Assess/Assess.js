@@ -158,7 +158,7 @@ class Assess extends Component {
             <div
               className="r-center"
               style={{
-                height: '75%',
+                height: '64%',
                 padding: '0 12px'
               }}
               >
@@ -208,9 +208,9 @@ class Assess extends Component {
                   <p
                     style={{
                       textAlign: 'center',
-                      fontSize: 18,
-                      fontWeight: 300,
-                      marginTop: '39%',
+                      fontSize: 20,
+                      color: 'rgba(0,0,0,0.2)',
+                      marginTop: '140px',
                     }}
                     className="fullwidth no-text-sel"
                   >

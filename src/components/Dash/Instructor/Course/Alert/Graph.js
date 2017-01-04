@@ -26,7 +26,7 @@ var AlertGraph = React.createClass({
   },
   render: function() {
     return (
-      <div id="lineChart">
+      <div>
         {
           React.createElement(NVD3Chart, {
             xAxis: {
@@ -46,10 +46,7 @@ var AlertGraph = React.createClass({
             },
             x: 'label',
             y: 'value',
-            duration: 1,
-            margin: {
-              left: 200
-            }
+            duration: 1
           })
         }
       </div>

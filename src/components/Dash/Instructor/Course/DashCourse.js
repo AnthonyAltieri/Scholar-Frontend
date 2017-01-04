@@ -13,12 +13,14 @@ import * as ReflectiveActions from '../../../../actions/Assess/Reflelctive';
 import * as SocketActions from '../../../../actions/Socket';
 import * as QuestionListActions from '../../../../actions/QuestionList';
 import * as AttendanceActions from '../../../../actions/Attendance';
+import * as DrawerActions from '../../../../actions/Drawer';
 import { numberInCourseSessionGet, getNumberInAttendance } from '../../../../api/CourseSession';
 import { startCourseSession, endCourseSession } from '../../../../api/CourseSession';
 import Socket from '../../../../socket/Socket'
 import Events from '../../../../socket/Events';
 import Ask from './Ask/Ask';
 import Alert from './Alert/Alert';
+import Main from './Main/Main';
 import ConnectionBar from '../../../ConnectionBar';
 import Graph from './Alert/Graph';
 import Assess from './Assess/Assess';
@@ -217,6 +219,7 @@ class DashCourse extends Component {
       courseSessionId,
       connectionStatus,
       setConnectionStatus,
+      closeDrawer,
     } = this.props;
 
     const events = {
@@ -291,7 +294,10 @@ class DashCourse extends Component {
     let content = null;
     switch (mode) {
       case 'MAIN': {
-        content = (<p>main</p>);
+        content = (
+          <Main/>
+        );
+
         break;
       }
 
@@ -306,7 +312,7 @@ class DashCourse extends Component {
       }
 
       case 'ALERT': {
-        content = (<Graph />);
+        content = (<Alert />);
         break;
       }
 
@@ -338,6 +344,7 @@ class DashCourse extends Component {
                   return;
                 }
                 hideOverlay();
+                closeDrawer();
                 activateCourseSession(courseSessionId);
                 handleSockets(this.props);
               })
@@ -355,6 +362,7 @@ class DashCourse extends Component {
                   return;
                 }
                 hideOverlay();
+                closeDrawer();
                 deactivateCourseSession();
               })
               .catch(() => {
@@ -493,6 +501,9 @@ const dispatchToProps = (dispatch, ownProps) => ({
   },
   setConnectionStatus: (connectionStatus) => {
     dispatch(SocketActions.setConnectionStatus(connectionStatus));
+  },
+  closeDrawer: () => {
+    dispatch(DrawerActions.closeDrawer());
   },
 });
 

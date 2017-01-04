@@ -5,7 +5,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom'
 import { connect } from 'react-redux';
-import Stats from './Stats';
+import StatBlock from '../StatBlock';
 import Graph from './Graph';
 import * as OverlayActions from '../../../../../actions/Loading';
 
@@ -15,14 +15,37 @@ class Alert extends Component {
   }
 
   render() {
-    const {numberAttendees, activeAlerts} = this.props;
+    const {numberInCourseSession, activeAlerts} = this.props;
 
     return (
-      <div>
-        <div id="lineChart">
-          <Graph />
+
+      <div className="c mode-content">
+        <div className="two-thirds-pane card">
+          <div id="lineChart">
+            <Graph />
+          </div>
         </div>
-        <Stats attendance={numberAttendees} numberAlerts={activeAlerts}/>
+        <div id="alertStats" className=" one-thirds-pane card">
+          <div className="heading">
+            <h2 className="header">STATS</h2>
+          </div>
+          <div
+            className="r-center"
+            style={{
+              height: '75%',
+            }}
+          >
+
+            <StatBlock
+              name="Active Alerts"
+              number={activeAlerts}
+            />
+            <StatBlock
+              name="Present"
+              number={numberInCourseSession}
+            />
+          </div>
+        </div>
       </div>
     );
   }
@@ -30,7 +53,7 @@ class Alert extends Component {
 
 const stateToProps = (state) => ({
   alertGraph: state.Graph.Alert.graph,
-  numberAttendees : state.Course.Attendance.numberAttendees,
+  numberInCourseSession : state.Course.Attendance.numberInCourseSession,
   activeAlerts : state.Graph.Alert.activeAlerts
 });
 

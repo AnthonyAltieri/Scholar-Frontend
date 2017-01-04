@@ -216,11 +216,16 @@ async function handleAlertThreshold(
 class DashStudent extends Component {
   async componentWillMount(){
     const { studentJoinedAttendance, courseSessionId } = this.props;
-    const payload =  await getNumberInAttendance(courseSessionId);
-    const error = payload.error;
-    let numberInAttendance = payload.attendance;
-    if (!error) {
-      studentJoinedAttendance(numberInAttendance);
+    try{
+      const payload =  await getNumberInAttendance(courseSessionId);
+      const error = payload.error;
+      let numberInAttendance = payload.attendance;
+      if (!error) {
+        studentJoinedAttendance(numberInAttendance);
+      }
+    }
+    catch (e) {
+      console.error("[ERROR] in DashStudent component > ComponentWillMount : " + e);
     }
   }
   async componentDidMount() {
@@ -235,32 +240,33 @@ class DashStudent extends Component {
       studentJoinedCourseSession
     } = this.props;
     endLoading();
-    // handleAlertThreshold(
-    //   courseId,
-    //   courseSessionId,
-    //   setAlertThreshold,
-    //   setAlertPercentage
-    // );
-    let {
-      numberInCourseSession,
-      error,
-    } = await numberInCourseSessionGet(courseSessionId);
-    if (!error) {
-      studentJoinedCourseSession(numberInCourseSession);
+
+    try {
+      let {
+        numberInCourseSession,
+        error,
+      } = await numberInCourseSessionGet(courseSessionId);
+      if (!error) {
+        studentJoinedCourseSession(numberInCourseSession);
+      }
+
+      window.intervalGetAlerts =  window.setInterval( async () => {
+        try {
+          let alerts = await getAlerts(courseSessionId);
+          updateAlertGraph(alerts);
+        }
+        catch (e) {
+          console.error("[ERROR] in DashCourse Component > ComponentDidMount inside intervalGetAlerts: " + e)
+        }
+      }, INTERVAL_TIME);
+
+      console.log('DashStudent componentDidMount()');
+      setUpSockets(this.props)
+    }
+    catch (e) {
+      console.error("[ERROR] in DashCourse Component > ComponentDidMount " + e)
     }
 
-    window.intervalGetAlerts =  window.setInterval( async () => {
-      try {
-        let alerts = await getAlerts(courseSessionId);
-        updateAlertGraph(alerts);
-      }
-      catch (e) {
-        console.error("[ERROR] in DashCourse Component > ComponentDidMount : " + e)
-      }
-    }, INTERVAL_TIME);
-
-    console.log('DashStudent componentDidMount()');
-    setUpSockets(this.props)
   }
 
   componentWillUnmount() {
@@ -412,34 +418,38 @@ class DashStudent extends Component {
           />
           <AttendanceDialog
             onSubmitClick={async (attendanceCode) => {
-              const payload = await joinAttendance(courseSessionId, attendanceCode, userId);
-              if(!!payload){
-                const { attendance, studentAlreadyInAttendance, isAttendanceClosed, invalidCode } = payload;
+              try {
+                const payload = await joinAttendance(courseSessionId, attendanceCode, userId);
+                if(!!payload){
+                  const { attendance, studentAlreadyInAttendance, isAttendanceClosed, invalidCode } = payload;
 
-                if(!!attendance) {
-                  console.log("ATTENDANCE SUCCESS");
-                  hideOverlay();
-                  toastr.success("You have been added to this attendance list!");
+                  if(!!attendance) {
+                    console.log("ATTENDANCE SUCCESS");
+                    hideOverlay();
+                    toastr.success("You have been added to this attendance list!");
+                  }
+                  else {
+                    console.error("[ERROR] While Joining courseSession Attendance : ");
+                    if(!!studentAlreadyInAttendance) {
+                      toastr.info("You are already in this attendance list!");
+                      hideOverlay();
+                    }
+                    if(!!isAttendanceClosed) {
+                      toastr.error("Please wait for your professor to open the attendance.")
+                    }
+                    if(!!invalidCode) {
+                      toastr.error("This is an invalid attendance code. Please try again")
+                    }
+                  }
                 }
                 else {
-                  console.error("[ERROR] While Joining courseSession Attendance : ");
-                  if(!!studentAlreadyInAttendance) {
-                    toastr.info("You are already in this attendance list!");
-                    hideOverlay();
-                  }
-                  if(!!isAttendanceClosed) {
-                    toastr.error("Please wait for your professor to open the attendance.")
-                  }
-                  if(!!invalidCode) {
-                    toastr.error("This is an invalid attendance code. Please try again")
-                  }
+                  console.error("[ERROR] While Joining courseSession Attendance : Unknown ");
+                  toastr.error("An error occurred :( Please refresh the page and try again");
                 }
               }
-              else {
-                console.error("[ERROR] While Joining courseSession Attendance : Unknown ");
-                toastr.error("An error occurred :( Please refresh the page and try again");
+              catch (e) {
+                console.error("[ERROR] in DashStudent component > render > AttendanceDialog : " + e);
               }
-
             }}
             onCancelClick={() => closeAttendanceDialog()}
             isOpen={isOverlayVisible && overlayType === 'ATTENDANCE'}

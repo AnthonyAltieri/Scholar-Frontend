@@ -1,6 +1,3 @@
-// Spinkit
-@import '../../node_modules/spinkit/scss/spinners/3-wave';
-
 // DIMENS
 $desktop: "(min-width: 767px)";
 $mobile: "(max-width: 767px)";
@@ -1341,7 +1338,7 @@ $connection-bar-height: 18px;
 
 .dash-instructor {
   $side-nav-width: 0px;
-  min-height: 660px;
+  min-height: 698px;
   min-width: 768px;
   position: absolute;
   top: 0; right: 0; bottom: 0;
@@ -1562,19 +1559,46 @@ $connection-bar-height: 18px;
     }
   }
 
+  .stats-row {
+    flex-wrap: wrap;
+    @extend .r-center;
+  }
   .stat {
-    margin: 0 8px;
+    margin: 4px 8px;
+    width: 120px;
+    height: 110px;
+    display: inline-block;
+    border: 1px solid rgba(0,0,0,0.2);
+    .name-container {
+      height: 60px;
+      background-color: rgba(0,0,0,0.1);
+    }
     .name {
       font-weight: 700;
       margin: 0 auto;
+      text-align: center;
+      max-width: 100px;
     }
     .number {
       margin: 0 auto;
-      font-size: 42px;
+      font-size: 40px;
       width: 100%;
       text-align: center;
     }
-
+  }
+  .stat.mini {
+    width: 100px;
+    height: 92px;
+    .name-container {
+      height: 42px;
+    }
+    .name {
+      max-width: 80px;
+      font-size: 14px;
+    }
+    .number {
+      font-size: 38px;
+    }
   }
 
   .mode-content {
@@ -1664,6 +1688,34 @@ $connection-bar-height: 18px;
       background-color: white;
       @extend .card;
     }
+    @extend .mode-content;
+  }
+  .main {
+    .filter-bar {
+      @extend .r, .fullwidth;
+    }
+    .filter {
+      width: auto !important;
+      min-width: 52px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 15px !important;
+      border-bottom: 2px solid transparent;
+    }
+    .filter.active {
+      border-bottom: 2px solid $color-bright;
+      font-weight: 400;
+    }
+    .filter-label {
+      font-weight: 300;
+    }
+    .no-questions {
+      margin-top: 82px;
+      font-size: 32px;
+      color: $color-gray;
+      text-align: center;
+    }
+
     @extend .mode-content;
   }
   .left-pane {
@@ -2001,8 +2053,15 @@ $connection-bar-height: 18px;
 }
 
 #lineChart svg {
-  min-height: 400px;
+  margin: auto;
+  min-height: 374px;
   max-width: 750px;
+}
+
+#main-alert-graph svg  {
+  margin: auto;
+  min-height: 280px;
+  //max-width: 500px;
 }
 
 #instantGraph svg {
@@ -2043,3 +2102,47 @@ $connection-bar-height: 18px;
     -webkit-transform: scale(1);
     transform: scale(1); } }
 
+.sk-wave {
+  margin: 40px auto;
+  width: 50px;
+  height: 40px;
+  text-align: center;
+  font-size: 10px; }
+.sk-wave .sk-rect {
+  background-color: #333;
+  height: 100%;
+  width: 6px;
+  display: inline-block;
+  -webkit-animation: sk-waveStretchDelay 1.2s infinite ease-in-out;
+  animation: sk-waveStretchDelay 1.2s infinite ease-in-out; }
+.sk-wave .sk-rect1 {
+  -webkit-animation-delay: -1.2s;
+  animation-delay: -1.2s; }
+.sk-wave .sk-rect2 {
+  -webkit-animation-delay: -1.1s;
+  animation-delay: -1.1s; }
+.sk-wave .sk-rect3 {
+  -webkit-animation-delay: -1s;
+  animation-delay: -1s; }
+.sk-wave .sk-rect4 {
+  -webkit-animation-delay: -0.9s;
+  animation-delay: -0.9s; }
+.sk-wave .sk-rect5 {
+  -webkit-animation-delay: -0.8s;
+  animation-delay: -0.8s; }
+
+@-webkit-keyframes sk-waveStretchDelay {
+  0%, 40%, 100% {
+    -webkit-transform: scaleY(0.4);
+    transform: scaleY(0.4); }
+  20% {
+    -webkit-transform: scaleY(1);
+    transform: scaleY(1); } }
+
+@keyframes sk-waveStretchDelay {
+  0%, 40%, 100% {
+    -webkit-transform: scaleY(0.4);
+    transform: scaleY(0.4); }
+  20% {
+    -webkit-transform: scaleY(1);
+    transform: scaleY(1); } }
