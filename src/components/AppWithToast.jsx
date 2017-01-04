@@ -45,16 +45,16 @@ const muiTheme = getMuiTheme({
 class AppWithToast extends Component {
 
   componentDidMount() {
-    this.props.dispatch(WindowActions.resize(
-      window.innerWidth,
-      window.innerHeight
-    ));
-    window.onresize = throttle(() => {
-      this.props.dispatch(WindowActions.resize(
-        window.innerWidth,
-        window.innerHeight
-      ))
-    }, 500);
+    // this.props.dispatch(WindowActions.resize(
+    //   window.innerWidth,
+    //   window.innerHeight
+    // ));
+    // window.onresize = throttle(() => {
+    //   this.props.dispatch(WindowActions.resize(
+    //     window.innerWidth,
+    //     window.innerHeight
+    //   ))
+    // }, 500);
 
   }
 

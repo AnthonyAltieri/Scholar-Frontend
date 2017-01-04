@@ -27,7 +27,9 @@ function reconnectDisconnectedSockets(
 
 
 const secondsToMili = seconds => seconds * 1000;
-const INTERVAL_TIME = secondsToMili(2.5);
+const INTERVAL_TIME = process.env.NODE_ENV === 'production'
+  ? secondsToMili(3)
+  : secondsToMili(10);
 
 class ConnectionBar extends Component {
   componentDidMount() {
@@ -40,14 +42,18 @@ class ConnectionBar extends Component {
     } = this.props;
     try {
       // Determine new connection status
-      let newConnectionStatus = Socket
-        .determineConnectionStatus(
-          `private-${courseSessionId}`,
-          requiredEvents
-        );
-      if (process.NODE_ENV !== 'production') {
+      const result = Socket.determineConnectionStatus(
+        `private-${courseSessionId}`,
+        requiredEvents
+      );
+      console.log('result', result);
+      const newConnectionStatus = result.status;
+      console.log('newConnectionStatus', newConnectionStatus);
+
+      if (process.env.NODE_ENV !== 'production') {
         console.group('[SOCKET] - Status');
         console.log('%c Connection Status', 'color: blue', newConnectionStatus);
+        console.log('%c Reason', 'color: green', result.reason);
         console.groupEnd();
       }
       // If that is not the same as it used to be, change it
@@ -69,14 +75,16 @@ class ConnectionBar extends Component {
     window.socketConnectionInterval = window.setInterval(() => {
       try {
         // Determine new connection status
-        let newConnectionStatus = Socket
+        let result = Socket
           .determineConnectionStatus(
             `private-${courseSessionId}`,
             requiredEvents
           );
+        const newConnectionStatus = result.status;
         if (process.NODE_ENV !== 'production') {
           console.group('[SOCKET] - Status');
           console.log('%c Connection Status', 'color: blue', newConnectionStatus);
+          console.log('%c Reason', 'color: green', result.reason);
           console.groupEnd();
         }
         // If that is not the same as it used to be, change it

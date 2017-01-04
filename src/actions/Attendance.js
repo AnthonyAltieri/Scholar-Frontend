@@ -19,3 +19,7 @@ export const studentJoinedCourseSession = (numberInCourseSession) => ({
   type: 'STUDENT_JOINED_COURSESESSION',
   numberInCourseSession,
 });
+
+export const clear = () => ({
+  type: 'ATTENDANCE_CLEAR',
+});

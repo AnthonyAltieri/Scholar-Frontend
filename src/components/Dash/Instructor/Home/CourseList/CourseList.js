@@ -37,7 +37,6 @@ const CourseList = ({
   chooseCourse,
   selectedCourse,
 }) => {
-  console.log('CourseList courses',courses);
   return (
     <div
       className="course-list"

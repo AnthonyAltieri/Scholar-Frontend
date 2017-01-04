@@ -22,14 +22,6 @@ $color-blue-light-light: #E1F5FE;
 
 // Fonts
 $font-default: Lato, Helvetica, SansSerif;
-//svg.nvd3-svg {
-//  height: 400px;
-//  width: 100%;
-//}
-//
-//g.nvd3.nv-wrap.nv-lineChart{
-//  width: 100%;
-//}
 svg.nvd3-svg {
   margin: 0 auto;
 }
@@ -234,27 +226,6 @@ body {
   background: -o-linear-gradient(bottom left, $color-primary-dark, $color-primary-light); /* For Opera 11.1 to 12.0 */
   background: -moz-linear-gradient(bottom left, $color-primary-dark, $color-primary-light);/* For Firefox 3.6 to 15 */
   background: linear-gradient(to bottom left, $color-primary-dark, $color-primary-light); /* Standard syntax */
-
-  //input {
-  //  width: 90%;
-  //  height: 42px;
-  //  max-width: 500px;
-  //  font-family: $font-default;
-  //  font-size: 16px;
-  //  color: $color-dark;
-  //  padding-left: 8px;
-  //  padding-right: 8px;
-  //  border-radius: 3px;
-  //  background-color: #ededed;
-  //  border: 1px #cbcbcb solid;
-  //  margin-top: 4px;
-  //  margin-bottom: 4px;
-  //}
-  //input:focus {
-  //  box-shadow: rgba(0, 0, 0, 0.21) 0px 0px 8px, rgba(0, 0, 0, 0.219608) 0px 0px 3px;
-  //  outline: none;
-  //}
-
   @extend .fullscreen, .r-center;
 }
 
@@ -452,10 +423,6 @@ body {
   font-family: $font-default;
   font-weight: 700;
   position: relative;
-  //@media #{$desktop} {
-  //  font-size: 18px !important;
-  //  width: 240px !important;
-  //}
   color: white;
   text-align: center;
   margin-top: 12px;
@@ -481,7 +448,7 @@ body {
   font-size: 14px;
   font-family: $font-default;
   font-weight: 400;
-  @media #{$desktop} {
+  @media (min-width: 767px) {
     width: 200px;
     font-size: 20px;
   }
@@ -696,7 +663,6 @@ $nav-top_height: 34px;
 }
 
 .dash-student {
-  //$nav_height: 68px;
   $top-height: 64px;
   .header {
     height: 28px;
@@ -734,7 +700,6 @@ $nav-top_height: 34px;
   .choice {
     border-top: 1px solid rgba(0,0,0,0.2);
     border-bottom: 1px solid rgba(0,0,0,0.2);
-    // background-color: $color-blue-light-light;
     .text {
       font-size: 16px;
       max-width: 80%;
@@ -1087,7 +1052,6 @@ $nav-btn-height: 40px;
   text-align: center;
   margin: 4px 2px;
   padding: 2px 10px;
-  // border-radius: 12px;
   color: $color-dark;
   p {
     margin: 0;
@@ -1338,7 +1302,7 @@ $connection-bar-height: 18px;
 
 .dash-instructor {
   $side-nav-width: 0px;
-  min-height: 698px;
+  min-height: 678px;
   min-width: 768px;
   position: absolute;
   top: 0; right: 0; bottom: 0;
@@ -1376,7 +1340,6 @@ $connection-bar-height: 18px;
       width: $nav-btn-width;
       height: $nav-btn-width;
       position: relative;
-      //background: $color-dark;
       background: $color-bright;
       margin: 4px auto 2px;
       border-radius: 5px;
@@ -1804,13 +1767,11 @@ $connection-bar-height: 18px;
 }
 .question-response {
   width: 94%;
-  // margin: 8px 0 auto auto;
   margin-left: 10px;
   position: relative;
   background-color: rgba(0,0,0,0.01);
   border-bottom: 1px solid rgba(0,0,0,0.05);
   .rank {
-    //float: left;
     width: 20px;
     height: 20px;
     background-color: $color-dark;
@@ -1860,7 +1821,6 @@ $connection-bar-height: 18px;
 .question-response.response {
 }
 .question-response.question {
-  // margin: 8px auto auto auto;
   margin-left: 10px;
 }
 .question-response-list {
@@ -1879,7 +1839,6 @@ $connection-bar-height: 18px;
     margin: 0 8px 0 8px;
   }
   .filter {
-    // margin: 0 12px 0 0;
     width: 40px;
     height: 40px;
     border-bottom: 2px solid transparent;
@@ -1931,11 +1890,6 @@ $connection-bar-height: 18px;
 
 .home-instructor {
   .course-list {
-    // position: absolute;
-    // top: 72px;
-    // bottom: 0;
-    // left: 0;
-    // right: 0;
     padding: 20px;
     align-items: flex-start !important;
     flex-wrap: wrap;
@@ -2061,7 +2015,6 @@ $connection-bar-height: 18px;
 #main-alert-graph svg  {
   margin: auto;
   min-height: 280px;
-  //max-width: 500px;
 }
 
 #instantGraph svg {

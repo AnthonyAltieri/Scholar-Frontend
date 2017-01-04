@@ -19,8 +19,8 @@ var common = {
   entry: {
     style: PATHS.style,
     app: [
-	    'babel-polyfill',
-	    PATHS.app
+      'babel-polyfill',
+      PATHS.app
     ],
   },
   output: {
@@ -51,6 +51,7 @@ var common = {
 
 var config;
 console.log('process.env.npm_lifecycle_event', process.env.npm_lifecycle_event);
+console.log('process.env.NODE_ENV', process.env.NODE_ENV);
 switch (process.env.npm_lifecycle_event) {
   case 'build':
     console.log('case `build`');
