@@ -83,11 +83,15 @@ exports.setupImg = function() {
       loaders: [
         {
           test: /\.svg$/,
-          loader: 'file?name=[name].[hash].svg',
+          loader: process.env.NODE_ENV === 'production'
+            ? 'file?name=[name].[hash].[ext]'
+            : 'file',
         },
         {
           test: /\.(jpg|png)$/,
-          loader: 'file?name=[path][name].[hash].[ext]',
+          loader: process.env.NODE_ENV === 'production'
+            ? 'file?name=[name].[hash].[ext]'
+            : 'file',
         },
       ]
     }
