@@ -10,6 +10,7 @@ import * as MainActions
 import * as AskActions from '../../../../../actions/Dash/Courses/Ask';
 import * as QuestionsActions from '../../../../../actions/Questions'
 import * as QuestionListActions from '../../../../../actions/QuestionList';
+import { fetchQuestions } from '../../../../../api/Questions';
 import Questions from './Questions';
 import AlertGraph from '../Alert/Graph';
 import Stats from './Stats';
@@ -63,6 +64,31 @@ const getVisibleQuestions = (filter = 'MOST_RECENT', allQuestions = []) => {
 };
 
 class Main extends Component {
+  componentDidMount() {
+    const {
+      isCourseSessionActive,
+      activeCourseSessionId,
+      receivedQuestions,
+    } = this.props;
+    if (isCourseSessionActive) {
+      fetchQuestions(activeCourseSessionId)
+        .then((result) => {
+          const { questions, error } = result;
+          if (!!error) {
+            toastr.error(
+              'Question List Error',
+              'Something went wrong fetching the questions'
+            );
+            return;
+          }
+          receivedQuestions(questions.filter(q => !q.isDismissed));
+        })
+        .catch((error) => {})
+    }
+
+  }
+
+
   render() {
     const {
     } = this.props;

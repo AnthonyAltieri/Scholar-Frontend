@@ -178,7 +178,7 @@ exports.extractCSS = function(paths) {
           test: /\.scss$/,
           loader: ExtractTextPlugin.extract(
             "style",
-            "css!sass"
+            "css!sass!postcss"
           ),
         },
         {

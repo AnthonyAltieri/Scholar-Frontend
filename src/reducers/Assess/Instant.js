@@ -51,7 +51,6 @@ const Instant = (state = initialState, action) => {
 
     case 'ASSESS_INSTANT_ADD_OPTION': {
       const options = state.options || [];
-      console.log('state',state);
       return {
         ...state,
         options: [

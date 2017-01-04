@@ -11,13 +11,14 @@ const initialState = {
 const Attendance = (state = initialState, action) => {
   switch (action.type) {
 
+    case 'ATTENDANCE_CLEAR':
     case 'ENDED_COURSESESSION': {
       return initialState;
     }
 
+
     // When course activated reset attendance stats
     case 'ACTIVATE_COURSE': {
-      console.log("Fire em up: ACTIVATE COURSE");
       return initialState
     }
 

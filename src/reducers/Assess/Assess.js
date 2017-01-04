@@ -14,7 +14,6 @@ const initialState = {
 const Assess = (state = initialState, action) => {
   switch (action.type) {
     case 'ASSESS_ACTIVATE_ASSESSMENT': {
-      console.log("ID FOR ACTIVATED ASSESSMENT : " + action.activeAssessmentId);
       return {
         ...state,
         activeType: action.assessmentType,

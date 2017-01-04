@@ -13,9 +13,10 @@ import * as ModeActions from '../../../../actions/DashInstructor/Course/Mode';
 import * as CourseActions from '../../../../actions/Course';
 import * as HomeCoursesActions from '../../../../actions/DashInstructor/Home/Courses';
 import * as OverlayActions from '../../../../actions/Overlay'
+import * as AttendanceActions from '../../../../actions/Attendance';
+import * as CourseApi from '../../../../api/Course';
 import AddCodeDialog from './AddCodeDialog';
 import CourseListSection from './CourseList/Section';
-import CourseSessionListSection from './CourseSessionList/Section';
 import * as CourseSessionApi from '../../../../api/CourseSession';
 import PanelSelectedCourse from './PanelSelectedCourse';
 import { setId as setAssessmentBankId } from '../../../../actions/AssessmentBank';
@@ -40,8 +41,8 @@ async function handleCourses(userId, receivedCourses) {
       toastr.error('Unable to retrieve Courses', 'Please refresh the page');
       return;
     }
-    console.log('courses', courses)
     receivedCourses(courses);
+    return courses;
   } catch (e) {
     console.error('retrieve course error', e);
     toastr.error('Unable to retrieve Courses', 'Please refresh the page');
@@ -67,7 +68,7 @@ async function handleAssessmentBankId(
 
 
 class Home extends Component {
-  componentDidMount() {
+  async componentDidMount() {
     const {
       userId,
       navigate,
@@ -75,8 +76,9 @@ class Home extends Component {
       endLoading,
       receivedBankId,
       chooseCourse,
+      selectedCourse,
     } = this.props;
-    console.log('componentDidMount()')
+    console.log('Home componentDidMount()');
 
     if (!userId) {
       toastr.info('You have been logged out', 'Please log in again');
@@ -84,14 +86,25 @@ class Home extends Component {
       return;
     }
 
-    handleCourses(
-      userId,
-      receivedCourses
-    );
-    handleAssessmentBankId(
-      userId,
-      receivedBankId,
-    )
+
+    try {
+      const courses = await handleCourses(
+        userId,
+        receivedCourses
+      );
+      if (!!selectedCourse.id && !!courses) {
+        const course = courses.filter(c => c.id === selectedCourse.id)[0];
+        if (!!course) {
+          chooseCourse(course);
+        }
+      }
+      await handleAssessmentBankId(
+        userId,
+        receivedBankId,
+      );
+    } catch (e) {
+      console.error('initial stuff', e);
+    }
     endLoading();
   }
 
@@ -221,6 +234,7 @@ const dispatchToProps = (dispatch) => ({
   },
   goToCourse: (courseId) => {
     dispatch(ModeActions.setMode('MAIN'));
+    dispatch(AttendanceActions.clear());
     dispatch(push(`/dash/instructor/course/${courseId}`))
   },
   navigate: (url) => {

@@ -85,20 +85,53 @@ function getPusher() {
 function determineConnectionStatus(channelName, requiredEvents) {
   // If there is no channelName that means we don't need to be connected
   // to anything right now
-  if (channelName === null) return 'NONE';
+  if (channelName === null) {
+    return {
+      status: 'NONE',
+      reason: process.env.NODE_ENV !== 'production'
+        ? 'channelName is null'
+        : '',
+    };
+  }
   const pusher = window.pusher;
   // If there is no pusher object we are disconnected
-  if (!pusher) return 'DISCONNECTED';
+  if (!pusher) {
+    return {
+      status: 'DISCONNECTED',
+      reason: process.env.NODE_ENV !== 'production'
+        ? 'pusher is falsey'
+        : '',
+    };
+  }
   // If there are no channels in the pusher object we are disconnected
-  if (!pusher.channels) return 'DISCONNECTED';
+  if (!pusher.channels) {
+    return {
+      status: 'DISCONNECTED',
+      reason: process.env.NODE_ENV !== 'production'
+        ? 'pusher.channels is falsey'
+        : '',
+    };
+  }
   // Get the names of the channels that are subscribed to now
   const channelNames = Object.keys(pusher.channels.channels);
   // If there are none we are disconnected
-  if (!channelNames) return 'DISCONNECTED';
+  if (!channelNames) {
+    return {
+      status: 'DISCONNECTED',
+      reason: process.env.NODE_ENV !== 'production'
+        ? 'channelNames is falsey'
+        : '',
+    };
+  }
   // Determine if we are connected to the provided channelName
   // if not, we are disconnected
   if (!channelNames.filter(cn => cn === channelName)[0]) {
-    return 'DISCONNECTED';
+    return {
+      status: 'DISCONNECTED',
+      reason: process.env.NODE_ENV !== 'production'
+        ? `not connected to channelName: ${channelName}`
+        : '',
+    };
   }
   // Get that channel if we are
   const channel = pusher.channels.channels[channelName];
@@ -113,12 +146,22 @@ function determineConnectionStatus(channelName, requiredEvents) {
     .map(k => requiredEvents[k])
     .forEach((re) => {
     if (!callbackNames.filter(cbn => cbn === re.name)) {
-      return 'PARTIAL';
+      return {
+        status: 'PARTIAL',
+        reason: process.env.NODE_ENV !== 'production'
+          ? 'missing a bound event'
+          : '',
+      };
     }
   });
   // If we are subscribed to the channel and bound to every event
   // that we need to be bound to we are connected
-  return 'CONNECTED';
+  return {
+    status: 'CONNECTED',
+    reason: process.env.NODE_ENV !== 'production'
+      ? 'nothing went wrong'
+      : '',
+  };
 }
 
 function bindAllEvents(events, channelName) {

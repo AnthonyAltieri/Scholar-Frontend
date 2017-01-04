@@ -11,6 +11,7 @@ const routes = {
   ENROLL_STUDENT: '/api/course/enroll/student',
   GRADE_SUMMARY: '/api/course/grade/summary',
   GET_ADD_CODES: '/api/course/get/addCodes',
+  GET_ID: '/api/course/get/id',
 };
 
 /**
@@ -109,6 +110,17 @@ export async function getAddCodes(userId) {
     return await post(routes.GET_ADD_CODES, { userId });
   } catch (e) {
     console.error('[ERROR] Course Api getAddCodes', e);
+    return null;
+  }
+}
+
+export async function getById(courseId) {
+  try {
+    return {
+      course: await post(routes.GET_ID, { courseId })
+    };
+  } catch (e) {
+    console.error('[ERROR] Course Api getById', e);
     return null;
   }
 }

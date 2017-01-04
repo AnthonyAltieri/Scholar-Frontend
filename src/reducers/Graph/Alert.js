@@ -37,7 +37,6 @@ const Alert = (state = initialState, action) => {
     }
 
     case 'DEACTIVATE_COURSE': {
-      console.log("Course Deactivated - In the alert Reducer");
       return {
         ...state,
         graph : initInstructorAlertGraph(DEFAULT_THRESHOLD),
@@ -79,8 +78,6 @@ const Alert = (state = initialState, action) => {
     }
 
     case 'UPDATE_ACTIVE_ALERTS_STUDENT': {
-      console.log((action.activeAlerts===0 || !!action.activeAlerts)
-        ? action.activeAlerts : state.activeAlerts);
       return {
         ...state,
         activeAlerts : (action.activeAlerts===0 || !!action.activeAlerts)
