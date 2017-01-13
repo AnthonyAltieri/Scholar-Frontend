@@ -44,7 +44,9 @@ let AskQuestion = ({
             }
             try {
 
-              const similarityIndex =await checkSimilarity(content, questionList);
+	
+              const similarityIndex = -1;
+			    //await checkSimilarity(content, questionList);
               if(!!similarityIndex && similarityIndex > -1){
                 toastr.info("Found a similar Question with content : " + questionList[similarityIndex].content);
                 dispatch(clearEnteredQuestion());

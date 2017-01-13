@@ -58,7 +58,7 @@ switch (process.env.npm_lifecycle_event) {
     config = merge(
       common,
       {
-        devtool: 'source-map',
+        //devtool: 'source-map',
         plugins: [
           new HtmlWebpackPlugin({
             title: 'Scholar',
