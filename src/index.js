@@ -6,7 +6,9 @@ import ReactDOM from 'react-dom';
 import React from 'react';
 import Root from './components/Root.js';
 import configureStore from './configureStore'
-import './scss/style.scss';
+if (process.env.NODE_ENV !== 'production') {
+  require('./scss/style.scss');
+}
 
 const store = configureStore();
 if (process.env.NODE_ENV === 'development') {

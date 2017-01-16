@@ -131,6 +131,7 @@ class Assess extends Component {
       moveToQueue,
       numberInstantAssessmentAnswers,
       answersWithReviews,
+	    numberInCourseSession,
     } = this.props;
     const isAssessmentActive = !!activeAssessmentType;
 
@@ -167,12 +168,17 @@ class Assess extends Component {
                 number={0}
                 isMini
               />
+              <StatBlock
+                name="Present"
+                number={numberInCourseSession}
+	    	isMini
+              />
               {isInstantActive || isReflectiveActive
                 ? (
                   <div>
                     <StatBlock
                       name="Answered"
-                      number={answers}
+                      number={(answers > 0) ? (answers/2) : answers}
                       isMini
                     />
                   </div>
@@ -481,6 +487,7 @@ function getInstantAssessmentAnswers(answers = []) {
 }
 
 const stateToProps = (state) => ({
+	numberInCourseSession: state.Course.Attendance.numberInCourseSession || 0,
   userId: state.User.id,
   courseId: state.Course.id,
   bankId: state.AssessmentBank.id,

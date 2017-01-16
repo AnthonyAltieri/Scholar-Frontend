@@ -13,6 +13,11 @@ const initialState = {
 
 const Assess = (state = initialState, action) => {
   switch (action.type) {
+
+    case 'LOG_OUT': {
+	    return initialState;
+    }
+
     case 'ASSESS_ACTIVATE_ASSESSMENT': {
       return {
         ...state,

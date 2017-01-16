@@ -36,7 +36,7 @@ exports.setupCSS = function(paths) {
         {
           test: /\.scss$/,
           loaders: ['style', 'css', 'sass'],
-          // include: paths,
+          include: paths,
         },
         {
           test: /\.less$/,

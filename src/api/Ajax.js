@@ -2,6 +2,7 @@
  * @author Anthony Altieri on 11/1/16.
  */
 
+
 const SERVER_PREFIX = process.env.NODE_ENV === 'production'
   ? 'https://scholarapp.xyz'
   : 'http://localhost:7000';

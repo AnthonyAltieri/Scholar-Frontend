@@ -99,10 +99,11 @@ export function gradeSummary(
   courseId,
   courseTitle,
 ) {
-  window.location = 'http://localhost:7000'
-    + routes.GRADE_SUMMARY
-    + `?courseId=${encodeURIComponent(courseId)}`
-    + `&courseTitle=${encodeURIComponent(courseTitle)}`;
+  const route = 'http://scholarapp.xyz' + routes.GRADE_SUMMARY
+	+ `?courseId=${encodeURIComponent(courseId)}`
+	+ `&courseTitle=${encodeURIComponent(courseTitle)}`;
+  console.log('about to do this route',route);
+  window.location = route;
 };
 
 export async function getAddCodes(userId) {

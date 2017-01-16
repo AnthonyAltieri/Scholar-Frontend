@@ -5,7 +5,6 @@ import { getActiveAlerts } from '../api/Alert'
 /*
 Constants for the alert Graph initialization
  */
-// export const INTERVAL_TIME = 3000;//milliseconds per request
 export const INTERVAL_TIME = process.env.NODE_ENV === 'production'
   ? 3000
   : 10000000000;

@@ -58,7 +58,7 @@ switch (process.env.npm_lifecycle_event) {
     config = merge(
       common,
       {
-        devtool: 'source-map',
+        //devtool: 'source-map',
         plugins: [
           new HtmlWebpackPlugin({
             title: 'Scholar',
@@ -90,8 +90,8 @@ switch (process.env.npm_lifecycle_event) {
         name: 'vendor',
         entries: Object.keys(pkg.dependencies)
       }),
-      parts.extractCSS(PATHS.outputCss),
-      parts.minify()
+      parts.extractCSS(PATHS.outputCss)
+      //parts.minify()
     );
     break;
 
@@ -127,19 +127,14 @@ switch (process.env.npm_lifecycle_event) {
           // chunkFilename: '[chunkhash].js',
         }
       },
-      // parts.setupBabel(PATHS.app),
-      parts.setupCSS(PATHS.style),
-      parts.setupImg(PATHS.img),
-      parts.setupFonts(),
-      parts.setupJSON(),
-      // parts.extractBundle({
-      //   name: 'vendor',
-      //   entries: Object.keys(pkg.dependencies)
-      // }),
       parts.devServer({
         host: process.env.HOST,
-        port: process.env.PORT,
-      })
+        port: process.env.PORT || 3000,
+      }),
+      parts.setupCSS(PATHS.style),
+      parts.setupImg(),
+      parts.setupFonts(),
+      parts.setupJSON()
     );
     break;
 }

@@ -57,6 +57,7 @@ async function handleGetCourses(
   userId,
   receivedCourses
 ) {
+	console.log('userId', userId);
   try {
     const { error, courses } = await getCoursesByUser(userId);
     if (!!error) {
