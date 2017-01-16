@@ -94,6 +94,7 @@ switch (process.env.npm_lifecycle_event) {
       parts.minify()
     );
     break;
+
   default:
     console.log('case `default`');
     config = merge(
