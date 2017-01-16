@@ -94,6 +94,7 @@ switch (process.env.npm_lifecycle_event) {
       //parts.minify()
     );
     break;
+
   default:
     console.log('case `default`');
     config = merge(
@@ -126,19 +127,14 @@ switch (process.env.npm_lifecycle_event) {
           // chunkFilename: '[chunkhash].js',
         }
       },
-      // parts.setupBabel(PATHS.app),
-      parts.setupCSS(PATHS.style),
-      parts.setupImg(PATHS.img),
-      parts.setupFonts(),
-      parts.setupJSON(),
-      // parts.extractBundle({
-      //   name: 'vendor',
-      //   entries: Object.keys(pkg.dependencies)
-      // }),
       parts.devServer({
         host: process.env.HOST,
-        port: process.env.PORT,
-      })
+        port: process.env.PORT || 3000,
+      }),
+      parts.setupCSS(PATHS.style),
+      parts.setupImg(),
+      parts.setupFonts(),
+      parts.setupJSON()
     );
     break;
 }
