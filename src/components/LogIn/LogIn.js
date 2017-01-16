@@ -46,13 +46,19 @@ async function handleLogIn(
 ) {
   try {
     const payload = await logIn(email, password);
-    const { user, error } = payload;
+    const { user, error, incorrectPassword } = payload;
     if (!!error) {
       console.log('error', e);
       toastr.error('Something went wrong, please try again.');
       endLoading();
       return;
     }
+    if(!!incorrectPassword){
+      toastr.info('Incorrect Password. Please try again');
+      endLoading();
+      return;
+    }
+
     if (!user) {
       toastr.info('No account found associated with that email.');
       endLoading();
