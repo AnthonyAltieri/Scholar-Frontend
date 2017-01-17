@@ -492,11 +492,7 @@ class DashStudent extends Component {
                 </p>
               )
             }
-            <MenuItem
-              onTouchTap={() => showTextInstructions()}
-            >
-              Use Via SMS
-            </MenuItem>
+
             <MenuItem
               onTouchTap={() => promptGoToCourses()}
               rightIcon={
@@ -516,6 +512,12 @@ class DashStudent extends Component {
               }
             >
               Attendance
+            </MenuItem>
+            <MenuItem
+              onTouchTap={() => showTextInstructions()}
+              rightIcon={<font className="material-icons">phone_iphone</font>}
+            >
+              SMS Text Help
             </MenuItem>
           </Drawer>
           <Content params={params || {}} mode={mode} />
