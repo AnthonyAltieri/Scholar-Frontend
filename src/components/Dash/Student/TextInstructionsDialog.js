@@ -11,7 +11,7 @@ const TextInstructionsDialog = ({
   return (
     <Dialog
       autoScrollBodyContent={true}
-      title="TextInstructions"
+      title="Text Message Instructions"
       open={isOpen}
       actions={[
         <FlatButton
@@ -24,6 +24,7 @@ const TextInstructionsDialog = ({
       <p className="dialog-text">
         You can use Scholar by sending text messages to the number <span style={{color : Colors.green}}>888-997-5717</span>
 
+        <br />
         <br />
         1.	To Join Course Session:
         <br />
