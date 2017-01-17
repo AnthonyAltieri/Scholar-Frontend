@@ -322,10 +322,10 @@ const stateToProps = (state) => ({
   lastName: getLastName(state.User.name),
   phone: state.User.phone,
   studentId: state.User.institutionId,
-  displayedFirstName: state.Dash.Account.firstName,
-  displayedLastName: state.Dash.Account.lastName,
-  displayedPhone: state.Dash.Account.phone,
-  displayedInstitutionId: state.Dash.Account.institutionId,
+  displayedFirstName: state.Dash.Account.firstName || '',
+  displayedLastName: state.Dash.Account.lastName || '',
+  displayedPhone: state.Dash.Account.phone || '',
+  displayedInstitutionId: state.Dash.Account.institutionId || '',
 });
 const dispatchToProps = (dispatch) => ({
   receivedAccountInfo: (
