@@ -6,6 +6,7 @@ import React, { Component } from 'react';
 import * as LoadingActions from '../../actions/Loading';
 import * as UserActions from '../../actions/User'
 import * as OverlayActions from '../../actions/Overlay'
+import * as UserApi from '../../api/User';
 import { toastr } from 'react-redux-toastr';
 import { push } from 'react-router-redux';
 import { connect } from 'react-redux';
@@ -68,7 +69,9 @@ async function handleLogIn(
       user.email,
       user.id,
       `${user.firstName} ${user.lastName}`,
-      user.type
+      user.type,
+      user.phone,
+      user.institutionId,
     );
     handleLoginSuccess(user.type, navigate);
   } catch (e) {
@@ -169,9 +172,25 @@ class LogIn extends Component {
           onCancelClick={() => {
             hideOverlay();
           }}
-          onSendClick={() => {
-            // TODO: add forgot password functionality
-            hideOverlay();
+          onSendClick={async (email) => {
+            try {
+              const payload = await UserApi.requestForgotPassword(email)
+              if (!!payload.error) {
+                toastr.error('Something went wrong please try again');
+                return;
+              }
+              if (!!payload.userNotFound) {
+                toastr.info('No user found with that email');
+                return;
+              }
+              toastr.success('Email send to ' + email + ', use that to ' +
+               'reset your password');
+              hideOverlay();
+            } catch (e) {
+              console.error('[Error] requestForgotPassword', e);
+              toastr.error('Something went wrong please try again');
+              return;
+            }
           }}
         />
         <div className="initial-card log-in">
@@ -260,8 +279,15 @@ LogIn = connect(
     endLoading: () => {
       dispatch(LoadingActions.endLoading());
     },
-    logInSuccess: (email, id, name, type) => {
-      dispatch(UserActions.logInSuccess(email, id, name, type))
+    logInSuccess: (email, id, name, type, phone, institutionId) => {
+      dispatch(UserActions.logInSuccess(
+        email,
+        id,
+        name,
+        type,
+        phone,
+        institutionId
+      ))
     },
     logInFail: () => {
       dispatch(UserActions.logInFail());
