@@ -38,22 +38,5 @@ const Nav = ({
     }}
   />
 );
-  // <div className="nav">
-  //   <div className="nav-top">
-  //     <div
-  //       className="navigation"
-  //       onClick={onBackClick}
-  //     >
-  //       <img
-  //         className="arrow"
-  //         src={backSrc}
-  //       />
-  //       <p>To Courses</p>
-  //     </div>
-  //     <h1 className="code">
-  //       {code}
-  //     </h1>
-  //   </div>
-  // </div>
 
 export default Nav;

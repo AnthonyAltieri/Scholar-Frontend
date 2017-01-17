@@ -480,19 +480,6 @@ class DashStudent extends Component {
               }
             }}
           >
-            {isInAttendance
-              ? (
-                <p className="in-attendance yes">
-                  In Attendance
-                </p>
-              )
-              : (
-                <p className="in-attendance no">
-                  Out of Attendance
-                </p>
-              )
-            }
-
             <MenuItem
               onTouchTap={() => promptGoToCourses()}
               rightIcon={
