@@ -19,6 +19,7 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import * as LoadingActions from '../../../actions/Loading'
 import Colors from '../../../util/Colors'
 import ToCourseDialog from './ToCoursesDialog';
+import TextInstructionsDialog from './TextInstructionsDialog'
 import AlertDialog from './AlertDialog';
 import AttendanceDialog from './AttendanceDialog';
 import MenuItem from 'material-ui/MenuItem';
@@ -315,7 +316,9 @@ class DashStudent extends Component {
       removeResponse,
       connectionStatus,
       setConnectionStatus,
-      numberInCourseSession
+      numberInCourseSession,
+      showTextInstructions,
+      closeTextInstructionsDialog
     }  = this.props;
     const events = {
       [Events.QUESTION_ASKED]: {
@@ -416,6 +419,10 @@ class DashStudent extends Component {
             onOkClick={() => hideAlertOverlay()}
             isOpen={isAlertOverlayVisible}
           />
+          <TextInstructionsDialog
+            onCancelClick={() => closeTextInstructionsDialog()}
+            isOpen={isOverlayVisible && overlayType === 'SHOW_TEXT_INSTRUCTIONS'}
+          />
           <AttendanceDialog
             onSubmitClick={async (attendanceCode) => {
               try {
@@ -485,6 +492,11 @@ class DashStudent extends Component {
                 </p>
               )
             }
+            <MenuItem
+              onTouchTap={() => showTextInstructions()}
+            >
+              Use Via SMS
+            </MenuItem>
             <MenuItem
               onTouchTap={() => promptGoToCourses()}
               rightIcon={
@@ -640,6 +652,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onConfirmClick: () => {
       dispatch(DashStudentActions.setDashMode('QUESTIONS'))
     },
+    showTextInstructions: () => {
+      dispatch(OverlayActions.setOverlayType('SHOW_TEXT_INSTRUCTIONS'));
+      dispatch(OverlayActions.showOverlay());
+    },
     promptGoToCourses: () => {
       dispatch(OverlayActions.setOverlayType('GO_TO_COURSES'));
       dispatch(OverlayActions.showOverlay());
@@ -748,6 +764,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     openAttendanceDialog: () => {
       dispatch(OverlayActions.setOverlayType('ATTENDANCE'));
       dispatch(OverlayActions.showOverlay());
+    },
+    closeTextInstructionsDialog: () => {
+      dispatch(OverlayActions.hideOverlay());
+      dispatch(OverlayActions.clearOverlayType());
     },
     closeAttendanceDialog: () => {
       dispatch(OverlayActions.hideOverlay());
