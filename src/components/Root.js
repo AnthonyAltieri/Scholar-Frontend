@@ -43,7 +43,7 @@ class Root extends Component {
         <Router history={syncHistoryWithStore(browserHistory, store)}>
           <Route path="/" component={AppWithToast}>
             <IndexRedirect to="/login/"/>
-            <Route path="forgotpassword/:forgotPassId" component={ForgotPassword} />
+            <Route path="forgotpassword/:id" component={ForgotPassword} />
             <Route path="login" component={Login}/>
             <Route path="signup" components={Signup}/>
             <Route path="signup/instructor" components={SignupInstructor}/>

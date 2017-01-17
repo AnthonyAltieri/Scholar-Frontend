@@ -12,6 +12,8 @@ const routes = {
   LOG_OUT: '/api/user/logOut',
   GET_ACCOUNT_INFO: '/api/user/get/accountInfo',
   SAVE_ACCOUNT_INFO: '/api/user/save/accountInfo',
+  CHANGE_PASSWORD: '/api/user/change/password',
+  REQUEST_FORGOT_PASSWORD: '/api/user/request/forgotPassword',
 };
 
 export async function logIn(email, password) {
@@ -87,5 +89,27 @@ export async function saveAccountInfo(
   }
 }
 
+export async function changePassword(
+  password,
+  forgotPasswordCode,
+) {
+  try {
+    return await post(
+      routes.CHANGE_PASSWORD,
+      { password, forgotPasswordCode }
+    );
+  } catch (e) {
+    console.error('[ERROR] User Api changePassword', e);
+    return null;
+  }
+}
+
+export async function requestForgotPassword(email) {
+  try {
+    return await post(routes.REQUEST_FORGOT_PASSWORD, { email });
+  } catch (e) {
+    console.error('[ERROR] User Api requestForgotPassword');
+  }
+}
 
 

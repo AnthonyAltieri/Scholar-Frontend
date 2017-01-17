@@ -10,6 +10,7 @@ const CourseDrawer = ({
   onLogOutClick,
   pathname,
   startLoading,
+  onLeave,
 }) => (
   <Drawer
     docked={false}
@@ -58,6 +59,7 @@ const CourseDrawer = ({
       onTouchTap={() => {
         if (pathname === '/dash/courses/active') return;
         if (pathname === '/dash/courses/inactive') return;
+        if (!!onLeave) onLeave();
         navigate('/dash/courses/active');
         closeDrawer();
       }}

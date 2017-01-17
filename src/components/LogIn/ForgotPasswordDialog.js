@@ -30,7 +30,10 @@ const ForgotPasswordDialog = ({
       />,
       <FlatButton
         label="Send"
-        onTouchTap={onSendClick}
+        onTouchTap={() => {
+          const emailVal = !!email.value ? email.value : '';
+          onSendClick(emailVal)
+        }}
         style={{ color: Colors.green }}
       />
     ]}
@@ -39,8 +42,9 @@ const ForgotPasswordDialog = ({
       <div className="r-center">
         <TextField
           floatingLabelText="Email"
-          onChange={(event) => {
-            email = event.target.value;
+          id="forgot-pass-dialog-enter"
+          ref={(event) => {
+            email = document.getElementById('forgot-pass-dialog-enter');
           }}
         />
       </div>

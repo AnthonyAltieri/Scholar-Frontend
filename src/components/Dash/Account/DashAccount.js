@@ -135,6 +135,12 @@ class DashAccount extends Component {
           isOpen={isDrawerOpen}
           closeDrawer={closeDrawer}
           onLogOutClick={() => showOverlay('LOG_OUT')}
+          onLeave={() => {
+            setAccountFirstName(firstName);
+            setAccountLastName(lastName);
+            setAccountPhone(phone);
+            setAccountStudentId(studentId);
+          }}
           navigate={navigate}
           pathname={pathname}
         />
