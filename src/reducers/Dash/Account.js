@@ -45,6 +45,10 @@ const Account = (state = initialState, action) => {
       }
     }
 
+    case 'LOG_OUT': {
+      return initialState;
+    }
+
     default: {
       return state;
     }
