@@ -85,9 +85,7 @@ class ConnectionBar extends Component {
           console.groupEnd();
         }
         // If that is not the same as it used to be, change it
-        if (newConnectionStatus !== connectionStatus) {
-          setConnectionStatus(newConnectionStatus);
-        }
+        setConnectionStatus(newConnectionStatus);
         if (newConnectionStatus === 'DISCONNECTED'
           || newConnectionStatus === 'PARTIAL') {
           reconnectDisconnectedSockets(
