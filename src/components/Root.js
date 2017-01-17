@@ -28,6 +28,8 @@ import InstructorSettings from './Dash/Instructor/InstructorSettings';
 import InstructorConfusion from './Dash/Instructor/Course/Confusion';
 import InstructorAsk from './Dash/Instructor/Course/Ask/Ask';
 import DashStudent from './Dash/Student/DashStudent';
+import DashAccount from './Dash/Account/DashAccount';
+import ForgotPassword from './ForgotPassword/ForgotPassword';
 
 class Root extends Component {
   componentWillMount() {
@@ -41,11 +43,13 @@ class Root extends Component {
         <Router history={syncHistoryWithStore(browserHistory, store)}>
           <Route path="/" component={AppWithToast}>
             <IndexRedirect to="/login/"/>
+            <Route path="forgotpassword/:forgotPassId" component={ForgotPassword} />
             <Route path="login" component={Login}/>
             <Route path="signup" components={Signup}/>
             <Route path="signup/instructor" components={SignupInstructor}/>
             <Route path="dash/">
-              <Route path="courses" components={DashCourses}/>
+              <Route path="account" component={DashAccount} />
+              <Route path="courses" components={DashCourses} />
               <Route path="courses/:filter" components={DashCourses}/>
               <Route path="admin" components={DashAdmin}>
                 <Route path="addCourse" component={AddCourses}/>

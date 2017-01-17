@@ -132,6 +132,7 @@ async function handleSignUp(
       error,
       emailInUse,
       schoolNotFound,
+      phoneInUse,
       user
     } = payload;
     if (!!error) {
@@ -149,11 +150,18 @@ async function handleSignUp(
       endLoading();
       return;
     }
+    if (!!phoneInUse) {
+      toastr.info('That Phone Number is in use');
+      endLoading();
+      return;
+    }
     signUpSuccess(
       user.email,
       user.id,
       `${user.firstName} ${user.lastName}`,
-      user.type
+      user.type,
+      user.phone,
+      user.institutionId,
     );
     navigate('/dash/courses/active');
   } catch (e) {
@@ -269,7 +277,7 @@ class Signup extends Component {
             fullWidth
           />
           <TextField
-            floatingLabelText="School Id"
+            floatingLabelText="Student Id"
             type="text"
             id="institutionId"
             ref={() => {
@@ -374,8 +382,8 @@ Signup = connect(
     endLoading: () => {
       dispatch(LoadingActions.endLoading());
     },
-    signUpSuccess: (email, userId, userName, userType) => {
-      dispatch(UserActions.logInSuccess(email, userId, userName, userType));
+    signUpSuccess: (email, userId, userName, userType, phone, institutionId) => {
+      dispatch(UserActions.logInSuccess(email, userId, userName, userType, phone, institutionId));
     },
     signUpFail: () => {
       dispatch(UserActions.logInFail());

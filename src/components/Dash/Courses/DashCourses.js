@@ -4,21 +4,24 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
+import { toastr } from 'react-redux-toastr';
+import { getByUser as getCoursesByUser } from '../../../api/Courses';
 import Nav from './Nav';
 import CourseList from './CourseList/CourseList';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import FontIcon from 'material-ui/FontIcon';
 import AddCourseDialog from './AddCourseDialog';
 import LogOutDialog from './LogOutDialog';
+import CourseFilterBar from './CourseFilterBar';
+import CourseDrawer from './CourseDrawer';
 import { logOut } from '../../../api/User';
 import { enrollStudentInCourse } from '../../../api/Course';
 import * as OverlayActions from '../../../actions/Overlay';
 import * as LoadingActions from '../../../actions/Loading'
 import * as CoursesActions from '../../../actions/Dash/Courses/Courses'
-import * as UserActions from '../../../actions/User'
-import { push } from 'react-router-redux';
-import { toastr } from 'react-redux-toastr';
-import { getByUser as getCoursesByUser } from '../../../api/Courses';
+import * as UserActions from '../../../actions/User';
+import * as DrawerActions from '../../../actions/Drawer';
 
 
 async function handleGetCourses(
@@ -114,16 +117,25 @@ class DashCourses extends Component {
       onLogoutClick,
       addCourseSuccess,
       receivedCourses,
+      openDrawer,
+      closeDrawer,
+      isDrawerOpen,
+      navigate,
+      pathname,
+      startLoading,
     } = this.props;
 
     if (!window.getCoursesInterval) {
+      const GET_COURSE_INTERVAL = process.env.NODE_ENV === 'production'
+        ? 1000
+        : 30000;
       window.getCoursesInterval = window.setInterval(() => {
         try {
           handleGetCourses(userId, receivedCourses);
         } catch (e) {
           console.error('[ERROR] handleGetCourses', e);
         }
-      }, 1000);
+      }, GET_COURSE_INTERVAL);
     }
 
     return (
@@ -143,10 +155,23 @@ class DashCourses extends Component {
           onNoClick={() => { hideOverlay() }}
         />
         <Nav
+          title="Courses"
+          openDrawer={openDrawer}
+          closeDrawer={closeDrawer}
+          isDrawerOpen={isDrawerOpen}
+        />
+        <CourseDrawer
+          isOpen={isDrawerOpen}
+          closeDrawer={closeDrawer}
+          onLogOutClick={() => showOverlay('LOG_OUT')}
+          navigate={navigate}
+          pathname={pathname}
+          startLoading={startLoading}
+        />
+        <CourseFilterBar
           onActiveClick={onActiveClick}
           onInactiveClick={onInactiveClick}
           filter={filter}
-          onLogoutClick={() => { showOverlay('LOG_OUT') }}
         />
         <CourseList />
         <FloatingActionButton
@@ -175,6 +200,8 @@ const mapStateToProps = (state) => {
     isLoggedIn: state.User.isLoggedIn,
     userId: state.User.id,
     userType: state.User.type,
+    isDrawerOpen: !!state.Drawer.isOpen,
+    pathname: state.routing.locationBeforeTransitions.pathname,
   }
 };
 const mapDispatchToProps = (dispatch, ownProps) => {
@@ -190,10 +217,13 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch(push('/dash/courses/inactive'));
     },
     onLogoutClick: () => {
-      dispatch(UserActions.logOut());;
+      dispatch(UserActions.logOut());
       dispatch(OverlayActions.clearOverlayType());
       dispatch(OverlayActions.hideOverlay());
       dispatch(push('/login'));
+    },
+    startLoading: () => {
+      dispatch(LoadingActions.startLoading());
     },
     endLoading: () => {
       dispatch(LoadingActions.endLoading());
@@ -212,12 +242,18 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     setVisibilityFilter: (filter) => {
       dispatch(CoursesActions.setVisibilityFilter(filter));
     },
-    navigate: (url) => {
-      dispatch(push(url))
-    },
     addCourseSuccess: (course) => {
       dispatch(CoursesActions.addCourse(course))
-    }
+    },
+    openDrawer: () => {
+      dispatch(DrawerActions.openDrawer());
+    },
+    closeDrawer: () => {
+      dispatch(DrawerActions.closeDrawer())
+    },
+    navigate: (url) => {
+      dispatch(push(url));
+    },
   }
 };
 DashCourses = connect(

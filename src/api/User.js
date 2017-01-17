@@ -10,6 +10,8 @@ const routes = {
   LOG_IN: '/api/user/logIn',
   SIGN_UP: '/api/user/signUp/student',
   LOG_OUT: '/api/user/logOut',
+  GET_ACCOUNT_INFO: '/api/user/get/accountInfo',
+  SAVE_ACCOUNT_INFO: '/api/user/save/accountInfo',
 };
 
 export async function logIn(email, password) {
@@ -49,6 +51,39 @@ export async function signUp(
     return payload;
   } catch (e) {
     return e;
+  }
+}
+
+export async function getAccountInfo(userId) {
+  try {
+    return await post(routes.GET_ACCOUNT_INFO, { userId });
+  } catch (e) {
+    console.error('[ERROR] User Api getAccountInfo', e);
+    return null;
+  }
+}
+
+export async function saveAccountInfo(
+  userId,
+  firstName,
+  lastName,
+  phone,
+  institutionId,
+) {
+  try {
+    return await post(
+      routes.SAVE_ACCOUNT_INFO,
+      {
+        userId,
+        firstName,
+        lastName,
+        phone,
+        institutionId,
+      }
+    )
+  } catch (e) {
+    console.error('[ERROR] User Api saveAccountInfo', e);
+    return null;
   }
 }
 

@@ -62,7 +62,9 @@ async function handleLogIn(
       user.email,
       user.id,
       `${user.firstName} ${user.lastName}`,
-      user.type
+      user.type,
+      user.phone,
+      user.institutionId,
     );
     handleLoginSuccess(user.type, navigate);
   } catch (e) {
@@ -254,8 +256,15 @@ LogIn = connect(
     endLoading: () => {
       dispatch(LoadingActions.endLoading());
     },
-    logInSuccess: (email, id, name, type) => {
-      dispatch(UserActions.logInSuccess(email, id, name, type))
+    logInSuccess: (email, id, name, type, phone, institutionId) => {
+      dispatch(UserActions.logInSuccess(
+        email,
+        id,
+        name,
+        type,
+        phone,
+        institutionId
+      ))
     },
     logInFail: () => {
       dispatch(UserActions.logInFail());
