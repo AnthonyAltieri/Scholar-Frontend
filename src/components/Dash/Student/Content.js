@@ -11,9 +11,7 @@ const Content = ({
   mode,
   params,
 }) => {
-  console.log('in Content', params);
   const { filter } = params;
-  console.log('filter', filter);
 
   switch (mode) {
     case 'ALERT':

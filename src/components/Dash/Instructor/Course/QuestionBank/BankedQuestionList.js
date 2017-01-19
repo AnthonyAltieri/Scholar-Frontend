@@ -26,6 +26,7 @@ const BankedQuestionList = ({
   onUseForReflectiveClick,
   onUseForInstantClick,
   inAssess,
+  isCourseSessionActive,
 }) => (
   <ul className="banked-question-list">
     {bankedAssessments.map((bq) => (
@@ -42,6 +43,7 @@ const BankedQuestionList = ({
           isOptionsVisible={bq.isOptionsVisible || false}
           questionEditMode={bq.editQuestionMode || false}
           isAssessmentActive={isAssessmentActive}
+          isCourseSessionActive={isCourseSessionActive}
           onUseForReflectiveClick={onUseForReflectiveClick}
           onUseForInstantClick={onUseForInstantClick}
           optionEditModes={bq.optionEditModes ||

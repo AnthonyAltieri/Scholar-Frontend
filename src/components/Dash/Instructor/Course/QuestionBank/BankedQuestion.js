@@ -57,6 +57,7 @@ const BankedQuestion = ({
   onUseForReflectiveClick,
   onUseForInstantClick,
   inAssess,
+  isCourseSessionActive,
 }) => {
   const isQuestionEdited = !!questionEdit;
   const isOptionsEdited = optionEditModes.filter(o => !!o).length > 0;
@@ -253,7 +254,7 @@ const BankedQuestion = ({
           ? (
             <RaisedButton
               label="Use For Reflective"
-              disabled={!!isAssessmentActive}
+              disabled={isAssessmentActive || !isCourseSessionActive}
               style={{ margin: '8px 0' }}
               onTouchTap={() => {
                 onUseForReflectiveClick(question);
@@ -266,7 +267,7 @@ const BankedQuestion = ({
           ? (
             <RaisedButton
               label="Use For Instant"
-              disabled={!!isAssessmentActive}
+              disabled={isAssessmentActive || !isCourseSessionActive}
               style={{ margin: '8px 0' }}
               onTouchTap={() => {
                 onUseForInstantClick(question, options);

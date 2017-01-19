@@ -20,6 +20,12 @@ export const studentJoinedCourseSession = (numberInCourseSession) => ({
   numberInCourseSession,
 });
 
+export const setAttendance = (numberInCourseSession, numberAttendees) => ({
+  type: 'SET_ATTENDANCE',
+  numberInCourseSession,
+  numberAttendees,
+});
+
 export const clear = () => ({
   type: 'ATTENDANCE_CLEAR',
 });

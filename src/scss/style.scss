@@ -1526,43 +1526,6 @@ $connection-bar-height: 18px;
     flex-wrap: wrap;
     @extend .r-center;
   }
-  .stat {
-    margin: 4px 8px;
-    width: 120px;
-    height: 110px;
-    display: inline-block;
-    border: 1px solid rgba(0,0,0,0.2);
-    .name-container {
-      height: 60px;
-      background-color: rgba(0,0,0,0.1);
-    }
-    .name {
-      font-weight: 700;
-      margin: 0 auto;
-      text-align: center;
-      max-width: 100px;
-    }
-    .number {
-      margin: 0 auto;
-      font-size: 40px;
-      width: 100%;
-      text-align: center;
-    }
-  }
-  .stat.mini {
-    width: 100px;
-    height: 92px;
-    .name-container {
-      height: 42px;
-    }
-    .name {
-      max-width: 80px;
-      font-size: 14px;
-    }
-    .number {
-      font-size: 38px;
-    }
-  }
 
   .mode-content {
     position: absolute;
@@ -1851,6 +1814,44 @@ $connection-bar-height: 18px;
     border-bottom: 2px solid $color-bright;
   }
   @extend .r;
+}
+
+.stat {
+  margin: 4px 8px;
+  width: 120px;
+  height: 110px;
+  display: inline-block;
+  border: 1px solid rgba(0,0,0,0.2);
+  .name-container {
+    height: 60px;
+    background-color: rgba(0,0,0,0.1);
+  }
+  .name {
+    font-weight: 700;
+    margin: 0 auto;
+    text-align: center;
+    max-width: 100px;
+  }
+  .number {
+    margin: 0 auto;
+    font-size: 40px;
+    width: 100%;
+    text-align: center;
+  }
+}
+.stat.mini {
+  width: 100px;
+  height: 92px;
+  .name-container {
+    height: 42px;
+  }
+  .name {
+    max-width: 80px;
+    font-size: 14px;
+  }
+  .number {
+    font-size: 38px;
+  }
 }
 
 .alert-graph {

@@ -79,8 +79,10 @@ class AttendanceDialog extends Component {
     else{
       stageHeading = " : STAGE 1";
       isAttendanceOpen = false;
-      stage = (<div>
-        Generate a code by clicking "GET CODE"!
+      stage = (
+        <div>
+          Generate a code by clicking "GET CODE"!
+          <br/> number students in-app (present) and number students who entered code correctly (attendance)
           <br/>
         </div>
       )
@@ -122,23 +124,37 @@ class AttendanceDialog extends Component {
 
 
         <div className="r-center">
-          <p>
+          <p
+            style={{
+              marginRight: 8,
+            }}
+          >
             CODE :
           </p>
           <p>
-            <AttendanceCodeBox code={code}/>
+            <AttendanceCodeBox style={{ width: 220 }} code={code}/>
           </p>
           </div>
         <div className="r-center">
-          <p>
+          <p
+            style={{
+              marginRight: 8,
+            }}
+          >
             Present :
           </p>
-          <p>
+          <p
+            style={{
+              marginRight: 18,
+            }}
+          >
             <AttendanceCodeBox code={numberInCourseSession}/>
           </p>
-        </div>
-        <div className="r-center">
-          <p>
+          <p
+            style={{
+              marginRight: 8,
+            }}
+          >
             Attendance :
           </p>
           <p>
@@ -146,25 +162,6 @@ class AttendanceDialog extends Component {
           </p>
         </div>
 
-        <div
-          className="stats r-around"
-          style={{
-            display: "flex"
-          }}
-        >
-          <StatBlock
-            name="code"
-            number={code || "INACTIVE"}
-          />
-          <StatBlock
-            name="Attendance"
-            number={numberAttendees}
-          />
-          <StatBlock
-            name="Present"
-            number={numberInCourseSession}
-          />
-        </div>
 
       </Dialog>
     );

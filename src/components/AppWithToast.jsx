@@ -67,6 +67,7 @@ class AppWithToast extends Component {
           {isLoading ? <Loading /> : null}
           {children}
           <ReduxToastr
+            preventDuplicates
             timeOut={4000}
             newestOnTop={false}
             position="bottom-center"

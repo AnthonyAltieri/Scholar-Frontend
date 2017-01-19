@@ -71,6 +71,7 @@ const Course = (state = initialState, action) => {
       return {}
     }
 
+    case 'SET_ATTENDANCE':
     case 'ENDED_COURSESESSION':
     case 'STUDENT_JOINED_COURSESESSION': 
     case 'ATTENDANCE_CODE_ACTIVATED':

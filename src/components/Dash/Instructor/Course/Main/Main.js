@@ -90,9 +90,6 @@ class Main extends Component {
 
 
   render() {
-    const {
-    } = this.props;
-
     return (
       <div className="main r-between">
         <div className="left-pane c fullheight">
@@ -107,7 +104,12 @@ class Main extends Component {
             className="half-pane card"
             style={{ marginTop: '1%' }}
           >
-            <Stats {...this.props} />
+            <Stats
+              numberQuestions={this.props.numberQuestions}
+              numberPresent={this.props.numberPresent}
+              numberActiveAlerts={this.props.numberActiveAlerts}
+              numberAttendance={this.props.numberAttendance}
+            />
           </div>
         </div>
         <div className="right-pane c card fullheight">
@@ -129,6 +131,7 @@ const stateToProps = (state) => ({
   ).length,
   numberPresent: state.Course.Attendance.numberInCourseSession,
   numberActiveAlerts: state.Graph.Alert.activeAlerts,
+  numberAttendance: state.Course.Attendance.numberAttendees,
   isCourseSessionActive: !!state.Course.activeCourseSessionId,
   activeCourseSessionId: state.Course.activeCourseSessionId,
   filter: state.Dash.Instructor.Course.Main.filter,

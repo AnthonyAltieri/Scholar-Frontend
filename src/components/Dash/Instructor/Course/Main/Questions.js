@@ -27,7 +27,7 @@ const Questions = ({
       onMostVotedClick={() => setFilter('MOST_VOTED')}
       onLeastVotedClick={() => setFilter('LEAST_VOTED')}
     />
-    {isCourseSessionActive
+    {questions.length > 0
       ? (
       <div>
         {questions.map((q) => (

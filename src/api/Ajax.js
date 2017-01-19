@@ -13,7 +13,9 @@ export const send = (type, url, params = {}, withCredentials = true) => {
     if (type !== 'POST' && type !== 'GET') {
       throw new Error(`Invalid xmlhttp type ${type}`);
     }
-    if (url !== '/api/alert/get/active') {
+    if (process.env.NODE_ENV !== 'production'
+        && url !== '/api/alert/get/active'
+    ) {
       console.log(`sending ${type} at ${SERVER_PREFIX + url}`);
     }
     xmlhttp.open(type, SERVER_PREFIX + url, true);
@@ -24,7 +26,9 @@ export const send = (type, url, params = {}, withCredentials = true) => {
       if (xmlhttp.status === 200) {
         try {
           const payload = JSON.parse(xmlhttp.responseText);
-          if (url !== '/api/alert/get/active') {
+          if (process.env.NODE_ENV !== 'production'
+              && url !== '/api/alert/get/active'
+          ) {
             console.log('payload', payload);
           }
           resolve(payload);
@@ -42,7 +46,9 @@ export const send = (type, url, params = {}, withCredentials = true) => {
     }
     try {
       const parameters = JSON.stringify(params);
-      if (url !== '/api/alert/get/active') {
+      if (process.env.NODE_ENV == 'production'
+          && url !== '/api/alert/get/active'
+      ) {
         console.log('parameters', parameters);
       }
       xmlhttp.send(parameters);
@@ -68,7 +74,9 @@ export const sendAbsoluteUrl = (type, url, params = {}, withCredentials = true) 
     if (type !== 'POST' && type !== 'GET') {
       throw new Error(`Invalid xmlhttp type ${type}`);
     }
-    if (url !== '/api/alert/get/active') {
+    if (process.env.NODE_ENV !== 'production'
+        && url !== '/api/alert/get/active'
+    ) {
       console.log(`sending ${type} at ${url}`);
     }
     xmlhttp.open(type,  url, true);
@@ -79,7 +87,9 @@ export const sendAbsoluteUrl = (type, url, params = {}, withCredentials = true) 
       if (xmlhttp.status === 200) {
         try {
           const payload = JSON.parse(xmlhttp.responseText);
-          if (url !== '/api/alert/get/active') {
+          if (process.env.NODE_ENV !== 'production'
+              && url !== '/api/alert/get/active'
+          ) {
             console.log('payload', payload);
           }
           resolve(payload);
@@ -97,7 +107,9 @@ export const sendAbsoluteUrl = (type, url, params = {}, withCredentials = true) 
     }
     try {
       const parameters = JSON.stringify(params);
-      if (url !== '/api/alert/get/active') {
+      if (process.end.NODE_ENV !== 'production'
+          && url !== '/api/alert/get/active'
+      ) {
         console.log('parameters', parameters);
       }
       xmlhttp.send(parameters);

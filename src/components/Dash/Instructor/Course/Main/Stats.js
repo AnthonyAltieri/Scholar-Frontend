@@ -10,7 +10,6 @@ const Stats = ({
   numberPresent,
   numberActiveAlerts,
   numberAttendance,
-  windowHeight,
 }) => (
   <div className="fullwidth fullheight">
     <div className="heading">
@@ -19,19 +18,19 @@ const Stats = ({
     <div className="stats-row">
       <StatBlock
         name="Present"
-        number={numberPresent || 0}
+        number={numberPresent}
       />
       <StatBlock
         name="Active Alerts"
-        number={numberActiveAlerts || 0}
+        number={numberActiveAlerts}
       />
       <StatBlock
         name="Questions"
-        number={numberQuestions || 0}
+        number={numberQuestions}
       />
       <StatBlock
         name="In Attendance"
-        number={numberAttendance || 0}
+        number={numberAttendance}
       />
     </div>
   </div>

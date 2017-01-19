@@ -220,6 +220,7 @@ class DashCourse extends Component {
       connectionStatus,
       setConnectionStatus,
       closeDrawer,
+      setAttendance,
     } = this.props;
 
     const events = {
@@ -338,7 +339,12 @@ class DashCourse extends Component {
           isCourseSessionActive={isCourseSessionActive}
           onStartClick={() => {
             handleCourseSessionStart(courseId, userId)
-              .then(({ error, courseSessionId }) => {
+              .then(({
+                error,
+                courseSessionId,
+                numberAttendees,
+                numberInCourseSession,
+              }) => {
                 if (!!error) {
                   toastr.error('Something went wrong please try again');
                   return;
@@ -346,6 +352,7 @@ class DashCourse extends Component {
                 hideOverlay();
                 closeDrawer();
                 activateCourseSession(courseSessionId);
+                setAttendance(numberInCourseSession, numberAttendees);
                 handleSockets(this.props);
               })
               .catch((e) => {
@@ -504,6 +511,12 @@ const dispatchToProps = (dispatch, ownProps) => ({
   },
   closeDrawer: () => {
     dispatch(DrawerActions.closeDrawer());
+  },
+  setAttendance: (numberInCourseSession, numberAttendees) => {
+    dispatch(AttendanceActions.setAttendance(
+      numberInCourseSession,
+      numberAttendees
+    ));
   },
 });
 

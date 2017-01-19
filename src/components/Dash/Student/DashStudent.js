@@ -12,12 +12,13 @@ import * as AssessmentActions from '../../../actions/Assess/Assess'
 import * as CoursesActions from '../../../actions/Dash/Courses/Courses'
 import * as SocketActions from '../../../actions/Socket'
 import Content from './Content';
-import Socket from '../../../socket/Socket';
-import Events from '../../../socket/Events';
+import setUpSockets, { getEvents } from '../../../socket/DashStudentSockets';
+import { disconnect as socketDisconnect } from '../../../socket/Socket';
 import Nav from '../../Navigation/DashStudent/Nav';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
+import AlertFab from './AlertFab';
+import MainFab from './MainFab';
 import * as LoadingActions from '../../../actions/Loading'
-import Colors from '../../../util/Colors'
 import ToCourseDialog from './ToCoursesDialog';
 import TextInstructionsDialog from './TextInstructionsDialog'
 import AlertDialog from './AlertDialog';
@@ -25,7 +26,7 @@ import AttendanceDialog from './AttendanceDialog';
 import MenuItem from 'material-ui/MenuItem';
 import ConnectionBar from '../../ConnectionBar';
 import FontIcon from 'material-ui/FontIcon';
-import Drawer from 'material-ui/Drawer';
+import Drawer from './Drawer';
 import * as QuestionListActions from '../../../actions/QuestionList';
 import * as UserActions from '../../../actions/User';
 import * as DrawerActions from '../../../actions/Drawer';
@@ -35,24 +36,16 @@ import * as AlertActions from '../../../actions/Alert'
 import * as MenuActions from '../../../actions/Menu'
 import * as ReflectiveActions from '../../../actions/Assess/Reflelctive';
 import { createAlert } from '../../../api/Alert'
-import { joinAttendance, getNumberInAttendance, numberInCourseSessionGet } from '../../../api/CourseSession'
+import {
+  joinAttendance,
+  getNumberInAttendance,
+  numberInCourseSessionGet,
+  getActiveAssessment,
+} from '../../../api/CourseSession'
 import { toastr } from 'react-redux-toastr';
 import * as AttendanceActions from '../../../actions/Attendance'
 import { getByUser as getCoursesByUser } from '../../../api/Courses';
 
-const fabAskStyle = {
-  position: "absolute",
-  bottom: "40px",
-  right: "16px",
-  zIndex: "10",
-};
-
-const fabAlertStyle = {
-  position: "absolute",
-  bottom: "116px",
-  right: "24px",
-  zIndex: "10",
-};
 
 async function handleGetCourses(
   userId,
@@ -71,113 +64,6 @@ async function handleGetCourses(
     console.error('[ERROR] : ', e);
     toastr.error('Something went wrong please refresh the page');
   }
-}
-
-function setUpSockets(props) {
-  const {
-    courseSessionId,
-    addQuestion,
-    addVote,
-    removeVote,
-    dismissQuestion,
-    addFlag,
-    removeFlag,
-    receivedActiveAssessment,
-    deactivateAssessment,
-    reflectiveStartReview,
-    addEndorse,
-    removeEndorse,
-    userId,
-    studentJoinedAttendance,
-    studentJoinedCourseSession,
-    goToCourses,
-    addResponse,
-    removeResponse,
-  } = props;
-  const courseSessionChannel = `private-${courseSessionId}`;
-  Socket.subscribe(courseSessionChannel);
-  const events = {
-    [Events.QUESTION_ASKED]: {
-      name: Events.QUESTION_ASKED,
-      handler: (data) => addQuestion(data.question),
-    },
-    [Events.QUESTION_REMOVED]: {
-      name: Events.QUESTION_REMOVED,
-      handler: (data) => dismissQuestion(data.id),
-    },
-    [Events.RESPONSE_ADD]: {
-      name: Events.RESPONSE_ADD,
-      handler: (data) => addResponse(data.response),
-    },
-    [Events.RESPONSE_REMOVED]: {
-      name: Events.RESPONSE_ADD,
-      handler: (data) => removeResponse(data.response)
-    },
-    [Events.VOTE_ADD]: {
-      name: Events.VOTE_ADD,
-      handler: (data) => {
-        if (data.vote.userId === userId) return;
-        addVote(data.targetId, data.vote)
-      },
-    },
-    [Events.VOTE_REMOVE]: {
-      name: Events.VOTE_REMOVE,
-      handler: (data) => {
-        if (data.userId === userId) return;
-        removeVote(data.id, data.userId)
-      },
-    },
-    [Events.ADD_FLAG]: {
-      name: Events.ADD_FLAG,
-      handler: (data) => addFlag(data.id),
-    },
-    [Events.REMOVE_FLAG]: {
-      name: Events.REMOVE_FLAG,
-      handler: (data) => removeFlag(data.id),
-    },
-    [Events.ASSESSMENT_ACTIVATED]: {
-      name: Events.ASSESSMENT_ACTIVATED,
-      handler: (data) => receivedActiveAssessment(
-        data.assessmentId,
-        data.assessmentType,
-        data.question,
-        data.options,
-      ),
-    },
-    [Events.ASSESSMENT_DEACTIVATED]: {
-      name: Events.ASSESSMENT_DEACTIVATED,
-      handler: (data) => deactivateAssessment(),
-    },
-    [Events.REFLECTIVE_ASSESSMENT_START_REVIEW]: {
-      name: Events.REFLECTIVE_ASSESSMENT_START_REVIEW,
-      handler: (data) => reflectiveStartReview(
-        data.toReview.filter(a => a.userId !== userId)
-      ),
-    },
-    [Events.ADD_ENDORSE]: {
-      name: Events.ADD_ENDORSE,
-      handler: (data) => addEndorse(data.id),
-    },
-    [Events.REMOVE_ENDORSE]: {
-      name: Events.REMOVE_ENDORSE,
-      handler: (data) => removeEndorse(data.id),
-    },
-    [Events.STUDENT_JOINED_ATTENDANCE]: {
-      name: Events.STUDENT_JOINED_ATTENDANCE,
-      handler: (data) => studentJoinedAttendance(data.attendance),
-    },
-    [Events.END_COURSESESSION]: {
-      name: Events.END_COURSESESSION,
-      handler: (data) => goToCourses(userId),
-    },
-    [Events.STUDENT_JOINED_COURSESESSION]: {
-      name: Events.STUDENT_JOINED_COURSESESSION,
-      handler: (data) => studentJoinedCourseSession(
-        data.numberInCourseSession,
-      ),
-    },
-  };
-  Socket.bindAllEvents(events, courseSessionChannel);
 }
 
 async function handleAlertThreshold(
@@ -213,10 +99,47 @@ async function handleAlertThreshold(
     })
 }
 
+async function handleActiveAssessments(
+  courseSessionId,
+  receivedActiveAssessment,
+  isAssessmentActive,
+  deactivateAssessment,
+) {
+  try {
+    const payload = await getActiveAssessment(courseSessionId);
+    const {
+      activeAssessmentType,
+      activeAssessment,
+    }  = payload;
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('activeAssessment');
+      console.log('Has Active Assessment: ' + !!activeAssessmentType);
+    }
+    if (!!payload.error) return;
+    if (!!activeAssessmentType && !isAssessmentActive) {
+      receivedActiveAssessment(
+        activeAssessment.id,
+        activeAssessmentType,
+        activeAssessment.question,
+        activeAssessment.options,
+      )
+    } else if (!activeAssessmentType && isAssessmentActive) {
+      deactivateAssessment();
+    } else {
+      throw new Error(`Invalid activeAssessmentType: ${activeAssessmentType}`);
+    }
+  } catch (e) {
+    console.error('[ERROR] Dash Student handleActiveAssessments', e);
+  }
+}
+
 
 class DashStudent extends Component {
   async componentWillMount(){
-    const { studentJoinedAttendance, courseSessionId } = this.props;
+    const {
+      studentJoinedAttendance,
+      courseSessionId,
+    } = this.props;
     try{
       const payload =  await getNumberInAttendance(courseSessionId);
       const error = payload.error;
@@ -229,16 +152,18 @@ class DashStudent extends Component {
       console.error("[ERROR] in DashStudent component > ComponentWillMount : " + e);
     }
   }
+
+
+
   async componentDidMount() {
     const {
       endLoading,
-      courseId,
       courseSessionId,
-      setAlertThreshold,
-      setAlertPercentage,
       updateAlertGraph,
-      attendance,
-      studentJoinedCourseSession
+      studentJoinedCourseSession,
+      receivedActiveAssessment,
+      isAssessmentActive,
+      deactivateAssessment,
     } = this.props;
     endLoading();
 
@@ -261,6 +186,15 @@ class DashStudent extends Component {
         }
       }, INTERVAL_TIME);
 
+
+      await handleActiveAssessments(courseSessionId, receivedActiveAssessment);
+      window.activeAssessmentInterval = window.setInterval(
+        handleActiveAssessments(courseSessionId, receivedActiveAssessment),
+        INTERVAL_TIME,
+        isAssessmentActive,
+        deactivateAssessment
+      );
+
       console.log('DashStudent componentDidMount()');
       setUpSockets(this.props)
     }
@@ -271,8 +205,9 @@ class DashStudent extends Component {
   }
 
   componentWillUnmount() {
-    Socket.disconnect() ;
+    socketDisconnect();
     window.clearInterval(window.intervalGetAlerts);
+    window.clearInterval(window.activeAssessmentInterval);
   }
 
   render() {
@@ -296,112 +231,18 @@ class DashStudent extends Component {
       threshold,
       isDrawerOpen,
       closeDrawer,
-      isInAttendance,
       overlayType,
       openAttendanceDialog,
       closeAttendanceDialog,
-      addQuestion,
-      addVote,
-      removeVote,
-      dismissQuestion,
-      addFlag,
-      removeFlag,
-      receivedActiveAssessment,
-      deactivateAssessment,
-      reflectiveStartReview,
-      addEndorse,
-      removeEndorse,
-      studentJoinedAttendance,
-      addResponse,
-      removeResponse,
       connectionStatus,
       setConnectionStatus,
       numberInCourseSession,
       showTextInstructions,
       closeTextInstructionsDialog
     }  = this.props;
-    const events = {
-      [Events.QUESTION_ASKED]: {
-        name: Events.QUESTION_ASKED,
-        handler: (data) => addQuestion(data.question),
-      },
-      [Events.QUESTION_REMOVED]: {
-        name: Events.QUESTION_REMOVED,
-        handler: (data) => dismissQuestion(data.id),
-      },
-      [Events.RESPONSE_ADD]: {
-        name: Events.RESPONSE_ADD,
-        handler: (data) => addResponse(data.response),
-      },
-      [Events.RESPONSE_REMOVED]: {
-        name: Events.RESPONSE_ADD,
-        handler: (data) => removeResponse(data.response)
-      },
-      [Events.VOTE_ADD]: {
-        name: Events.VOTE_ADD,
-        handler: (data) => {
-          if (data.userId === userId) return;
-          addVote(data.targetId, data.vote)
-        },
-      },
-      [Events.VOTE_REMOVE]: {
-        name: Events.VOTE_REMOVE,
-        handler: (data) => {
-          if (data.userId === userId) return;
-          removeVote(data.id, data.userId)
-        },
-      },
-      [Events.ADD_FLAG]: {
-        name: Events.ADD_FLAG,
-        handler: (data) => addFlag(data.id),
-      },
-      [Events.REMOVE_FLAG]: {
-        name: Events.REMOVE_FLAG,
-        handler: (data) => removeFlag(data.id),
-      },
-      [Events.ASSESSMENT_ACTIVATED]: {
-        name: Events.ASSESSMENT_ACTIVATED,
-        handler: (data) => receivedActiveAssessment(
-          data.assessmentId,
-          data.assessmentType,
-          data.question,
-          data.options,
-        ),
-      },
-      [Events.ASSESSMENT_DEACTIVATED]: {
-        name: Events.ASSESSMENT_DEACTIVATED,
-        handler: (data) => deactivateAssessment(),
-      },
-      [Events.REFLECTIVE_ASSESSMENT_START_REVIEW]: {
-        name: Events.REFLECTIVE_ASSESSMENT_START_REVIEW,
-        handler: (data) => reflectiveStartReview(
-          data.toReview.filter(a => a.userId !== userId)
-        ),
-      },
-      [Events.ADD_ENDORSE]: {
-        name: Events.ADD_ENDORSE,
-        handler: (data) => addEndorse(data.id),
-      },
-      [Events.REMOVE_ENDORSE]: {
-        name: Events.REMOVE_ENDORSE,
-        handler: (data) => removeEndorse(data.id),
-      },
-      [Events.STUDENT_JOINED_ATTENDANCE]: {
-        name: Events.STUDENT_JOINED_ATTENDANCE,
-        handler: (data) => studentJoinedAttendance(data.attendance),
-      },
-      [Events.END_COURSESESSION]: {
-        name: Events.END_COURSESESSION,
-        handler: (data) => goToCourses(userId),
-      }
-    };
-
-    const adjustedAlertPercentage = (numberInCourseSession) => {
-      {
-        return ((activeAlerts/numberInCourseSession)*100);
-      }
-    };
-        return (
+    const events = getEvents(this.props);
+    const alertPercentage = ((activeAlerts/numberInCourseSession) * 100);
+      return (
           <div className="dash-student">
           <ToCourseDialog
             onYesClick={() => {
@@ -413,7 +254,9 @@ class DashStudent extends Component {
             onNoClick={() => {
               hideOverlay();
             }}
-            isOpen={isOverlayVisible && overlayType === 'GO_TO_COURSES'}
+            isOpen={overlayType === 'GO_TO_COURSES'
+              && isOverlayVisible
+            }
           />
           <AlertDialog
             onOkClick={() => hideAlertOverlay()}
@@ -421,7 +264,9 @@ class DashStudent extends Component {
           />
           <TextInstructionsDialog
             onCancelClick={() => closeTextInstructionsDialog()}
-            isOpen={isOverlayVisible && overlayType === 'SHOW_TEXT_INSTRUCTIONS'}
+            isOpen={overlayType === 'SHOW_TEXT_INSTRUCTIONS'
+              && isOverlayVisible
+            }
           />
           <AttendanceDialog
             onSubmitClick={async (attendanceCode) => {
@@ -471,95 +316,35 @@ class DashStudent extends Component {
             courseSessionId={courseSessionId}
           />
           <Drawer
-            docked={false}
-            width={200}
-            open={isDrawerOpen}
-            onRequestChange={(open, reason) => {
-              if (!open) {
-                closeDrawer();
-              }
-            }}
-          >
-            <MenuItem
-              onTouchTap={() => promptGoToCourses()}
-              rightIcon={
-                <FontIcon className="material-icons">
-                  list
-                </FontIcon>
-              }
-            >
-              Go To Courses
-            </MenuItem>
-            <MenuItem
-              onTouchTap={() => openAttendanceDialog()}
-              rightIcon={
-                <FontIcon className="material-icons">
-                  pan_tool
-                </FontIcon>
-              }
-            >
-              Attendance
-            </MenuItem>
-            <MenuItem
-              onTouchTap={() => showTextInstructions()}
-              rightIcon={<font className="material-icons">phone_iphone</font>}
-            >
-              SMS Text Help
-            </MenuItem>
-          </Drawer>
+            isDrawerOpen={isDrawerOpen}
+            closeDrawer={closeDrawer}
+            onCoursesClick={() => promptGoToCourses()}
+            onAttendanceClick={() => openAttendanceDialog()}
+            onSMSHelpClick={() => showTextInstructions()}
+          />
           <Content params={params || {}} mode={mode} />
           {mode !== 'ASSESSMENT'
             ? (
-              <FloatingActionButton
-                style={fabAlertStyle}
-                backgroundColor={Colors.red}
-                onTouchTap={() => {
-                  //TODO: Send data to server
-                  const payload = createAlert(courseSessionId, courseId, userId);
-                  const { error, alert } = payload;
-                  if(!!error) {
-                    console.error("[ERROR] in DashStudent > onClick of Alert FAB : couldn't create the alert");
-                    //TODO: consider adding Toastr Error
-                  }
-                  else {
-                    console.info("[INFO] alert added ");
-                  }
+              <AlertFab
+                onAlertClick={onAlertClick}
+                onClick={() => {
+                  createAlert(courseSessionId, courseId, userId);
                   onAlertClick();
                 }}
-                mini
-              >
-                <FontIcon className="material-icons">
-                  error_outline
-                </FontIcon>
-              </FloatingActionButton>
+              />
             )
             : null
           }
-          <FloatingActionButton
-            style={fabAskStyle}
-            secondary
-            onTouchTap={() => {
-              if (mode === 'ASK' || mode === 'ASSESSMENT') {
-                setModeToQuestions();
-              } else {
-                setModeToAsk();
-              }
-            }}
-          >
-            {mode === 'ASK' || mode === 'ASSESSMENT'
-              ? <FontIcon className="material-icons">
-                view_list
-              </FontIcon>
-              : <FontIcon className="material-icons">
-                chat
-              </FontIcon>
-            }
-          </FloatingActionButton>
+          <MainFab
+            mode={mode}
+            setModeToQuestions={setModeToQuestions}
+            setModeToAsk={setModeToAsk}
+          />
           {mode !== 'ASSESSMENT'
             ? (
               <AlertGraph
-                percentage={adjustedAlertPercentage(numberInCourseSession)}
-                isPastThreshold={(adjustedAlertPercentage(numberInCourseSession) >= threshold) ? 1 : 0}
+                percentage={alertPercentage}
+                isPastThreshold={alertPercentage >= threshold}
               />
             )
             : null
@@ -580,8 +365,6 @@ const mapStateToProps = (state) => {
   return {
     mode: state.DashStudent.mode || 'QUESTIONS',
     code: state.Course.abbreviation || '',
-    // threshold: state.CourseSession.threshold,
-    // alertPercentage: state.CourseSession.alertPercentage,
     isOverlayVisible: !!state.Overlay.isVisible,
     isAlertOverlayVisible: !!state.DashStudent.isAlertOverlayVisible,
     courseSessionId: state.Course.activeCourseSessionId,
@@ -595,6 +378,7 @@ const mapStateToProps = (state) => {
     attendance: state.Course.Attendance.numberAttendees,
     numberInCourseSession: state.Course.Attendance.numberInCourseSession,
     connectionStatus: state.Socket.connectionStatus,
+    isAssessmentActive: !!state.Assess.activeAssessmentId,
   }
 };
 
@@ -607,7 +391,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
     },
     goToCourses: (userId) => {
-      dispatch(push('/dash/courses'))
+      dispatch(push('/dash/courses'));
       dispatch(DashStudentActions.setDashMode('QUESTIONS'))
       window.clearInterval(window.intervalGetAlerts);
       window.getCoursesInterval = window.setInterval(() => {

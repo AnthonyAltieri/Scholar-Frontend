@@ -22,6 +22,14 @@ const Attendance = (state = initialState, action) => {
       return initialState
     }
 
+    case 'SET_ATTENDANCE': {
+      return {
+        ...state,
+        numberAttendees: action.numberAttendees,
+        numberInCourseSession: action.numberInCourseSession,
+      }
+    }
+
     case 'ATTENDANCE_CODE_ACTIVATED' : {
       return {
         ...state,

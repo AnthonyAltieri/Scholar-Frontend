@@ -10,7 +10,6 @@ import AppBar from 'material-ui/AppBar';
 const backSrc = require('../../../img/App/back.svg');
 
 const Nav = ({
-  onBackClick,
   isMenuOpen,
   closeMenu,
   openMenu,

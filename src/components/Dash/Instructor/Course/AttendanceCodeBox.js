@@ -8,13 +8,17 @@ import Colors from '../../../../util/Colors';
 
 const AttendanceCodeBox = ({
   code,
+  style,
 }) => (
-  <div style={
-    {
-
-      border: "3px solid" + Colors.dark,
-      fontSize: "40px"
-    }}>
+  <div
+    style={{
+      ...style,
+      padding: 20,
+      border: "2px solid" + Colors.dark,
+      fontSize: "40px",
+      textAlign: 'center',
+    }}
+  >
     {code}
   </div>
 );

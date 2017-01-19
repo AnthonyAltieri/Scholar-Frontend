@@ -132,6 +132,7 @@ class Assess extends Component {
       numberInstantAssessmentAnswers,
       answersWithReviews,
 	    numberInCourseSession,
+      numberInAttendance,
     } = this.props;
     const isAssessmentActive = !!activeAssessmentType;
 
@@ -165,7 +166,7 @@ class Assess extends Component {
               >
               <StatBlock
                 name="Attendance"
-                number={0}
+                number={numberInAttendance}
                 isMini
               />
               <StatBlock
@@ -178,7 +179,7 @@ class Assess extends Component {
                   <div>
                     <StatBlock
                       name="Answered"
-                      number={(answers > 0) ? (answers/2) : answers}
+                      number={answers}
                       isMini
                     />
                   </div>
@@ -227,6 +228,7 @@ class Assess extends Component {
                   <BankedQuestionList
                     inAssess
                     isAssessmentActive={isAssessmentActive}
+                    isCourseSessionActive={!!courseSessionId}
                     onUseForReflectiveClick={async (question) => {
                         try {
                           document
@@ -490,6 +492,7 @@ const stateToProps = (state) => ({
 	numberInCourseSession: state.Course.Attendance.numberInCourseSession || 0,
   userId: state.User.id,
   courseId: state.Course.id,
+  numberInAttendance: state.Course.Attendance.numberAttendees,
   bankId: state.AssessmentBank.id,
   addOptions: !!state.AssessmentBank.add
     ? state.AssessmentBank.add.options

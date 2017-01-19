@@ -60,7 +60,7 @@ function bind(channelName, event, callback) {
   );
 }
 
-function disconnect() {
+export function disconnect() {
   if (!pusher) return;
   try {
     unsubscribeAll();

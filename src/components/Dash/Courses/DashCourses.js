@@ -125,10 +125,15 @@ class DashCourses extends Component {
       startLoading,
     } = this.props;
 
+    try {
+      handleGetCourses(userId, receivedCourses);
+    } catch (e) {
+      console.error('[ERROR] handleGetCourses', e);
+    }
     if (!window.getCoursesInterval) {
       const GET_COURSE_INTERVAL = process.env.NODE_ENV === 'production'
         ? 1000
-        : 30000;
+        : 5000;
       window.getCoursesInterval = window.setInterval(() => {
         try {
           handleGetCourses(userId, receivedCourses);

@@ -29,7 +29,7 @@ function reconnectDisconnectedSockets(
 const secondsToMili = seconds => seconds * 1000;
 const INTERVAL_TIME = process.env.NODE_ENV === 'production'
   ? secondsToMili(3)
-  : secondsToMili(10);
+  : secondsToMili(5);
 
 class ConnectionBar extends Component {
   componentDidMount() {
