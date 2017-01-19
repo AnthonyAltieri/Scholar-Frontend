@@ -148,7 +148,7 @@ class AttendanceDialog extends Component {
               marginRight: 18,
             }}
           >
-            <AttendanceCodeBox code={numberInCourseSession}/>
+            <AttendanceCodeBox code={numberInCourseSession || 0}/>
           </p>
           <p
             style={{
@@ -158,7 +158,7 @@ class AttendanceDialog extends Component {
             Attendance :
           </p>
           <p>
-            <AttendanceCodeBox code={numberAttendees}/>
+            <AttendanceCodeBox code={numberAttendees || 0}/>
           </p>
         </div>
 
