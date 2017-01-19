@@ -271,7 +271,7 @@ class DashStudent extends Component {
           <AttendanceDialog
             onSubmitClick={async (attendanceCode) => {
               try {
-                const payload = await joinAttendance(courseSessionId, attendanceCode.toLowerCase(), userId);
+                const payload = await joinAttendance(courseSessionId, attendanceCode.toLowerCase().trim(), userId);
                 if(!!payload){
                   const { attendance, studentAlreadyInAttendance, isAttendanceClosed, invalidCode } = payload;
 
