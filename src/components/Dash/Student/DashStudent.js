@@ -189,10 +189,13 @@ class DashStudent extends Component {
 
       await handleActiveAssessments(courseSessionId, receivedActiveAssessment);
       window.activeAssessmentInterval = window.setInterval(
-        handleActiveAssessments(courseSessionId, receivedActiveAssessment),
+        handleActiveAssessments(
+          courseSessionId,
+          receivedActiveAssessment,
+          isAssessmentActive,
+          deactivateAssessment
+        ),
         INTERVAL_TIME,
-        isAssessmentActive,
-        deactivateAssessment
       );
 
       console.log('DashStudent componentDidMount()');
