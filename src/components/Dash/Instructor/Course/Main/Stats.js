@@ -18,7 +18,7 @@ const Stats = ({
     <div className="stats-row">
       <StatBlock
         name="Present"
-        number={numberPresent}
+        number={numberPresent || 0}
       />
       <StatBlock
         name="Active Alerts"
@@ -30,7 +30,7 @@ const Stats = ({
       />
       <StatBlock
         name="In Attendance"
-        number={numberAttendance}
+        number={numberAttendance || 0}
       />
     </div>
   </div>
