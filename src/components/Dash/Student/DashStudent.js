@@ -187,14 +187,20 @@ class DashStudent extends Component {
       }, INTERVAL_TIME);
 
 
-      await handleActiveAssessments(courseSessionId, receivedActiveAssessment);
-      window.activeAssessmentInterval = window.setInterval(
-        handleActiveAssessments(
-          courseSessionId,
-          receivedActiveAssessment,
-          isAssessmentActive,
-          deactivateAssessment
-        ),
+      await handleActiveAssessments(
+        courseSessionId,
+        receivedActiveAssessment,
+        isAssessmentActive,
+        deactivateAssessment
+      );
+      window.activeAssessmentInterval = window.setInterval(async () => {
+          await handleActiveAssessments(
+            courseSessionId,
+            receivedActiveAssessment,
+            isAssessmentActive,
+            deactivateAssessment
+          )
+        },
         INTERVAL_TIME,
       );
 
@@ -509,14 +515,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       question,
       options,
     ) => {
-      dispatch(AssessmentActions
-        .receivedActiveAssessment(
-          assessmentId,
-          assessmentType,
-          question,
-          options,
-        )
-      )
+      dispatch(AssessmentActions.receivedActiveAssessment(
+        assessmentId,
+        assessmentType,
+        question,
+        options,
+      ))
     },
     deactivateAssessment: () => {
       dispatch(DashStudentActions.setDashMode('QUESTIONS'));
