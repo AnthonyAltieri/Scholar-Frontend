@@ -32,6 +32,10 @@ let AskQuestion = ({
         <RaisedButton
           label="submit"
           secondary
+          style={{
+            marginTop: 12,
+            marginBottom: 2,
+          }}
           id="ask-question-button"
           onClick={async function() {
             const content = input.value;
