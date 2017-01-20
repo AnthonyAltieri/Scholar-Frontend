@@ -25,21 +25,10 @@ const TextInstructionsDialog = ({
         You can use Scholar by sending text messages to the number <span style={{color : Colors.green}}>888-997-5717</span>
 
         <br />
-        <br />
-        1.	To Join Course Session:
-        <br />
-        <span style={{color : Colors.green}}>join : [code]</span>
-        <br />
-        Where code is the “Add Code” of the course as provided by your professor
-        <br />
-        Eg. join : abcde
-        <br />
-
         NOTE: notice the “ : “ between the instruction and its content
-
         <br />
         <br />
-        2.	To Send an Alert:
+        1.	To Send an Alert:
         <br />
         Simply send an exclamation point
         <br />
@@ -47,7 +36,7 @@ const TextInstructionsDialog = ({
 
         <br />
         <br />
-        3.	To Ask A Question
+        2.	To Ask A Question
         <br />
         <span style={{color : Colors.green}}>q : [content]</span>
         <br />
@@ -55,7 +44,7 @@ const TextInstructionsDialog = ({
         <br />
         <br />
 
-        4.	To Answer an Instant Assessment:
+        3.	To Answer an Instant Assessment:
         <br />
         <span style={{color : Colors.green}}>answer : [option letter]</span>
         <br />
@@ -63,7 +52,7 @@ const TextInstructionsDialog = ({
         <br />
         <br />
 
-        5.	To Answer a reflective Assessment:
+        4.	To Answer a reflective Assessment:
         <br />
         <span style={{color : Colors.green}}>answer : [answer content]</span>
         <br />
@@ -71,7 +60,7 @@ const TextInstructionsDialog = ({
         <br />
         <br />
 
-        6.	To join the attendance list:
+        5.	To join the attendance list:
         <br />
         <span style={{color : Colors.green}}>code : [code]</span>
         <br />
