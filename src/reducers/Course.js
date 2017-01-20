@@ -55,6 +55,9 @@ const Course = (state = initialState, action) => {
         activeCourseSessionId: null
       }
     }
+    case 'LOG_OUT': {
+     return initialState;
+    }
 
     case 'JOIN_COURSE': {
       return {

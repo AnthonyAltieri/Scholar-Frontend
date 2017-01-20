@@ -106,6 +106,7 @@ const handleLoginSuccess = (type, navigate) => {
 
 class LogIn extends Component {
   componentDidMount() {
+    this.props.logOut();
     this.props.endLoading();
     return;
     console.log('mount');
@@ -294,6 +295,10 @@ LogIn = connect(
     },
     showOverlay: () => {
       dispatch(OverlayActions.showOverlay());
+    },
+    logOut: () => {
+	console.log("in logOut");
+      dispatch(UserActions.logOut());
     },
     hideOverlay: () => {
       dispatch(OverlayActions.hideOverlay())

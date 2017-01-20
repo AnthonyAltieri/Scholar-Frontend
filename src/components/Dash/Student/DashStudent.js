@@ -111,22 +111,23 @@ async function handleActiveAssessments(
       activeAssessmentType,
       activeAssessment,
     }  = payload;
-    if (process.env.NODE_ENV !== 'production') {
+    //if (process.env.NODE_ENV !== 'production') {
+    if (true) {
       console.log('activeAssessment');
       console.log('Has Active Assessment: ' + !!activeAssessmentType);
+	console.log('isAssessmentActive: ' + isAssessmentActive);
     }
     if (!!payload.error) return;
-    if (!!activeAssessmentType && !isAssessmentActive) {
+    if (!!activeAssessmentType) {
       receivedActiveAssessment(
         activeAssessment.id,
         activeAssessmentType,
         activeAssessment.question,
         activeAssessment.options,
       )
-    } else if (!activeAssessmentType && isAssessmentActive) {
+    } else if (!activeAssessmentType) {
       deactivateAssessment();
     } else {
-      throw new Error(`Invalid activeAssessmentType: ${activeAssessmentType}`);
     }
   } catch (e) {
     console.error('[ERROR] Dash Student handleActiveAssessments', e);
@@ -164,6 +165,7 @@ class DashStudent extends Component {
       receivedActiveAssessment,
       isAssessmentActive,
       deactivateAssessment,
+      deactivateAssessmentNoMode,
     } = this.props;
     endLoading();
 
@@ -191,14 +193,14 @@ class DashStudent extends Component {
         courseSessionId,
         receivedActiveAssessment,
         isAssessmentActive,
-        deactivateAssessment
+        deactivateAssessmentNoMode
       );
       window.activeAssessmentInterval = window.setInterval(async () => {
           await handleActiveAssessments(
             courseSessionId,
             receivedActiveAssessment,
             isAssessmentActive,
-            deactivateAssessment
+            deactivateAssessmentNoMode
           )
         },
         INTERVAL_TIME,
@@ -524,6 +526,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     deactivateAssessment: () => {
       dispatch(DashStudentActions.setDashMode('QUESTIONS'));
+      dispatch(AssessmentActions.deactivate());
+    },
+    deactivateAssessmentNoMode: () => {
       dispatch(AssessmentActions.deactivate());
     },
     updateAlertGraph: (activeAlerts) => {
