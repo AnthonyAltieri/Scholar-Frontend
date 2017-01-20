@@ -33,9 +33,6 @@ let AskQuestion = ({
           label="submit"
           secondary
           id="ask-question-button"
-          style={{
-            marginTop: 4,
-          }}
           onClick={async function() {
             const content = input.value;
             if (!content.trim()) {
