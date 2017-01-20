@@ -32,7 +32,6 @@ let AskQuestion = ({
         <RaisedButton
           label="submit"
           secondary
-          fullWidth
           id="ask-question-button"
           style={{
             marginTop: 4,
