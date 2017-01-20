@@ -11,8 +11,6 @@ import * as AskActions from '../../../../../actions/Dash/Courses/Ask';
 import * as QuestionsActions from '../../../../../actions/Questions';
 import * as QuestionListActions from '../../../../../actions/QuestionList';
 import StatBlock from '../StatBlock';
-import Socket from '../../../../../socket/Socket';
-import Events from '../../../../../socket/Events';
 
 const filterQuestions = (filter, allQuestions = []) => {
   const questions = allQuestions.filter(q => !q.isDismissed);
