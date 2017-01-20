@@ -229,16 +229,28 @@ body {
   @extend .fullscreen, .r-center;
 }
 
+.login-button {
+  margin-top: 20px;
+  @media #{$mobile} {
+    margin-top: 2px;
+  }
+}
+
 .initial-card {
   width: 90%;
   height: 90%;
-  min-height: 400px;
+  min-height: 500px;
   max-width: 500px;
 
   display: flex;
   flex-flow: column;
   justify-content: space-between;
   align-items: center;
+
+  @media #{$mobile} {
+    min-height: 400px;
+    height: 98%;
+  }
 
   .container-input {
     width: 90%;

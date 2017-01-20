@@ -11,10 +11,12 @@ import { toastr } from 'react-redux-toastr';
 import { push } from 'react-router-redux';
 import { connect } from 'react-redux';
 import { logIn, isLoggedIn } from '../../api/User';
-import ButtonClear from '../buttons/ButtonClear';
-import ButtonRound from '../buttons/ButtonRound';
 import ForgotPasswordDialog from './ForgotPasswordDialog';
+import PickDemoAccountDialog from './PickDemoAccountDialog';
+import InstructorPresentDialog from './InstructorPresentDialog';
 import TextField from '../TextField';
+import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';
 
 const validEmail = (email) => {
   const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -143,6 +145,7 @@ class LogIn extends Component {
       logInSuccess,
       logInFail,
       hideOverlay,
+      overlayType,
     } = this.props;
 
     let email;
@@ -169,7 +172,7 @@ class LogIn extends Component {
         }}
       >
         <ForgotPasswordDialog
-          isOpen={isOverlayVisible}
+          isOpen={overlayType === 'FORGOT_PASSWORD' && isOverlayVisible}
           onCancelClick={() => {
             hideOverlay();
           }}
@@ -193,6 +196,17 @@ class LogIn extends Component {
               return;
             }
           }}
+        />
+        <PickDemoAccountDialog
+          isOpen={overlayType === 'PICK_DEMO_ACCOUNT_TYPE' && isOverlayVisible}
+          onCancelClick={() => hideOverlay()}
+          onStudentClick={() => {}}
+          onInstructorClick={() => {}}
+        />
+        <InstructorPresentDialog
+          isOpen={overlayType === 'INSTRUCTOR_PRESENT' && isOverlayVisible}
+          onCancelClick={() => hideOverlay()}
+          onRequestClick={() => {}}
         />
         <div className="initial-card log-in">
           <div className="top">
@@ -220,9 +234,16 @@ class LogIn extends Component {
                   password = document.getElementById('password-input');
                 }}
               />
-              <br />
-              <ButtonRound
-                onClick={() => {
+              <RaisedButton
+                label="Log in"
+                secondary
+                labelColor="#FFFFFF"
+                className="login-button"
+                style={{
+                  width: 200,
+                  marginBottom: 12,
+                }}
+                onTouchTap={() => {
                   startLoading();
                   if (hasValidCredentials(
                     email.value,
@@ -239,26 +260,44 @@ class LogIn extends Component {
                     );
                   }
                 }}
-              >
-                LOG IN
-              </ButtonRound>
-              <ButtonRound
-                className="background-bright"
-                onClick={() => {
-                  showOverlay();
+              />
+              <RaisedButton
+                label="forgot password"
+                secondary
+                labelColor="#FFFFFF"
+                style={{
+                  width: 200,
+                  marginBottom: 12,
                 }}
-              >
-                FORGOT PASSWORD
-              </ButtonRound>
+                onTouchTap={() => {
+                  showOverlay('FORGOT_PASSWORD');
+                }}
+              />
+              {/*<RaisedButton*/}
+                {/*label="Demo"*/}
+                {/*secondary*/}
+                {/*labelColor="#FFFFFF"*/}
+                {/*style={{*/}
+                  {/*width: 200,*/}
+                {/*}}*/}
+                {/*onTouchTap={() => {*/}
+                  {/*showOverlay('PICK_DEMO_ACCOUNT_TYPE');*/}
+                {/*}}*/}
+              {/*/>*/}
             </div>
           </div>
-          <ButtonClear
-            onClick={() => {
+          <FlatButton
+            label="Sign Up"
+            onTouchTap={() => {
               navigate('/signup')
             }}
-          >
-            SIGN UP
-          </ButtonClear>
+            style={{
+              marginBottom: 4,
+            }}
+            labelStyle={{
+              fontSize: 16,
+            }}
+          />
         </div>
       </div>
     )
@@ -267,6 +306,7 @@ class LogIn extends Component {
 LogIn = connect(
   (state) => ({
     isOverlayVisible: state.Overlay.isVisible,
+    overlayType: state.Overlay.type,
     isLoggedIn: state.User.isLoggedIn,
     userType: state.User.type,
   }),
@@ -293,15 +333,17 @@ LogIn = connect(
     logInFail: () => {
       dispatch(UserActions.logInFail());
     },
-    showOverlay: () => {
+    showOverlay: (type) => {
       dispatch(OverlayActions.showOverlay());
+      dispatch(OverlayActions.setOverlayType(type))
     },
     logOut: () => {
 	console.log("in logOut");
       dispatch(UserActions.logOut());
     },
     hideOverlay: () => {
-      dispatch(OverlayActions.hideOverlay())
+      dispatch(OverlayActions.hideOverlay());
+      dispatch(OverlayActions.clearOverlayType());
     },
     dispatch,
   })
