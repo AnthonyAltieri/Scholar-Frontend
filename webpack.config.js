@@ -120,7 +120,7 @@ switch (process.env.npm_lifecycle_event) {
           new DashboardPlugin(),
           new webpack.HotModuleReplacementPlugin()
         ],
-        devtool: 'source-map',
+        devtool: 'eval-source-map',
         output: {
           path: PATHS.dist,
           filename: 'app.bundle.js',
