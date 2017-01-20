@@ -33,9 +33,9 @@ let AskQuestion = ({
           label="submit"
           secondary
           fullWidth
+          id="ask-question-button"
           style={{
             marginTop: 4,
-            width: 200,
           }}
           onClick={async function() {
             const content = input.value;
