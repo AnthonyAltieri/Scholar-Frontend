@@ -356,6 +356,7 @@ class DashStudent extends Component {
               <AlertGraph
                 percentage={alertPercentage}
                 isPastThreshold={alertPercentage >= threshold}
+                positionalClass="alert-graph-bottom"
               />
             )
             : null

@@ -49,12 +49,13 @@ class AppWithToast extends Component {
     //   window.innerWidth,
     //   window.innerHeight
     // ));
-    // window.onresize = throttle(() => {
-    //   this.props.dispatch(WindowActions.resize(
-    //     window.innerWidth,
-    //     window.innerHeight
-    //   ))
-    // }, 500);
+    window.onresize = throttle(() => {
+      this.props.dispatch(WindowActions.resize(
+        window.innerWidth,
+        window.innerHeight
+      ));
+      console.log("Width : ", window.innerWidth, ", Height : " , window.innerHeight);
+    }, 500);
 
   }
 

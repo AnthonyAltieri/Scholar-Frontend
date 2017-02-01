@@ -14,6 +14,7 @@ import * as SocketActions from '../../../../actions/Socket';
 import * as QuestionListActions from '../../../../actions/QuestionList';
 import * as AttendanceActions from '../../../../actions/Attendance';
 import * as DrawerActions from '../../../../actions/Drawer';
+import * as PresentationActions from '../../../../actions/Presentation';
 import { numberInCourseSessionGet, getNumberInAttendance } from '../../../../api/CourseSession';
 import { startCourseSession, endCourseSession } from '../../../../api/CourseSession';
 import Socket from '../../../../socket/Socket'
@@ -22,11 +23,13 @@ import Ask from './Ask/Ask';
 import Alert from './Alert/Alert';
 import Main from './Main/Main';
 import ConnectionBar from '../../../ConnectionBar';
+import Presentation from './Presention/Presentation';
 import Graph from './Alert/Graph';
 import Assess from './Assess/Assess';
 import QuestionBank from './QuestionBank/QuestionBank';
 import CourseSessionDialog from './CourseSessionDialog';
 import AttendanceDialog from './AttendanceDialog'
+import MySlidesDialog from './Presention/MySlidesDialog';
 import { getAlerts, INTERVAL_TIME, initInstructorAlertGraph } from '../../../../util/AlertGraph'
 
 
@@ -221,6 +224,7 @@ class DashCourse extends Component {
       setConnectionStatus,
       closeDrawer,
       setAttendance,
+      setPresentationUrl
     } = this.props;
 
     const events = {
@@ -294,6 +298,13 @@ class DashCourse extends Component {
 
     let content = null;
     switch (mode) {
+      case 'PRESENTATION' : {
+        content = (
+          <Presentation/>
+        );
+
+        break;
+      }
       case 'MAIN': {
         content = (
           <Main/>
@@ -378,6 +389,14 @@ class DashCourse extends Component {
           }}
           onCancelClick={() => { hideOverlay(); }}
         />
+        <MySlidesDialog
+          isOpen={!!isOverlayVisible && overlayType === 'MY_SLIDES'}
+          onCancelClick={() => { hideOverlay(); }}
+          onSubmitClick={ (url) => {
+            setPresentationUrl(courseId, url);
+            hideOverlay();
+          }}
+        />
 
         <AttendanceDialog
           isOpen={!!isOverlayVisible && overlayType === 'ATTENDANCE'}
@@ -412,6 +431,7 @@ const stateToProps = state => ({
   alertGraph: !!state.Graph.Alert.graph ? state.Graph.Alert.graph : initInstructorAlertGraph(),
   numberAttendees: state.Course.Attendance.numberAttendees,
   connectionStatus: state.Socket.connectionStatus,
+  courseId: state.Course.id
 });
 
 const dispatchToProps = (dispatch, ownProps) => ({
@@ -518,6 +538,10 @@ const dispatchToProps = (dispatch, ownProps) => ({
       numberAttendees
     ));
   },
+  setPresentationUrl: (id, url) => {
+    dispatch(PresentationActions.setPresentationUrl(id, url));
+    //TODO: save this url in our db along with the course
+  }
 });
 
 DashCourse = connect(

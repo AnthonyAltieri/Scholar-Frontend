@@ -14,7 +14,7 @@ const Bar = ({
     className="bar"
     style={{
       background: isPastThreshold ? Colors.red : Colors.green,
-      width: `${percentage}%`
+      width: `${isNaN(percentage) ? 0.00 : percentage }%`
     }}
   >
     <p>{percentage.toFixed(2)}%</p>
@@ -23,7 +23,7 @@ const Bar = ({
 
 
 const AlertGraph = (props) => (
-  <div className="alert-graph">
+  <div className={ props.positionalClass }>
     <Bar {...props} />
   </div>
 );

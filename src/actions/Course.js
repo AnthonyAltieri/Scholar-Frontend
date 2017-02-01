@@ -22,3 +22,9 @@ export const joinCourse = (
 export const clearCourse = () => ({
   type: 'CLEAR_COURSE',
 });
+
+export const setPresentationUrl = (id, url) => ({
+  type: 'SET_PRESENTATION_URL',
+  id,
+  url
+});

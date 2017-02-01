@@ -1660,6 +1660,7 @@ $connection-bar-height: 18px;
 
     @extend .mode-content;
   }
+
   .left-pane {
     display: inline-block;
     height: 100%;
@@ -1671,7 +1672,17 @@ $connection-bar-height: 18px;
     width: 49.5%;
   }
 
-  .top-pane {
+  .left-pane-wide {
+    @extend .left-pane;
+    width : 70%;
+  }
+  .right-pane-narrow {
+    @extend .right-pane;
+    width: 29%;
+    overflow-y: auto;
+  }
+
+    .top-pane {
     position: absolute;
     top: 12px;
     left: 12px;
@@ -1875,7 +1886,6 @@ $connection-bar-height: 18px;
   width: 100%;
   height: $bar-height;
   position: absolute;
-  bottom: $connection-bar-height;
   background-color: $color-white;
   box-shadow: 0 0px 2px 1px rgba(0,0,0,.14),0 3px 16px 2px rgba(0,0,0,.12),0 5px 5px -3px rgba(0,0,0,.2);
   z-index: 1;
@@ -1890,6 +1900,17 @@ $connection-bar-height: 18px;
 
     @extend .r;
   }
+}
+
+.alert-graph-bottom{
+  @extend .alert-graph;
+  bottom: $connection-bar-height;
+}
+
+
+.alert-graph-top {
+  @extend .alert-graph;
+  top: 64px !important;
 }
 
 .sign-up-instructor {
@@ -2128,3 +2149,8 @@ $connection-bar-height: 18px;
   20% {
     -webkit-transform: scaleY(1);
     transform: scaleY(1); } }
+
+iframe {
+  resize: both;
+  overflow: auto;
+}

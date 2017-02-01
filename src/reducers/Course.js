@@ -2,6 +2,7 @@
  * @author Anthony Altieri on 10/9/16.
  */
 import Attendance from './Dash/Instructor/Course/Attendance'
+import Presentation from './Dash/Instructor/Course/Presentation'
 
 const validateCourse = (course) => {
   if (!course.id) {
@@ -22,7 +23,8 @@ const validateCourse = (course) => {
 };
 
 const initialState = {
-  Attendance: Attendance(undefined, {type: 'FAKE_ACTION'})
+  Attendance: Attendance(undefined, {type: 'FAKE_ACTION'}),
+  Presentation: Presentation(undefined, {type: 'FAKE_ACTION'})
 };
 
 const Course = (state = initialState, action) => {
@@ -69,6 +71,16 @@ const Course = (state = initialState, action) => {
         Attendance: Attendance(state.Attendance, action)
       }
     }
+
+    //TODO: Create own reducer for this and add logic for multiple presentations
+    case 'SET_PRESENTATION_URL': {
+      if (state.id !== action.id) return state;
+      return {
+        ...state,
+        Presentation : Presentation(state.Presentation, action)
+      }
+    }
+
 
     case 'CLEAR_COURSE': {
       return {}

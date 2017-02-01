@@ -87,6 +87,27 @@ class DashInstructor extends Component {
             }
             onTouchTap={() => showOverlay('COURSE_SESSION')}
           />
+          <MenuItem primaryText="Presentation"
+                    rightIcon={
+                      <FontIcon className="material-icons">
+                        slideshow
+                      </FontIcon>
+                    }
+                    onTouchTap={() => {
+                      if (mode === 'PRESENTATION') return;
+                      setMode('PRESENTATION');
+                      closeDrawer();
+                    }}
+          />
+          <MenuItem
+            primaryText="My Slides"
+            rightIcon={
+              <FontIcon className="material-icons">
+                attach_file
+              </FontIcon>
+            }
+            onTouchTap={() => showOverlay('MY_SLIDES')}
+          />
           <MenuItem primaryText="Main"
             rightIcon={
               <FontIcon className="material-icons">
