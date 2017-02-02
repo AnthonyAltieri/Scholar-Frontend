@@ -17,6 +17,7 @@ import * as DrawerActions from '../../../../actions/Drawer';
 import * as PresentationActions from '../../../../actions/Presentation';
 import { numberInCourseSessionGet, getNumberInAttendance } from '../../../../api/CourseSession';
 import { startCourseSession, endCourseSession } from '../../../../api/CourseSession';
+import { addPresentation, getMostRecentPresentation } from '../../../../api/Course';
 import Socket from '../../../../socket/Socket'
 import Events from '../../../../socket/Events';
 import Ask from './Ask/Ask';
@@ -59,6 +60,7 @@ async function handleCourseSessionEnd(
     return null;
   }
 }
+
 
 function handleSockets(props) {
   const {
@@ -157,6 +159,7 @@ class DashCourse extends Component {
   async componentDidMount() {
     const {
       courseSessionId,
+      courseId,
       studentJoinedCourseSession,
       handleStudentJoinedAttendance,
       instantAnswerReceived,
@@ -171,6 +174,7 @@ class DashCourse extends Component {
       removeResponse,
       addFlag,
       removeFlag,
+      setPresentationUrl
     } = this.props;
     console.log('DashCourse componentDidMount()');
     if (this.props.isCourseSessionActive) {
@@ -203,6 +207,13 @@ class DashCourse extends Component {
       }, INTERVAL_TIME);
 
     }
+
+    //set presentation if any
+    const presentation = await getMostRecentPresentation(courseId);
+    if(!!presentation) {
+      setPresentationUrl(courseId, presentation.url);
+    }
+
 
 
 
@@ -409,7 +420,9 @@ class DashCourse extends Component {
           isOpen={!!isOverlayVisible && overlayType === 'MY_SLIDES'}
           onCancelClick={() => { hideOverlay(); }}
           onSubmitClick={ (url) => {
-            setPresentationUrl(courseId, url);
+            //TODO: Find a way to set this name
+            setPresentationUrl(courseId, url );
+            addPresentation(courseId, userId, new Date().toLocaleDateString("en-US"), url);
             hideOverlay();
           }}
         />
@@ -560,7 +573,6 @@ const dispatchToProps = (dispatch, ownProps) => ({
   },
   setPresentationUrl: (id, url) => {
     dispatch(PresentationActions.setPresentationUrl(id, url));
-    //TODO: save this url in our db along with the course
   }
 });
 

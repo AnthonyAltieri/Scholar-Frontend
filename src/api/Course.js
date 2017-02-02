@@ -12,6 +12,9 @@ const routes = {
   GRADE_SUMMARY: '/api/course/grade/summary',
   GET_ADD_CODES: '/api/course/get/addCodes',
   GET_ID: '/api/course/get/id',
+  ADD_PRESENTATION: '/api/course/add/presentation',
+  GET_MOST_RECENT_PRESENTATION: '/api/course/get/presentation/mostRecent',
+  GET_PRESENTATIONS: '/api/course/get/presentations'
 };
 
 /**
@@ -123,5 +126,24 @@ export async function getById(courseId) {
   } catch (e) {
     console.error('[ERROR] Course Api getById', e);
     return null;
+  }
+}
+
+export async function getMostRecentPresentation(courseId) {
+  try{
+    return await post(routes.GET_MOST_RECENT_PRESENTATION, { courseId });
+  }
+  catch (e) {
+    console.error("[ERROR] in Course API > getMostRecentPresentation ", e);
+  }
+}
+
+//Not async because we do not want to hold up execution here
+export function addPresentation(courseId, userId, title, url) {
+  try {
+    post(routes.ADD_PRESENTATION, { courseId, userId, title, url });
+  }
+  catch (e) {
+    console.error("[ERROR] in Course API > addPresentation ", e);
   }
 }

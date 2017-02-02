@@ -6,7 +6,7 @@ import { getActiveAlerts } from '../api/Alert'
 Constants for the alert Graph initialization
  */
 export const INTERVAL_TIME = process.env.NODE_ENV === 'production'
-  ? 3000 
+  ? 3000
   : 10000000000;
 const TOTAL_MINUTES = 10;//the amount we want to show the instructor
 const TOTAL_TIME = TOTAL_MINUTES * 60000;//convert from minutes to milliseconds

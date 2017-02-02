@@ -5,7 +5,6 @@ import FlatButton from 'material-ui/FlatButton';
 import {toastr} from 'react-redux-toastr'
 import TextField from '../../../../TextField'
 import Colors from '../../../../../util/Colors';
-
 class MySlidesDialog extends Component {
   render(){
     const {isOpen, onCancelClick, onSubmitClick} = this.props;
