@@ -233,7 +233,7 @@ const dispatchToProps = (dispatch) => ({
     dispatch(CoursesActions.receivedCourses(courses));
   },
   goToCourse: (courseId) => {
-    dispatch(ModeActions.setMode('MAIN'));
+    dispatch(ModeActions.setMode('PRESENTATION'));
     dispatch(AttendanceActions.clear());
     dispatch(push(`/dash/instructor/course/${courseId}`))
   },

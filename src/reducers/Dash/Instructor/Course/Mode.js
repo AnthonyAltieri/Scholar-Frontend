@@ -3,14 +3,14 @@
  * @return {string}
  */
 
-const Mode = (state = 'MAIN', action ) => {
+const Mode = (state = 'PRESENTATION', action ) => {
   switch (action.type) {
     case 'SET_MODE': {
       return action.mode;
     }
 
     case 'CLEAR_MODE': {
-      return 'MAIN';
+      return 'PRESENTATION';
     }
 
     default: {

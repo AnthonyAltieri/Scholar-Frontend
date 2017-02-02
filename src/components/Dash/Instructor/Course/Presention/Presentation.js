@@ -100,16 +100,22 @@ class Presentation extends Component {
     const percentage= (numberActiveAlerts / numberPresent) * 100;
     const isPastThreshold= (percentage >= threshold) ;
 
-    const presentationFrame =
-      url?
-        (<iframe
-      src={url}
-      frameBorder="0"
-      width={ windowWidth * 0.68 }
-      height= { windowHeight * 0.9 }
-      allowFullScreen="true"
-      mozAllowFullScreen="true"
-      webkitAllowFullScreen="true" />) : "No Presentation Linked!";
+    const getPresentationFrame = () => {
+      try {
+       return url ? (
+            <iframe
+            src={url}
+            frameBorder="0"
+            width={ windowWidth * 0.72 }
+            height={ windowHeight * 0.9 }
+          />
+          ) : "No Presentation Linked!";
+      }
+      catch (e){
+        console.error("[ERROR] Presentation Component > getPresentationFrame : ")
+        return "Error With Link - Please make sure Sharing Permissions are set correctly";
+      }
+    };
     return (
       <div className="c-around">
         <AlertBar isPastThreshold={isPastThreshold} percentage={percentage} positionalClass="alert-graph-top"/>
@@ -117,7 +123,7 @@ class Presentation extends Component {
         <div className="main r-between" style={{top: "90px"}}>
           <div className="left-pane-wide c fullheight">
 
-            {presentationFrame}
+            {getPresentationFrame()}
 
           </div>
           <div className="right-pane-narrow c card fullheight">
@@ -146,7 +152,8 @@ const stateToProps = (state) => ({
   filter: state.Dash.Instructor.Course.Main.filter,
   windowHeight: state.Window.height,
   windowWidth: state.Window.width,
-  url: state.Course.Presentation ? state.Course.Presentation.url : null
+  url: state.Course.Presentation ? state.Course.Presentation.url : null,
+  threshold : state.Graph.Alert.threshold
 });
 
 const dispatchToProps = (dispatch) => ({

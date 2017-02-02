@@ -1674,11 +1674,11 @@ $connection-bar-height: 18px;
 
   .left-pane-wide {
     @extend .left-pane;
-    width : 70%;
+    width : 73%;
   }
   .right-pane-narrow {
     @extend .right-pane;
-    width: 29%;
+    width: 26%;
     overflow-y: auto;
   }
 

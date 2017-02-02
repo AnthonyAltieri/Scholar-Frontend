@@ -47,6 +47,20 @@ exports.setupCSS = function(paths) {
   }
 };
 
+exports.setupMp3 = function(paths) {
+  return {
+    module: {
+      loaders: [
+        {
+          test: /\.mp3$/,
+          loader: process.env.NODE_ENV === 'production'
+          ? 'file?name=[name].[hash].[ext]':'file',
+        }
+      ]
+    }
+  }
+};
+
 exports.minify = function() {
   return {
     plugins: [

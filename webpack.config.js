@@ -86,6 +86,7 @@ switch (process.env.npm_lifecycle_event) {
         'production'
       ),
       parts.setupJSON(),
+      parts.setupMp3(),
       parts.extractBundle({
         name: 'vendor',
         entries: Object.keys(pkg.dependencies)
@@ -132,6 +133,7 @@ switch (process.env.npm_lifecycle_event) {
         port: process.env.PORT || 3000,
       }),
       parts.setupCSS(PATHS.style),
+      parts.setupMp3(),
       parts.setupImg(),
       parts.setupFonts(),
       parts.setupJSON()

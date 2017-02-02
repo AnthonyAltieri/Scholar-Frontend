@@ -30,8 +30,11 @@ import QuestionBank from './QuestionBank/QuestionBank';
 import CourseSessionDialog from './CourseSessionDialog';
 import AttendanceDialog from './AttendanceDialog'
 import MySlidesDialog from './Presention/MySlidesDialog';
+import createWebNotification from '../../../../util/Notification';
 import { getAlerts, INTERVAL_TIME, initInstructorAlertGraph } from '../../../../util/AlertGraph'
 
+
+let previousAlertCount = 0;
 
 async function handleCourseSessionStart(
   courseId,
@@ -188,10 +191,11 @@ class DashCourse extends Component {
       if (!error) {
         handleStudentJoinedAttendance(numberInAttendance);
       }
-      const { updateAlertGraph, alertGraph, numberAttendees } = this.props;
+      const { updateAlertGraph, alertGraph, numberAttendees  } = this.props;
       window.intervalGetAlerts =  window.setInterval( async () => {
         try {
           let alerts = await getAlerts(courseSessionId);
+
           updateAlertGraph(alerts, alertGraph);
         } catch (e) {
           console.error("[ERROR] in DashCourse Component > ComponentDidMount : " + e)
@@ -217,15 +221,29 @@ class DashCourse extends Component {
       params,
       activateCourseSession,
       deactivateCourseSession,
-      alertGraph,
       isCourseSessionActive,
       courseSessionId,
       connectionStatus,
       setConnectionStatus,
       closeDrawer,
       setAttendance,
-      setPresentationUrl
+      setPresentationUrl,
+      activeAlerts
     } = this.props;
+
+    let soundNotification;
+    if(previousAlertCount !== activeAlerts){
+      if(activeAlerts > previousAlertCount) {
+        createWebNotification((activeAlerts) + " Active Alerts! ");
+        //TODO: Create Sound Notification
+        soundNotification = (
+          <audio hidden controls autoPlay style={{bottom : "0px", zIndex: 20000 }}>
+            <source src={require('../../../../mp3/going-up.mp3')} type="audio/mpeg" autoPlay="autoPlay"/>
+          </audio>
+        );
+      }
+      previousAlertCount = activeAlerts;
+    }
 
     const events = {
       [Events.INSTANT_ASSESSMENT_ANSWERED]: {
@@ -416,6 +434,7 @@ class DashCourse extends Component {
           setConnectionStatus={setConnectionStatus}
           requiredEvents={events}
         />
+        {soundNotification}
       </div>
     );
   }
@@ -431,7 +450,8 @@ const stateToProps = state => ({
   alertGraph: !!state.Graph.Alert.graph ? state.Graph.Alert.graph : initInstructorAlertGraph(),
   numberAttendees: state.Course.Attendance.numberAttendees,
   connectionStatus: state.Socket.connectionStatus,
-  courseId: state.Course.id
+  courseId: state.Course.id,
+  activeAlerts: state.Graph.Alert.activeAlerts ? state.Graph.Alert.activeAlerts : 0
 });
 
 const dispatchToProps = (dispatch, ownProps) => ({
@@ -474,6 +494,8 @@ const dispatchToProps = (dispatch, ownProps) => ({
       QuestionListActions
         .addQuestion(id, content, userId, created, 0, [])
     );
+
+    createWebNotification("New Question : " + content);
   },
   removeQuestion: (questionId) => {
     dispatch(QuestionListActions.removeQuestion(questionId))

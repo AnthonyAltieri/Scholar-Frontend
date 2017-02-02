@@ -11,14 +11,21 @@ const prepareUrl = (url) => {
 
   const EDIT_TEXT = "/edit";
 
+  const VIEW_TEXT = "/view";
+
   let endIndex = url.indexOf(EDIT_TEXT);
 
   if(endIndex > -1 && endIndex < url.length) {
-    url = url.substring(0, endIndex) + EMBED_TAIL;
-  } else {
-    if(url.indexOf(EMBED_TEXT) === -1) {
+    url = url.substring(0, endIndex);
+  }
+
+  endIndex = url.indexOf(VIEW_TEXT);
+  if(endIndex > -1 && endIndex < url.length) {
+    url = url.substring(0, endIndex);
+  }
+
+  if(url.indexOf(EMBED_TEXT) === -1) {
       url += EMBED_TAIL;
-    }
   }
   return url;
 };

@@ -1,6 +1,6 @@
 import { initInstructorAlertGraph, updateInstructorAlertGraph } from '../../util/AlertGraph'
 
-const DEFAULT_THRESHOLD = 30;
+const DEFAULT_THRESHOLD = 10;
 
 const initialState = {
   threshold: DEFAULT_THRESHOLD,
