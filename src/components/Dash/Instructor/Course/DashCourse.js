@@ -32,7 +32,7 @@ import AttendanceDialog from './AttendanceDialog'
 import MySlidesDialog from './Presention/MySlidesDialog';
 import createWebNotification from '../../../../util/Notification';
 import { getAlerts, INTERVAL_TIME, initInstructorAlertGraph } from '../../../../util/AlertGraph'
-
+import SoundNotification from '../../../SoundNotification';
 
 let previousAlertCount = 0;
 
@@ -237,9 +237,7 @@ class DashCourse extends Component {
         createWebNotification((activeAlerts) + " Active Alerts! ");
         //TODO: Create Sound Notification
         soundNotification = (
-          <audio hidden controls autoPlay style={{bottom : "0px", zIndex: 20000 }}>
-            <source src={require('../../../../mp3/going-up.mp3')} type="audio/mpeg" autoPlay="autoPlay"/>
-          </audio>
+          <SoundNotification />
         );
       }
       previousAlertCount = activeAlerts;

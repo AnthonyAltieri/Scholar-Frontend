@@ -22,7 +22,7 @@ const Heading = ({
 
   return (
       <div
-        className="heading"
+        className="heading r"
         style={{
           textAlign: !!isLeft ? 'left' : 'center',
           width: !!isLeft ? null : '100%',

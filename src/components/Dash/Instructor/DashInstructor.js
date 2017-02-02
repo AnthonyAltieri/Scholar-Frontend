@@ -44,6 +44,7 @@ class DashInstructor extends Component {
       closeDrawer,
       mode,
       name,
+      numberPresent
     } = this.props;
 
     const courseRegex = /^\/dash\/instructor\/course\/*/;
@@ -274,6 +275,21 @@ class DashInstructor extends Component {
                   <p
                     className="no-text-sel"
                     style={{
+                      margin: '0px 20px 0px 0px',
+                      position: 'relative',
+                      bottom: 1,
+                      color: isCourseSessionActive
+                        ? Colors.green
+                        : Colors.red,
+                    }}
+                  >
+                    Number Present :
+                    { ' ' + (numberPresent ? numberPresent : 0) + ' '}
+                  </p>
+
+                  <p
+                    className="no-text-sel"
+                    style={{
                       margin: '0 4px 0 0',
                       position: 'relative',
                       bottom: 1,
@@ -326,6 +342,7 @@ const stateToProps = (state) => ({
   courseAbbreviation: state.Course.abbreviation,
   pathname: state.routing.locationBeforeTransitions.pathname,
   isDrawerOpen: !!state.Drawer.isOpen,
+  numberPresent: state.Course.Attendance? state.Course.Attendance.numberInCourseSession : 0,
 });
 const dispatchToProps = (dispatch) => ({
   endLoading: () => {
