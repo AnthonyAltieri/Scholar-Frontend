@@ -14,7 +14,8 @@ const routes = {
   GET_ID: '/api/course/get/id',
   ADD_PRESENTATION: '/api/course/add/presentation',
   GET_MOST_RECENT_PRESENTATION: '/api/course/get/presentation/mostRecent',
-  GET_PRESENTATIONS: '/api/course/get/presentations'
+  GET_PRESENTATIONS: '/api/course/get/presentations',
+  SET_PRESENTATION_ACCESS_TIME: '/api/course/set/presentation/accessTime'
 };
 
 /**
@@ -135,6 +136,24 @@ export async function getMostRecentPresentation(courseId) {
   }
   catch (e) {
     console.error("[ERROR] in Course API > getMostRecentPresentation ", e);
+  }
+}
+
+export async function getPresentations(courseId) {
+  try{
+    return await post(routes.GET_PRESENTATIONS, { courseId });
+  }
+  catch (e) {
+    console.error("[ERROR] in Course API > getPresentations ", e);
+  }
+}
+
+export function setPresentationAccessTime(presentationId){
+  try{
+    post(routes.SET_PRESENTATION_ACCESS_TIME, { presentationId });
+  }
+  catch (e) {
+    console.error("[ERROR] in Course API > setPresentationAccessTime ", e);
   }
 }
 

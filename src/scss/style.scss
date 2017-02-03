@@ -1674,11 +1674,11 @@ $connection-bar-height: 18px;
 
   .left-pane-wide {
     @extend .left-pane;
-    width : 73%;
+    width : 75%;
   }
   .right-pane-narrow {
     @extend .right-pane;
-    width: 26%;
+    width: 24%;
     overflow-y: auto;
   }
 
@@ -2153,4 +2153,8 @@ $connection-bar-height: 18px;
 iframe {
   resize: both;
   overflow: auto;
+}
+
+a{
+  text-decoration: none;
 }

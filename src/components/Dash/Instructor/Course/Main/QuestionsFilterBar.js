@@ -44,11 +44,11 @@ const QuestionsFilterBar = ({
         text="Most Voted"
         onClick={onMostVotedClick}
       />
-      <Filter
-        isActive={activeFilter === 'LEAST_VOTED'}
-        text="Least Voted"
-        onClick={onLeastVotedClick}
-      />
+      {/*<Filter*/}
+        {/*isActive={activeFilter === 'LEAST_VOTED'}*/}
+        {/*text="Least Voted"*/}
+        {/*onClick={onLeastVotedClick}*/}
+      {/*/>*/}
     </div>
   </div>
 );

@@ -17,7 +17,7 @@ import * as DrawerActions from '../../../../actions/Drawer';
 import * as PresentationActions from '../../../../actions/Presentation';
 import { numberInCourseSessionGet, getNumberInAttendance } from '../../../../api/CourseSession';
 import { startCourseSession, endCourseSession } from '../../../../api/CourseSession';
-import { addPresentation, getMostRecentPresentation } from '../../../../api/Course';
+import { addPresentation, getMostRecentPresentation, setPresentationAccessTime } from '../../../../api/Course';
 import Socket from '../../../../socket/Socket'
 import Events from '../../../../socket/Events';
 import Ask from './Ask/Ask';
@@ -417,12 +417,18 @@ class DashCourse extends Component {
           onCancelClick={() => { hideOverlay(); }}
         />
         <MySlidesDialog
+          courseId={courseId}
           isOpen={!!isOverlayVisible && overlayType === 'MY_SLIDES'}
           onCancelClick={() => { hideOverlay(); }}
-          onSubmitClick={ (url) => {
+          onSelectUrl = { (url, presentationId ) => {
+            setPresentationUrl(courseId, url );
+            setPresentationAccessTime( presentationId );
+            hideOverlay();
+          }}
+          onSubmitClick={ (url, title) => {
             //TODO: Find a way to set this name
             setPresentationUrl(courseId, url );
-            addPresentation(courseId, userId, new Date().toLocaleDateString("en-US"), url);
+            addPresentation(courseId, userId, !!title? title : new Date().toLocaleDateString("en-US"), url);
             hideOverlay();
           }}
         />

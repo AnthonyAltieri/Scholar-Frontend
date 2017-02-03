@@ -106,7 +106,7 @@ class Presentation extends Component {
             <iframe
             src={url}
             frameBorder="0"
-            width={ windowWidth * 0.72 }
+            width={ windowWidth * 0.75 }
             height={ windowHeight * 0.9 }
             allowFullScreen
           />
