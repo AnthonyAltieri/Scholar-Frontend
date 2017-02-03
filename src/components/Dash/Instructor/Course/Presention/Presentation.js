@@ -108,7 +108,6 @@ class Presentation extends Component {
             frameBorder="0"
             width={ windowWidth * 0.75 }
             height={ windowHeight * 0.9 }
-            allowFullScreen
           />
           ) : "No Presentation Linked!";
       }
