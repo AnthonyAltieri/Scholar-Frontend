@@ -34,6 +34,7 @@ import MySlidesDialog from './Presention/MySlidesDialog';
 import createWebNotification from '../../../../util/Notification';
 import { getAlerts, INTERVAL_TIME, initInstructorAlertGraph } from '../../../../util/AlertGraph'
 import SoundNotification from '../../../SoundNotification';
+import {NUMBER_IN_DEMO_SESSION, DEMO_QUESTIONS, DEMO_INTERVAL_TIME } from '../../../../util/demo';
 
 let previousAlertCount = 0;
 
@@ -154,10 +155,12 @@ function handleSockets(props) {
 class DashCourse extends Component {
   componentWillMount() {
     window.clearInterval(window.intervalGetAlerts);
+    window.clearInterval(window.demoInterval);
   }
 
   async componentDidMount() {
     const {
+      isDemo,
       courseSessionId,
       courseId,
       studentJoinedCourseSession,
@@ -174,15 +177,22 @@ class DashCourse extends Component {
       removeResponse,
       addFlag,
       removeFlag,
-      setPresentationUrl
+      setPresentationUrl,
     } = this.props;
+
     console.log('DashCourse componentDidMount()');
     if (this.props.isCourseSessionActive) {
       handleSockets(this.props);
+
+
       let {
         numberInCourseSession,
         error,
       } = await numberInCourseSessionGet(courseSessionId);
+      if(!!isDemo) {
+        toastr.success("Welcome to Scholar! Click through the presentation for any help with exploring this app!");
+        numberInCourseSession = NUMBER_IN_DEMO_SESSION;
+      }
       if (!error) {
         studentJoinedCourseSession(numberInCourseSession);
       }
@@ -196,17 +206,41 @@ class DashCourse extends Component {
         handleStudentJoinedAttendance(numberInAttendance);
       }
       const { updateAlertGraph, alertGraph, numberAttendees  } = this.props;
+
       window.intervalGetAlerts =  window.setInterval( async () => {
         try {
-          let alerts = await getAlerts(courseSessionId);
+          let alerts;
+          if(!isDemo) {
+           alerts = await getAlerts(courseSessionId);
+            updateAlertGraph(alerts, alertGraph);
 
-          updateAlertGraph(alerts, alertGraph);
+          }
+          else {
+
+          }
         } catch (e) {
           console.error("[ERROR] in DashCourse Component > ComponentDidMount : " + e)
         }
       }, INTERVAL_TIME);
 
+      let qIndex = 0;
+      if(!!isDemo) {
+        window.demoInterval = window.setInterval( () => {
+          if(qIndex < DEMO_QUESTIONS.length)
+            addQuestion({ ...DEMO_QUESTIONS[qIndex++], created: new Date()});
+
+          instantAnswerReceived("" + Math.random(), Math.floor(Math.random() * 4));
+          instantAnswerReceived("" + Math.random(), Math.floor(Math.random() * 4));
+          instantAnswerReceived("" + Math.random(), Math.floor(Math.random() * 4));
+
+          let  alerts = Math.floor(Math.random() * numberInCourseSession);
+          updateAlertGraph(alerts, alertGraph);
+
+        }, DEMO_INTERVAL_TIME)
+      }
     }
+
+
 
     //set presentation if any
     const presentation = await getMostRecentPresentation(courseId);
@@ -239,17 +273,21 @@ class DashCourse extends Component {
       closeDrawer,
       setAttendance,
       setPresentationUrl,
-      activeAlerts
+      activeAlerts,
+      isDemo
     } = this.props;
 
     let soundNotification;
     if(previousAlertCount !== activeAlerts){
       if(activeAlerts > previousAlertCount) {
-        createWebNotification((activeAlerts) + " Active Alerts! ");
-        //TODO: Create Sound Notification
-        soundNotification = (
-          <SoundNotification />
-        );
+        if(!isDemo){
+          createWebNotification((activeAlerts) + " Active Alerts! ");
+          //TODO: Create Sound Notification
+          soundNotification = (
+            <SoundNotification />
+          );
+        }
+
       }
       previousAlertCount = activeAlerts;
     }
@@ -320,6 +358,7 @@ class DashCourse extends Component {
         ),
       }
     };
+
 
     const { courseId } = params;
 
@@ -462,6 +501,7 @@ const stateToProps = state => ({
   isOverlayVisible: state.Overlay.isVisible,
   overlayType: state.Overlay.type,
   userId: state.User.id,
+  isDemo: state.User.isDemo,
   isCourseSessionActive: !!state.Course.activeCourseSessionId,
   courseSessionId: state.Course.activeCourseSessionId,
   alertGraph: !!state.Graph.Alert.graph ? state.Graph.Alert.graph : initInstructorAlertGraph(),
@@ -483,6 +523,7 @@ const dispatchToProps = (dispatch, ownProps) => ({
   deactivateCourseSession: () => {
     dispatch(CourseActions.deactivateCourse(ownProps.params.courseId));
     window.clearInterval(window.intervalGetAlerts);
+    window.clearInterval(window.demoInterval);
   },
   updateAlertGraph: (activeAlerts, graph) => {
     dispatch(AlertActions.receivedActiveAlerts(activeAlerts, graph));

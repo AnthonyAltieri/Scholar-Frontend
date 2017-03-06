@@ -17,6 +17,7 @@ import InstructorPresentDialog from './InstructorPresentDialog';
 import TextField from '../TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
+import { DEMO_EMAIL, DEMO_PASSWORD } from '../../util/demo';
 
 const validEmail = (email) => {
   const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -273,17 +274,28 @@ class LogIn extends Component {
                   showOverlay('FORGOT_PASSWORD');
                 }}
               />
-              {/*<RaisedButton*/}
-                {/*label="Demo"*/}
-                {/*secondary*/}
-                {/*labelColor="#FFFFFF"*/}
-                {/*style={{*/}
-                  {/*width: 200,*/}
-                {/*}}*/}
-                {/*onTouchTap={() => {*/}
-                  {/*showOverlay('PICK_DEMO_ACCOUNT_TYPE');*/}
-                {/*}}*/}
-              {/*/>*/}
+              <RaisedButton
+                label="Interactive Demo"
+                secondary
+                labelColor="#FFFFFF"
+                style={{
+                  width: 200,
+                }}
+                onTouchTap={() => {
+                  {//TODO: Enable this later for a fuller demo
+                    /*showOverlay('PICK_DEMO_ACCOUNT_TYPE');*/}
+                   startLoading();
+                  handleLogIn(
+                   DEMO_EMAIL.toLowerCase(),
+                    DEMO_PASSWORD,
+                    logInSuccess,
+                    logInFail,
+                    endLoading,
+                    navigate
+                  );
+
+                }}
+              />
             </div>
           </div>
           <FlatButton

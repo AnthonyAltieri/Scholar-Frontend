@@ -101,7 +101,7 @@ class DashInstructor extends Component {
                     }}
           />
           <MenuItem
-            primaryText="My Slides"
+            primaryText="Select Slideshow"
             rightIcon={
               <FontIcon className="material-icons">
                 attach_file
@@ -109,18 +109,20 @@ class DashInstructor extends Component {
             }
             onTouchTap={() => showOverlay('MY_SLIDES')}
           />
-          <MenuItem primaryText="Main"
-            rightIcon={
-              <FontIcon className="material-icons">
-                dashboard
-              </FontIcon>
-            }
-            onTouchTap={() => {
-              if (mode === 'MAIN') return;
-              setMode('MAIN');
-              closeDrawer();
-            }}
-          />
+
+            {/*<MenuItem primaryText="Main"*/}
+            {/*rightIcon={*/}
+              {/*<FontIcon className="material-icons">*/}
+                {/*dashboard*/}
+              {/*</FontIcon>*/}
+            {/*}*/}
+            {/*onTouchTap={() => {*/}
+              {/*if (mode === 'MAIN') return;*/}
+              {/*setMode('MAIN');*/}
+              {/*closeDrawer();*/}
+            {/*}}*/}
+          {/*/>*/}
+
           <MenuItem primaryText="Ask"
             rightIcon={
               <FontIcon className="material-icons">
