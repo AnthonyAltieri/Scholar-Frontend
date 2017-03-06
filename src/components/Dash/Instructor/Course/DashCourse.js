@@ -35,6 +35,7 @@ import createWebNotification from '../../../../util/Notification';
 import { getAlerts, INTERVAL_TIME, initInstructorAlertGraph } from '../../../../util/AlertGraph'
 import SoundNotification from '../../../SoundNotification';
 import {NUMBER_IN_DEMO_SESSION, DEMO_QUESTIONS, DEMO_INTERVAL_TIME } from '../../../../util/demo';
+import { create } from '../../../../api/Question';//used in demo only
 
 let previousAlertCount = 0;
 
@@ -225,9 +226,14 @@ class DashCourse extends Component {
 
       let qIndex = 0;
       if(!!isDemo) {
-        window.demoInterval = window.setInterval( () => {
-          if(qIndex < DEMO_QUESTIONS.length)
-            addQuestion({ ...DEMO_QUESTIONS[qIndex++], created: new Date()});
+        window.demoInterval = window.setInterval(  () => {
+          if(qIndex < DEMO_QUESTIONS.length){
+            let question = DEMO_QUESTIONS[qIndex++];
+            create( question.userId,
+              question.content,
+              courseId,
+              courseSessionId,)
+          }
 
           instantAnswerReceived("" + Math.random(), Math.floor(Math.random() * 4));
           instantAnswerReceived("" + Math.random(), Math.floor(Math.random() * 4));
